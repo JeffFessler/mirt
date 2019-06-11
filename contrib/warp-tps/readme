@@ -1,0 +1,8 @@
+this is matlab code from jin park
+for thin-plate spline warping.
+
+It's interactive so that you can put control points by gui.
+It only does the geometric tranform part, you still  need to to the
+grayscale interpolation part.
+Put all 4 files into the same directory and type tpsgrid2.
+

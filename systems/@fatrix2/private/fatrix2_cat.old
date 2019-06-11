@@ -1,0 +1,145 @@
+ function ob = fatrix2_cat(dim, blocks)
+% vertcat: B = [A1; A2; ...]
+% each input block must be a fatrix2 with same mask
+
+arg.blocks = blocks;
+MM = numel(blocks);
+arg.dims = zeros(MM, 2);
+odim1 = blocks{1}.odim;
+ndim1 = numel(odim1);
+odims = zeros(ndim1, MM);
+odims_same = true;
+for mm=1:MM
+	arg.dims(mm,:) = size(blocks{mm});
+	if arg.dims(mm,2) ~= arg.dims(1,2)
+		fail('all blocks must have same #cols for "col"')
+	end
+	if ~isequal(blocks{mm}.mask, blocks{1}.mask)
+		fail('all blocks must have same mask for "col"')
+	end
+	if ~isequal(numel(blocks{mm}.odim), ndim1)
+		fail('all blocks must have same numel(odim) for "col"')
+	end
+	if ~isequal(blocks{mm}.odim(1:ndim1-1), odim1(1:ndim1-1))
+		fail('all blocks must have same odim(1:end-1) for "col"')
+	end
+	odims(mm,:) = numel(blocks{mm}.odim);
+	odims_same = odims_same & isequal(blocks{mm}.odim, odim1);
+end
+
+if odims_same
+	arg.odim = [odim1 MM];
+	arg.dim_cat = ndim1 + 1;
+else
+	arg.odim = [odim1(1:ndim1-1) sum(odims(:,ndim1))]
+	arg.dim_cat = ndim1;
+end
+
+arg.dim = [sum(arg.dims(:,1)) arg.dims(1,2)];
+
+%% start/end indices for selecting parts of y
+%arg.istart = cumsum([1; arg.dims(1:end-1,1)]); % todo: cut
+%arg.iend = arg.istart + arg.dims(:,1) - 1;
+%
+%if arg.tomo % prep for mat2cell later
+%	for mm=1:MM
+%		odim = arg.blocks{mm}.arg.odim;
+%		arg.tomo_ndim = length(odim);
+%		arg.tomo_dim = arg.tomo_ndim; % insist on last dimension
+%		if mm==1
+%			for id = 1:arg.tomo_ndim
+%				if id ~= arg.tomo_dim
+%					arg.mat2cell_arg{id} = odim(id);
+%				end
+%			end
+%		end
+%		arg.mat2cell_arg{arg.tomo_dim}(mm) = odim(arg.tomo_dim);
+%	end
+%end
+
+% build object
+ob = fatrix2('odim', arg.odim, 'mask', blocks{1}.mask, ...
+	'arg', arg, 'caller', 'fatrix2_block(col)', ...
+	'forw', @fatrix2_block_col_forw, 'back', @fatrix2_block_col_back, ...
+	'gram', @fatrix2_block_col_gram, 'free', @fatrix2_block_free);
+
+
+% fatrix2_block_col_forw(): y = A * x
+function y = fatrix2_block_col_forw(arg, x)
+
+MM = length(arg.blocks);
+y = cell(MM,1);
+for mm=1:MM
+	y{mm} = arg.blocks{mm} * x;
+end
+
+if size(x,1) == arg.dim(2) % [np (L)]
+	y = cat(1, y{:});
+else % x is [(N) (L)]
+	y = cat(arg.dim_cat, y{:});
+end
+
+
+% fatrix2_block_col_back(): x = A' * y
+function x = fatrix2_block_col_back(arg, y)
+
+ydim = size(y);
+
+if ydim(1) == arg.dim(1) % [nd (L)]
+	tmp = num2cell(ydim);
+	tmp{1} = arg.dims(:,1);
+	yc = mat2cell(y, tmp);
+
+else % [(odim) (L)] split into separate parts, undoing cat(?, y{:})
+	fail 'todo'
+	if length(ydim) == arg.tomo_ndim
+		yc = mat2cell(y, arg.mat2cell_arg{:});
+	elseif length(ydim) > arg.tomo_ndim
+		yc = mat2cell(y, arg.mat2cell_arg{:}, ...
+			ydim((arg.tomo_ndim+1):end)); % handle (L)
+	else
+		error 'bug'
+	end
+end
+
+MM = length(arg.blocks);
+for mm=1:MM
+	tmp = arg.blocks{mm}' * yc{mm};
+	if mm == 1
+		x = tmp;
+	else
+		x = x + tmp;
+	end
+end
+
+
+% fatrix2_block_col_gram()
+function [T, reuse] = fatrix2_block_col_gram(ob, W, reuse, varargin)
+
+fail 'todo'
+
+blocks = ob.arg.blocks;
+T = cell(size(blocks));
+for mm=1:length(blocks)
+	A = blocks{mm};
+	if isnumeric(A)
+		if isempty(W)
+			T{mm} = A' * A;
+		else
+			warn 'todo: this may not work, need piece of W!'
+			T{mm} = A' * W * A;
+		end
+	else
+		if isempty(W)
+			T{mm} = build_gram(A, [], reuse, varargin{:});
+		else
+			if isvar('W.arg.blocks{mm}')
+				T{mm} = build_gram(A, W.arg.blocks{mm}, ...
+					reuse, varargin{:});
+			else
+				fail('fatrix2_block_col_gram needs block diag W')
+			end
+		end
+	end
+end
+T = fatrix_plus(T{:});

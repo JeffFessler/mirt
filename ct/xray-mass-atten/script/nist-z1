@@ -1,0 +1,42 @@
+#!/bin/csh
+# nist-z1
+
+# get all the elements from nist web pages
+if 1 then
+	set ubase = 'http://physics.nist.gov/PhysRefData/XrayMassCoef/ElemTab/'
+
+	set iz = 0
+	while ($iz < 92)
+		@ iz += 1
+		set zz = `printf "%02d" $iz`
+		set url = ${ubase}z$zz.html
+
+		set tmp1 = /tmp/tmp-nist-$zz
+
+		if !(-e $tmp1) then
+			echo "$url"
+			lynx -source "$url" >! $tmp1
+		endif
+
+		# determine element name from file header
+		set name = `cat $tmp1 | perl -ne 'if (/\/TITLE/) {s/.* ([^ ]*)\<\/TITLE\>/$1/; print;}'`
+		set name = `echo $name | tr "[:upper:]" "[:lower:]"`
+		if ($name == graphite) then
+			set name = carbon-graphite
+		endif
+		echo $name
+
+		# extract energy in MeV and MAC in cm^2/g
+		set out = ../element/${zz}-${name}
+		if !(-e $out) then
+			cat $tmp1 \
+			| nist-z2 \
+			# strip electron shell info \
+			| perl -pe 's/(K|L\d|M\d|N\d)//' \
+			| awk '{print $1, $2}' \
+			# remove empty lines \
+			| perl -ne 'print unless /^\s*$/' \
+			> $out
+		endif
+	end
+endif

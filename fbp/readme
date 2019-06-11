@@ -1,0 +1,9 @@
+This directory has filter-backproject (FBP) routines
+for image reconstruction.
+
+Run fbp2_example.m or fbp_fan_arc_example.m to see a complete example.
+
+For the notation, see this book chapter:
+http://dx.doi.org/10.1016/B978-0-444-53632-7.00212-4
+If you can't access it, email me.
+It is also in a book chapter hidden on my web site - ask me.

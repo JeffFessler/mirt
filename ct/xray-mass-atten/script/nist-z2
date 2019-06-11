@@ -1,0 +1,11 @@
+#!/usr/bin/perl -w
+# nist-z2
+
+undef $/; # slurp entire file
+
+$_ = <STDIN>;
+s/.*\<PRE\>//s; # the "s" flag says to treat it as a single line
+s/\<\/PRE\>.*//s; # the "s" flag says to treat it as a single line
+s/__.*__//s; # the "s" flag says to treat it as a single line
+
+print;

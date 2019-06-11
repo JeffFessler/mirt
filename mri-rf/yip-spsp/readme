@@ -1,0 +1,104 @@
+This directory in Jeff Fessler's Image reconstruction toolbox contains 
+Matlab source code that computes spectral-spatial RF pulses (and the
+corresponding z-gradient waveforms) for through-plane phase precompensatory
+slice selection for T2*-weighted functional MRI.
+This work is based on the publication: "Spectral-spatial RF pulse design for
+through-plane phase precompensatory slice selection for T2*-weighted
+functional MRI", Chun-yu Yip et al, Magnetic Resonance in Medicine, May, 2009.
+
+SPSP pulse design source code:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You should start by looking at the example in example_mri_rf_spsp.m
+in the irt/mri-rf/spsp subdirectory of the toolbox.
+
+The file is a central design script that will guide you through the whole
+design process.  Remember: successful pulse design requires that the entire
+image reconstruction toolbox by Jeff Fessler be installed first:
+
+http://www.eecs.umich.edu/~fessler/code/index.html
+
+You can conveniently download the whole package at
+http://www.eecs.umich.edu/~fessler/irt/fessler.tgz
+   
+and use the unix command 'tar' to retrieve the files and folders.  In Matlab,
+use the "setup.m" command in the toolbox to set up the paths first.
+
+Ready-to-use SPSP pulse waveforms:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Alternatively, you can directly download the waveforms that I designed
+and try them out on your MRI scanner:
+
+http://www.eecs.umich.edu/~fessler/irt/irt/mri-rf/SPSPpulseset.mat
+
+SPSPpulseset.mat is a Matlab workspace that contains SPSP pulses computed
+with different "alpha" values based on our publication listed above.
+It includes three kinds of variables:
+
+1. gz           :real-value z gradient waveform (unit: Gauss/cm (g/cm))
+2. b            :complex-value RF waveform (unit: g)
+3. mresult      :complex-value Bloch simulation result (normalized)
+
+In Matlab you can type "load SPSPpulseset.mat" to load the waveforms, and then
+type "whos" to see all those variables.
+
+The number(s) in each b or gz variable name indicate the "alpha" value (in
+units of 1E-4 g/cm/Hz) for which the RF and z gradient waveforms were
+computed, and each of the (b,gz) pairs leads to Bloch simulation result in
+variable mresult with the same number(s).
+Please refer to example_mri_rf_spsp.m for source code.
+In the following we provide parameters with which the waveforms were computed
+and the Bloch simulation was performed:
+
+z gradient (gz)
+~~~~~~~~~~~~~~~
+sampling period = 4E-6 s
+max gradient amplitude = 4 g/cm
+max gradient slew rate = 15000 g/cm/s
+oscillation period (T, in s) and number of trapezoids (Ntraps):
+
+%   alpha=-1:   T = 0.0025;   Ntraps = 6;
+%   alpha=-1.25:T = 0.0025;   Ntraps = 6;
+%   alpha=-1.5: T = 0.0025;   Ntraps = 6;
+%   alpha=-1.75:T = 0.0025;   Ntraps = 7;
+%   alpha=-2:   T = 0.003;    Ntraps = 7;
+%   alpha=-2.25:T = 0.003;    Ntraps = 7;
+%   alpha=-2.5: T = 0.003;    Ntraps = 8;
+%   alpha=-2.75:T = 0.003;    Ntraps = 8;
+%   alpha=-3:   T = 0.003;    Ntraps = 9;
+%   alpha=-3.25:T = 0.003;    Ntraps = 10;
+%   alpha=-3.5: T = 0.003;    Ntraps = 10;
+                                
+RF pulse (b)
+~~~~~~~~~~~~
+sampling period = 4E-6 s
+slice thickness = 0.5 cm
+flip angle = 30 degrees
+slice profile = 'rectangular'
+desired pattern specifications:
+	range in z (space) = 20 cm
+	number of samples in z = 1200
+	range in f (frequency) = 500 Hz
+	number of samples in f = 300
+zshift = -0.25 m
+alpha = indicated in variable name, in units of 1E-4 g/cm/Hz
+TE = 30 ms
+conjugate gradient:
+	number of iterations = 100
+	beta (Tikhonov regularization) = 0
+
+Bloch simulation (mresult)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+range in z (space) = 3 cm
+number of samples in z = 200
+range in f (frequency) = 500 Hz
+number of samples in f = 200
+
+
+Thank you for your interest in our spectral-spatial pulses.
+Written by Chun-yu Yip, University of Michigan, Ann Arbor, 4/1/2009
+Please contact Chun-yu Yip if you have questions or problems. Enjoy!
+Current email: YIP_chun_yu@sbic.a-star.edu.sg
+
+Jeff Fessler made minor modifications to several of the files.
+Hopefully I did not break anything...

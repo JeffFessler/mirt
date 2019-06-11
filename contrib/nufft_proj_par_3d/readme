@@ -1,0 +1,7 @@
+
+This is 3D NUFFT-based projector/backprojector
+for parallel-beam geometry.
+Written by Yong Long, extending the 2D NUFFT code.
+
+She also tried 3D cone-beam projector using NUFFT
+but it was much slower than distance-driven method.

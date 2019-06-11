@@ -1,0 +1,109 @@
+% s,over
+
+Although there are numerous options
+in the \irt,
+most image reconstruction examples
+in the toolbox
+have the following outline.
+A concrete example
+is \ty{example/recon_limited_angle1.m}.
+
+\blist
+\item
+Pick an image size
+and generate a ``true'' digital phantom image
+such as the Shepp-Logan phantom.
+\item
+Generate a system matrix
+(usually called \ty{A}),
+typically a \fatrixx object (see below),
+that will be used for iterative reconstruction.
+\item
+Generate simulated measurements \ty{y},
+possibly using the \fatrixx object
+or possibly using an analytical model
+(\eg, the line-integrals through the phantom).
+(Using the \fatrixx object
+is cheating because in the real world
+there is model mismatch that contaminates the measurements.)
+\item
+Perform a conventional non-iterative reconstruction method
+(\eg, \ty{fbp2})
+to get a baseline image for comparison.
+\item
+Generate a regularization object
+(usually \ty{R}).
+\item
+Check the predicted resolution properties
+of that \ty{R}
+using \ty{qpwls_psf},
+and adjust the regularization parameter \bet
+if necessary.
+\item
+Apply an iterative algorithm
+to the data \ty{y}
+using the system model \ty{A} and the regularizer \ty{R}
+for some user-specified number of iterations.
+\elist
+
+
+
+\subsection{Getting started}
+
+The best way to learn
+is probably to run an example file
+like
+\ty{recon_limited_angle1.m},
+possibly
+inserting \ty{keyboard} commands
+within the m-file
+to examine the variables.
+Most of \irt routines
+have a built-in help message;
+\eg,
+typing \ty{im}
+without any arguments
+will return usage information.
+Many \irt routines
+have a built-in test routine,
+\eg,
+\ty{ellipse_sino test}
+runs a built-in test
+of the routine for generating
+the sinogram of ellipse objects.
+The test code illustrates
+how to use the routine.
+
+
+\subsection{Image orientation}
+
+In \irt,
+a 3D digital image $f(i,j,k)$
+often corresponds to samples
+of a 3D continuous function
+$f(x,y,z)$.
+To easily relate the three indexes,
+\irt uses \ty{ndgrid}, not \ty{meshgrid}.
+Likewise,
+a 2D digital image $f(m,n)$
+having $M$ columns and $N$ rows
+often corresponds to samples
+of a 2D continuous function
+$f(x,y)$.
+\irt stores $f(m,n)$
+as a 2D array
+with $M$ rows and $N$ columns,
+and the \ty{im} command
+has a built-in transpose
+so that 2D array
+with, say, $M=200$ rows and $N=100$ columns
+is displayed as a 2D image
+with 200 columns and 100 rows,
+so that $m$ relates to horizontal coordinate ``$x$''
+and $n$ relates to vertical coordinate ``$y$.''
+This transpose may feel unnatural to some users of 2D images,
+but has the benefit of providing more consistency
+between 2D and 3D index ordering
+and also is helpful
+for passing \matlab arrays to C-compiled \ty{mex} files
+because in C usually the $x$ coordinate varies fastest.

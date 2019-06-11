@@ -1,0 +1,11 @@
+Table of mass attenuation coefficients for various materials.
+Broken down in terms of different interaction mechanisms.
+Data taken from:
+	http://physics.nist.gov/PhysRefData/Xcom/html/xcom1.html
+
+Each file has 5 colums:
+photon energy [meV]
+coherent scatter [cm^2/g]
+incoherent scatter [cm^2/g]
+photoelectric absorption [cm^2/g]
+total (with coherent) [cm^2/g]

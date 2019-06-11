@@ -1,0 +1,27 @@
+2017-07-13
+jf enabled lots of compiler checks to recompile for matlab-2017a
+and to remove many warnings i had to make the following changes everyhwere:
+
+int -> mwSize dims[3];
+
+abs -> labs for long ints
+
+	if (nlhs == 0 && nrhs == 1 && mxIsChar(prhs[0])) // check
+
+	if (nlhs != 1)
+	{
+		mexPrintf("need nlhs=1\n");
+		return;
+	}
+
+
+ny = *((double*)(mxGetData(prhs[1]) + sizebuf));
+->
+	ny = *((double*)(mxGetData(prhs[1]) + 1);
+or
+	ny = ((double*) mxGetData(prhs[1]))[1]
+
+
+ 	float *data1, *data2, *wx=NULL, *wy=NULL, *wz=NULL;
+	double nx=0, ny=0, nz=0, offx=0, offy=0, offz=0, mx=0, my=0, mz=0;
+	double spline;

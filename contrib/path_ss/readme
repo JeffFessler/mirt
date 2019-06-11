@@ -1,0 +1,15 @@
+
+path manipulation tools by somesh srivastava.
+motivated by a name conflict between my old deg2rad.m and matlab's version.
+
+from his email:
+
+I have solved the path problem by creating a function
+delete_path. This function deletes paths that contain
+a particular keyword. In this case, it is 'toolbox/map/'.
+As an added feature, delete_path takes a cell array of strings as an input
+and deletes all the keywords contained in the cell array from the path.
+
+Please find attached the new setup.m and delete_path.m. Also included are
+additional matlab functions for debugging: keep_path.m and print_path.m
+

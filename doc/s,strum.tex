@@ -1,0 +1,90 @@
+% s,strum
+\newcommand{\strum} {\texttt{strum}\xspace}
+
+\subsection{The \strum class}
+
+Most object-oriented languages
+allow object classes
+to have private methods,
+\ie,
+functions that are intended for use
+only with objects or data
+of a specific class.
+\matlab also supports
+the use of private methods.
+If you put a function
+in an m-file named
+\ty{myfun.m}
+within the directory
+where an class \ty{myclass} is declared,
+\ie, in the directory 
+\ty{@myclass},
+then invoking
+\ty{myfun(ob)}
+will call the function \ty{myfun}
+if \ty{ob} is of class \ty{myclass}.
+This mechanism is very convenient,
+particularly when overloading
+an existing \matlab operation,
+but it has some limitations.
+\blist
+\item
+If several object classes
+can all use the same method \ty{myfun},
+the you must put copies of \ty{myfun}
+in each of the object class directories
+(or use suitable links),
+which complicates software maintenance.
+
+\item
+Every single method
+requires such an m-file,
+even if the function
+is only a few lines long,
+leading to a proliferation
+of little m-files
+littering the directories.
+
+\item
+There is no mechanism
+for changing the methods
+during execution.
+
+\elist
+
+The \strum object class
+is essentially a special \emph{structure}
+that contains private \emph{methods}
+that are simply function handles.
+
+If \ty{st} is a \strum object
+that was declared to have
+a method \ty{method1},
+then invoking
+\[
+\ty{st.method1(}\textsl{args}\ty{)}
+\]
+will cause a call
+to the function handle.
+
+A concrete example
+is given in the \ty{sino_geom.m}.
+A call of the form
+\[
+\ty{sg = sino_geom('par', 'nb', 128, 'na', 100, 'dr', 3, 'orbit', 180);}
+\]
+creates a \strum object
+that describes a parallel-beam sinogram.
+This object
+has a variety of data elements
+and associated methods.
+For example,
+invoking
+\ty{sg.ar}
+returns a list of the projection view angles
+in radians,
+and
+\ty{sg.ad(2)}
+returns the second projection view angle in degrees.
+These methods are very short functions
+defined within the \ty{sino_geom.m} m-file.

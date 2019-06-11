@@ -1,0 +1,19 @@
+
+Greg Handy summer 2010 project
+
+main routines are:
+
+helix.m helix_example.m
+SSRB/FBP in matlab
+
+new_helix_example.m
+needs parker weighting
+
+easyhelix.m
+nn interpolation
+
+realData.m
+
+
+my_cbct_back.m
+modified cbct_back to handle helix!!!

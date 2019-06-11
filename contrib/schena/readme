@@ -1,0 +1,14 @@
+
+code from Gianni Schena.  in his words:
+
+This time is my turn to share a simple (yet simplistic) routine that I 
+found of great help to show the relationship between the traditional FBP 
+and iterative methods to my students when I present micro tomography as a 
+NDE method.
+
+The routine Grid2Glinear is a surrogate of your Glinear routine bur rather 
+that building G from scratch it takes the back projection grids used by 
+most FBP routines and >explodes< it into a G sparse matrix.  It is also 
+quite fast. Just run the demo.
+
+

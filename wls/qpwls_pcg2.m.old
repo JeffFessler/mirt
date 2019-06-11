@@ -1,0 +1,132 @@
+ function [xs, info] = qpwls_pcg2(x, T, bb, C, M, niter)
+%function [xs, info] = qpwls_pcg2(x, T, bb, C, M, niter)
+%
+% quadratic penalized weighted least squares via
+% preconditioned conjugate gradients algorithm
+% cost:	Psi(x) = (y-Gx)'W(y-Gx)/2 + x'C'Cx/2
+% 	= -x'b + x'Tx/2 + x'C'Cx/2, where T = G'WG, b = G'W*y
+% in
+%	x	[np,1]		estimate
+%	T	[nd,np]		system matrix
+%	bb	[np,1]		G'*W*y ("backprojection vector")
+%	C	[nc,np]		penalty 'derivatives' (R = \Half C'*C)
+%	M	[np,np]		preconditioner (or object) (or 1)
+%	niter			# total iterations
+% out
+%	xs	[np,niter]	estimates each iteration
+%	info	[niter, 4]	gamma, step, time, flops
+%
+% Copyright Jan 1998, Jeff Fessler & Hugo Shi, The University of Michigan
+
+if nargin < 3 || nargin > 7, help(mfilename), error(mfilename), end
+
+if ~isvar('C') || isempty(C), C = 0; end
+if ~isvar('M') || isempty(M), M = 1; end
+if ~isvar('niter') || isempty(niter), niter = 2; end
+if ndims(x) > 2 || size(x,2) ~= 1, error 'x must be a column vector', end
+
+if ~isreal(bb)
+	persistent warned
+	if isempty(warned), warned = 0; end
+	if ~warned
+		warning 'i am not sure if the complex case is 100% correct'
+		warned = 1;
+	end
+end
+
+%
+% initialize
+%
+np = length(x);
+xs = zeros(np, niter);
+xs(:,1) = x;
+
+info = zeros(niter,4);
+
+Cx = C * x;
+Tx = T * x;
+
+tic
+%flops0 = flops;
+
+
+%
+% iterate
+%
+for iter = 2:niter
+	ticker(mfilename, iter, niter)
+
+	%
+	% (negative) gradient
+	%
+	ngrad = bb - Tx - C' * Cx;
+
+	%
+	% preconditioned gradient
+	%
+	pregrad = M * ngrad;
+
+	%
+	% direction
+	%
+	newinprod = ngrad' * pregrad;
+	% fix: should i take the real part?
+	newinprod = reale(newinprod, 'warn', 'inprod');
+	if iter == 2
+		ddir = pregrad;
+		gamma = 0;
+	else
+	%	gamma = (newinprod - oldgrad' * pregrad) / oldinprod;
+		if (oldinprod == 0)
+			warning 'inprod=0. going nowhere!'
+			gamma = 0;
+		else
+			gamma = newinprod / oldinprod;	% Fletcher-Reeves
+		end
+		ddir = pregrad + gamma * ddir;
+	end
+	oldgrad = ngrad;
+	oldinprod = newinprod;
+
+	% check if descent direction
+	if real(ddir' * ngrad) < 0
+		warning 'wrong direction'
+		keyboard
+	end
+
+	%
+	% step size in search direction
+	%
+	Cdir = C * ddir;
+	Tdir = T * ddir;
+	
+	denom = ddir' * Tdir + Cdir' * Cdir;
+	if denom == 0
+		warning 'found exact solution??? step=0 now!?'
+		step = 0;
+	else
+		step = (ddir' * ngrad) / denom;
+		% fix: should i take the real part?
+%		step = reale(step, 'warn', 'step');
+		step = real(step); % real step seems only natural
+	end
+	if step < 0
+		warning 'downhill?'
+		keyboard
+	end
+
+	%
+	% update
+	%
+	Tx = Tx + step * Tdir;
+	Cx = Cx + step * Cdir;
+	x = x + step * ddir;
+	xs(:,iter) = x;
+	
+	info(iter,1) = gamma;
+	info(iter,2) = step;
+	info(iter,3) = toc;		% accum. time
+%	info(iter,4) = flops;		% accum. flops
+end
+
+% info(:,4) = info(:,4) - flops0;

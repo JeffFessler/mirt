@@ -1,0 +1,6 @@
+yingying zhang-o'connor's fast 2d variance predictions
+for penalized likelihood fan-beam X-ray CT image reconstruction
+
+in 2010, Donghwan Kim updated the original code to use the
+current version of the toolbox.  his version is in:
+var_pre_2d_paper_2010_04_01.m

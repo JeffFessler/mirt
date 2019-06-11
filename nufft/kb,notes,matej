@@ -1,0 +1,120 @@
+Exploration of KB behavior for negative kb_m (by Samuel Matej)
+
+ f = sqrt(1 - (x/(J/2)).^2);
+ KB = f.^kb_m .* besseli(kb_mb, alpha*f) / besseli(kb_mb, alpha);
+
+Standard definition: kb_mb = kb_m   
+  
+       - singularities at borders for Negative NonInteger kb_m
+         (singularities are increasing with smaller alpha) 
+       - KB for negative non-integer kb_m is a terrible interpolator - with
+         values rising quickly to infinity just at its boundary
+       - leads to huge errors in Fproj (for noninteger negative kb_m)
+         - see error printouts below for 2 values of alpha
+
+       WARNING: the FT of the KB was defined only for values m > -1
+                it is not clear how good the FT formula is for m < -1
+    
+Modified definition of KB for kb_m<0:   kb_mb = abs(kb_m)
+
+       - using aproximation to besseli (for negative m) to avoid
+         singularities and to get "continuous" behavior for range of 
+         negative values of kb_m (see Fproj behavior below)
+       - this approximation of besseli is exactly valid for integer kb_m
+       - it is a very good approximation out of the boundaries for reasonable 
+         alpha values, but is a bad approximation at the boundaries were the 
+         stnadard KB values shoot-up/down to infinity 
+       - for small alpha values the approximation starts to break down
+
+       WARNING: it is not clear how accurate/correct is the original formula
+                of the FT of KB (as defined in JOSA) for the modified
+                KB function (for Negative NonInteger values)
+
+
+Example - Modified definition of KB for kb_m<0 
+(Errors of NUFFT FoProj vs. DSFT FoProj for zubal phantom - MaxE,NME,NRMSE):
+
+kn=2, J=4, m=-1, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 1.618e+01, 3.326e+00, 3.710e+00
+alpha=  9.36   E: 4.636e-01, 1.075e-01, 1.099e-01
+kn=2, J=4, m=-0.9, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 1.533e+01, 3.238e+00, 3.569e+00
+alpha=  9.36   E: 4.085e-01, 9.569e-02, 9.772e-02
+kn=2, J=4, m=-0.8, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 1.447e+01, 3.123e+00, 3.410e+00
+alpha=  9.36   E: 3.572e-01, 8.469e-02, 8.644e-02
+kn=2, J=4, m=-0.7, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 1.358e+01, 2.984e+00, 3.236e+00
+alpha=  9.36   E: 3.097e-01, 7.453e-02, 7.604e-02
+kn=2, J=4, m=-0.6, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 1.269e+01, 2.826e+00, 3.049e+00
+alpha=  9.36   E: 2.659e-01, 6.519e-02, 6.651e-02
+kn=2, J=4, m=-0.5, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 1.180e+01, 2.651e+00, 2.852e+00
+alpha=  9.36   E: 2.257e-01, 5.664e-02, 5.782e-02
+kn=2, J=4, m=-0.4, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 1.091e+01, 2.464e+00, 2.646e+00
+alpha=  9.36   E: 1.891e-01, 4.885e-02, 4.997e-02
+kn=2, J=4, m=-0.3, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 1.003e+01, 2.268e+00, 2.435e+00
+alpha=  9.36   E: 1.560e-01, 4.179e-02, 4.292e-02
+kn=2, J=4, m=-0.2, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 9.173e+00, 2.067e+00, 2.222e+00
+alpha=  9.36   E: 1.263e-01, 3.542e-02, 3.665e-02
+kn=2, J=4, m=-0.1, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 8.334e+00, 1.865e+00, 2.009e+00
+alpha=  9.36   E: 9.995e-02, 2.969e-02, 3.116e-02
+kn=2, J=4, m=0, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 7.524e+00, 1.665e+00, 1.798e+00
+alpha=  9.36   E: 7.673e-02, 2.458e-02, 2.643e-02
+K/N=2,J=4: Optimum m=0,alpha/J=2.34  -  NRMSE=2.643e-02
+           Optimum m=0,alpha/J=2.34  -  MaxD=7.673e-02 
+
+
+Example - Standard definition of KB for kb_m<0 (Errors:MaxE,NME,NRMSE):
+
+kn=2, J=4, m=-2, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 2.279e+01, 3.669e+00, 4.575e+00   kb_m=-2 - same as modified
+alpha=  9.36   E: 1.229e+00, 2.753e-01, 2.828e-01   (behaves well for neg.int)
+kn=2, J=4, m=-1.9, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 8.738e+27, 7.739e+25, 5.897e+26   NoNinteger m - huge errors
+alpha=  9.36   E: 1.300e+25, 1.015e+23, 8.105e+23
+...
+kn=2, J=4, m=-1.1, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 6.130e+15, 4.714e+13, 3.702e+14
+alpha=  9.36   E: 2.260e+13, 1.638e+11, 1.315e+12
+kn=2, J=4, m=-1, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 1.618e+01, 3.326e+00, 3.710e+00   kb_m=-1 - same as modified
+alpha=  9.36   E: 4.636e-01, 1.075e-01, 1.099e-01   (behaves well for neg.int)
+kn=2, J=4, m=-0.9, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 6.686e+12, 4.902e+10, 3.885e+11
+alpha=  9.36   E: 3.010e+10, 2.106e+08, 1.696e+09
+kn=2, J=4, m=-0.8, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 4.346e+11, 3.110e+09, 2.475e+10
+alpha=  9.36   E: 2.164e+09, 1.479e+07, 1.194e+08
+kn=2, J=4, m=-0.7, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 2.106e+10, 1.467e+08, 1.172e+09
+alpha=  9.36   E: 1.157e+08, 7.710e+05, 6.237e+06
+kn=2, J=4, m=-0.6, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 9.029e+08, 6.106e+06, 4.897e+07
+alpha=  9.36   E: 5.459e+06, 3.536e+04, 2.869e+05
+kn=2, J=4, m=-0.5, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 3.622e+07, 2.368e+05, 1.907e+06
+alpha=  9.36   E: 2.400e+05, 1.508e+03, 1.228e+04
+kn=2, J=4, m=-0.4, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 1.390e+06, 8.772e+03, 7.094e+04
+alpha=  9.36   E: 1.008e+04, 6.135e+01, 5.010e+02
+kn=2, J=4, m=-0.3, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 5.176e+04, 3.172e+02, 2.556e+03
+alpha=  9.36   E: 4.101e+02, 2.450e+00, 1.976e+01
+kn=2, J=4, m=-0.2, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 1.882e+03, 1.329e+01, 9.000e+01
+alpha=  9.36   E: 1.623e+01, 1.271e-01, 7.597e-01
+kn=2, J=4, m=-0.1, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 6.888e+01, 2.235e+00, 3.747e+00
+alpha=  9.36   E: 6.198e-01, 3.244e-02, 4.192e-02
+kn=2, J=4, m=0, alpha/J = 1: 1.34: 2.4
+alpha=     4   E: 7.524e+00, 1.665e+00, 1.798e+00   kb_m=0 - same as modified
+alpha=  9.36   E: 7.673e-02, 2.458e-02, 2.643e-02
+K/N=2,J=4: Optimum m=0,alpha/J=2.34  -  NRMSE=2.643e-02
+           Optimum m=0,alpha/J=2.34  -  MaxD=7.673e-02 

@@ -1,0 +1,23 @@
+This directory has C-code for 1D, 2D, and 3D interpolation
+(aka "gridding") using finite-support kernels that are tabulated
+on a fine grid.
+
+To compile for octave use "make -f Makefile-oct"
+
+The code supports interpolation using a complex kernel because
+my original NUFFT implementation required this generality.
+The complex interpolator code supports only 0th-order interpolation,
+where one looks up the nearest value in the kernel table.
+
+However, I later realized that a real kernel suffices as long
+as appropriate phase factors are applied before and after the
+interpolation.  So in July 2008 I added support for real kernels,
+and for those one has the option of either 0th-order or 1st-order
+interpolation of the values in the kernel table.  Using 1st-order
+interpolation requires slightly more computation, but allows one
+to use a smaller table.  And often modern CPUs are limited by memory
+bandwidth, not by simple calculations, so 1st-order is probably
+preferable.
+
+For discussion of using 1st-order interpolation, see Beatty etal,
+IEEE Trans. Med. Imaging, June 2005. doi 10.1109/TMI.2005.848376

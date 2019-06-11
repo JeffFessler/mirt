@@ -1,0 +1,11 @@
+this is code from wonseok kim
+for fat-water separation via
+the region growing method of reeder et al.
+
+he says:
+
+First run the Pixel Independent Method
+and second use the out put of it as input of RGM
+
+te =  -0.0004    0.0012    0.0028
+F_fw =  1319.5

@@ -1,0 +1,117 @@
+% irt.tex
+% documentation for image reconstruction toolbox
+
+\documentclass{article}
+\usepackage{jf-all}
+\usepackage{jf-tik}
+%\usepackage{psfrag}
+\usepackage[text={7in,9in}]{geometry}
+\usepackage{hyperref}
+%\input{../../../../tex/book/def/def}
+
+%\usepackage{epstopdf}
+%\epstopdfsetup{outdir=/tmp/fessler/eps/irt/}
+
+
+\newcommand{\dirchapfig}{\fdir}
+\usepackage{keycommand}
+\newkeycommand+[\|]{\figcap} % use keycommand package!
+[place=htbp,dir=\dirchapfig,sub=][others][3]{% file fraction caption
+|\figeps|[\commandkey{place}]%
+{\commandkey{dir}\ifcommandkey{sub}{/\commandkey{sub}}{}}%
+{#1}{#2\linewidth}{#3}}
+
+
+\newcommand{\ty}[1] {\jfverbtt{#1}}
+\newcommand{\matlab} {\textsc{Matlab}\xspace}
+\newcommand{\irt} {IRT\xspace}
+\newcommand{\fatrix} {\texttt{Fatrix}\xspace}
+\newcommand{\fatrixx} {\texttt{fatrix2}\xspace}
+
+\newcommand{\A} {\blmath{A}}
+\newcommand{\x} {\blmath{x}}
+\newcommand{\xj} {\jfunl{x}_j}
+\newcommand{\y} {\blmath{y}}
+\newcommand{\z} {\blmath{z}}
+\newcommand{\pn} {\jfunl{\vec{n}}}
+\newcommand{\nd} {\xmath{n_{\mathrm{d}}}}
+\newcommand{\np} {\xmath{n_{\mathrm{p}}}}
+\newcommand{\zumnm} {\sum_{n=0}^{N-1} \sum_{m=0}^{M-1}}
+
+\newlength{\figwidth} % for variable-size figures
+\newcommand{\infig}[3][\fdir]{ % [dir] file, size
+\setlength{\figwidth}{#3\linewidth}%
+\input{#1/#2}%
+}
+
+\begin{document}
+
+\title{
+Image Reconstruction Toolbox
+for \matlab
+(and Octave and Freemat)
+}
+\author{Jeffrey A. Fessler\\
+University of Michigan
+\\
+\ty{fessler@umich.edu}
+\date{\today}
+}
+
+\maketitle
+
+\section{Introduction}
+
+This is an initial attempt at documentation
+of the image reconstruction toolbox (\irt)
+for \matlab,
+and any other \matlab emulator
+that is sufficiently complete
+(possibly Octave and Freemat).
+This documentation is, and will always be,
+hopelessly incomplete.
+The number of options and features
+in this toolbox is ever growing.
+
+
+\section{Overview}
+
+\input s,over
+
+%\newpage
+\input s,mask
+
+\newpage
+\section{Special structures}
+
+The \irt uses
+some special custom-made object classes
+extensively:
+the \ty{strum} class,
+which provides structures with methods,
+and
+the \fatrixx class
+(and its obsolete predecessor, the \fatrix class),
+that provide a ``fake matrix'' object.
+These objects exploit
+\matlab's object-oriented features,
+specifically operator overloading.
+The following overview of these objects
+should help users
+understand the toolbox code.
+
+\input s,strum
+
+\input s,fatrix2
+
+\newpage
+\input s,fatrix
+
+%\newpage
+\vfill
+\input s,other
+
+\bibliographystyle{unsrt}
+\bibliography{master}
+
+\end{document}

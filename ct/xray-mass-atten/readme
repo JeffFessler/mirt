@@ -1,0 +1,59 @@
+Table of mass attenuation coefficients for various materials.
+
+The atomic mass data came from (2008-4-27):
+	http://en.wikipedia.org/wiki/List_of_elements_by_atomic_mass
+
+The files under the directory "element" came from these NIST web pages:
+	http://physics.nist.gov/PhysRefData/XrayMassCoef/tab3.html
+after processing by my "nist-z1" script.
+The first column is energy in MeV, second column is mass atten coef in cm^2/g.
+That mac is "with coherent scattering" based on Xcom output.
+
+The materials in directory "compound" (bone, etc.) came from these NIST pages:
+http://physics.nist.gov/PhysRefData/XrayMassCoef/tab4.html
+
+The soft tissue data came from
+http://physics.nist.gov/PhysRefData/XrayMassCoef/ComTab/tissue.html
+
+The bone data came from
+http://physics.nist.gov/PhysRefData/XrayMassCoef/ComTab/bone.html
+
+http://allmeasures.com/Formulae/
+Al: 2700 kg/m^3 or 2.7 g/cm^3
+I: 4930 kg/m^3 or 4.93 g/cm^3
+Cu: 920 kg/m^3 or 0.92 g/cm^3
+Pb: 11340 kg/m^3 or 11.34 g/cm^3
+
+ICRU (1989), Tissue Substitutes in Radiation Dosimetry and Measurement,
+Report 44 of the International Commission on Radiation Units and Measurements
+(Bethesda, MD).
+
+The tables give
+	energy (MeV), mass attenuation coefficient (\mu/\rho),
+	and mass energy-absorption coefficient, (\mu_en/\rho)
+	(in cm^2/gram)
+
+Here are the densities from:
+http://physics.nist.gov/PhysRefData/XrayMassCoef/tab2.html
+
+				Z/A	   I	  rho [g/cm^3]
+ADIPOSE TISSUE (ICRU-44)	0.55579    64.8   9.500E-01
+AIR, DRY (NEAR SEA LEVEL)	0.49919    85.7   1.205E-03
+BONE, CORTICAL (ICRU-44)	0.51478   112.0   1.920E+00
+BRAIN, GREY/WHITE (ICRU-44)	0.55239    73.9   1.040E+00
+BREAST TISSUE (ICRU-44)		0.55196    70.3   1.020E+00
+LUNG TISSUE (ICRU-44)		0.55048    75.2   1.050E+00
+MUSCLE, SKELETAL (ICRU-44)	0.55000    74.6   1.050E+00
+TISSUE, SOFT (ICRU-44)		0.54996    74.7   1.060E+00
+WATER, LIQUID			0.55508    75.0   1.000E+00
+
+lead:
+http://physics.nist.gov/PhysRefData/XrayMassCoef/tab3.html
+copper:
+http://physics.nist.gov/PhysRefData/XrayMassCoef/ElemTab/z29.html
+aluminum:
+http://physics.nist.gov/PhysRefData/XrayMassCoef/ElemTab/z13.html
+
+Some of the table have two identical energy values due to k-edges.
+Previously I had perturbed those values to make the energy monotone increasing.
+Instead, I modified the interpolator to deal with such jumps.

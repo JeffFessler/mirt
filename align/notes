@@ -1,0 +1,18 @@
+
+note:
+the KronProd kronecker product class by Matt Jacobson
+may be useful for refining some of these operations.
+
+http://www.mathworks.com/matlabcentral/fileexchange/25969-efficient-object-oriented-kronecker-product-manipulation
+
+
+For T0 = BsplCo2Val and T0inv = BsplVal2Co,
+we sometimes need the adjoint (transpose)
+which can be evaluated as follows (2010-04-13 email from Se Young Chun)
+T0inv' = inv(T0') = inv(T0) = T0inv (because T0 = T0')
+
+
+Caution: T0 * T0inv is not always the identity matrix
+when using the BsplVal2CoMirr / BsplCo2ValMirr pair,
+as found by Jan Hwan Cho circa 2011-11 so Se Young Chun
+recommends using BsplVal2CoZero instead.

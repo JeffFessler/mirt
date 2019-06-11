@@ -1,0 +1,69 @@
+
+This directory has various system models for tomographic image reconstruction
+and related problems.
+
+@fatrix2
+@Fatrix
+This object provides a general "container" for linear operations A*x and A'*y.
+Fatrix is the obsolete version; fatrix2 is the current version.
+
+@Gblock
+block system models (based on one of Gtomo2_dsc, Gtomo2_sparse, Gtomo2_wtfmex)
+for ordered-subsets (aka block iterative) algorithms.  this is largely obsolete;
+the newer @Fatrix object includes this functionality
+
+@Gtomo2_dsc
+on-the-fly forward or backprojection using a .dsc file (see ASPIRE user manual)
+the system matrix is not precomputed so this uses very little memory.
+
+@Gtomo2_wtfmex
+uses .wtf created by ASPIRE - loaded in mex memory space rather than matlab
+to save memory (singles instead of doubles).  for large problem sizes even
+this may use too much memory in which case try Gtomo2_dsc instead.
+
+
+Gblur
+linear shift invariant blur (image restoration)
+
+Gdsft
+discrete-space Fourier transform (nonuniform k-space samples).
+a slow but exact version of Gnufft.
+
+Glinear
+tomographic system matrix based on pixel-driven linear interpolation.
+not recommended.
+
+Gmri
+For MRI image reconstruction, possibly including nonuniform k-space samples,
+off-resonance effects, and relaxation effects.
+
+Gnearest
+tomographic system matrix based on pixel-driven nearest-neighbor interpolation.
+not recommended.
+
+Gnufft
+Nonuniform FFT (NUFFT) for applications like MRI that record Fourier samples.
+
+Gsparse
+an object made from matlab sparse matrix, essentially for testing.
+also useful as a base for Gblock objects
+
+Gtomo2_strip
+strip integral tomographic system model.  useful but uses lots of memory.
+
+Gtomo2_table
+table-based tomographic system model.  fast yet small memory.  recommended.
+
+Gtomo3
+3D system models, some precomputed, some on-the-fly, based on f3d_mex.
+
+Gtomo_blob
+work in progress
+
+Gtomo_nufft
+NUFFT-based forward/backprojection for 2D tomography
+
+Final option:
+	!wt gen tomo.dsc
+	(creates tomo.wtf using ASPIRE)
+	A = wtfmex('load', 'file.wtf');

@@ -1,0 +1,38 @@
+This directory containts Matlab tools for
+nonrigid image registration using b-splines,
+developed by Se Young Chun at the University of Michigan,
+with input by Jeff Fessler,
+and support by NIH grant P01 CA87634.
+
+Most of the Matlab mex files here are wrappers around
+the Bspline software available from EPFL:
+	http://bigwww.epfl.ch/algorithms.html
+by P. Thevenaz and M. Unser, and redistributed here with their permission.
+We own them a big thanks for their online code!
+
+HOW TO INSTALL (only needed if the mex files for your system
+are not already in the mex/ directory!):
+cd bsplinetool
+
+% Ensure that 'makefile' has the correct MPATH value which 
+% is your MATLAB bin directory location.
+make
+
+% then you can see mex files in mex directory.
+% set the current directory as well as mex directory as paths
+% in MATLAB for use
+
+If you use this software, we would appreciate you citing this
+toolbox and following paper:
+
+Se Young Chun, J A Fessler.
+"A simple regularizer for B-spline nonrigid image registration that
+encourages local invertibility."
+IEEE J. Sel. Top. Sig. Proc., 3(1):159-69, Feb. 2009.
+http://doi.org/10.1109/JSTSP.2008.2011116
+
+Se Young Chun, J A Fessler.
+"Regularized methods for topology-preserving smooth nonrigid image registration
+using b-spline basis."
+Proc. IEEE Intl. Symp. Biomed. Imag., pp. 1099-102, 2008.
+http://doi.org/10.1109/ISBI.2008.4541192

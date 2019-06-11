@@ -1,0 +1,90 @@
+% s,fatrix
+
+\subsection{The \fatrix class}
+
+The \fatrix class
+is the (now obsolete) predecessor
+to the \fatrixx class.
+
+If \x is of length 1000
+and \y is of length 2000,
+use the following call
+to create a \fatrix object:
+\begin{quote}
+\ty{
+A = Fatrix([2000 1000], system_arguments, ...
+}
+\\\hspace*{7em}
+\ty{
+'forw', @forward_project, 'back', @back_project);
+}
+\end{quote}
+The resulting \fatrix object \ty{A}
+acts just like
+a $2000 \times 1000$ matrix
+in most important respects.
+
+
+Basic operations
+like \ty{A(:,7)}
+are also implemented,
+but nonlinear operations
+like \ty{A .^ 1/3}
+are not
+because those cannot be computed readily
+using \ty{forward_project}. 
+
+For examples, see
+the \ty{systems} subdirectory of \irt.
+
+On 2007-1-30,
+inspired by \ty{bbtools},
+I added the following functionality:
+\blist
+\item
+Fatrix object multiplication
+(using \ty{Gcascade}): \ty{C = A * B}
+\item
+Scalar multiplication of Fatrix object
+(using \ty{Gcascade}): \ty{B = 7 * A}
+\item
+Vertical concatenation (using \ty{block_fatrix}):
+\ty{A = [A1; A2; A3]}
+\item
+Horizontal concatenation (using \ty{block_fatrix}):
+\ty{A = [A1, A2, A3]}
+\elist
+One could use \ty{Gcascade} or \ty{block_fatrix}
+directly for these operations,
+but it looks nicer
+and is more ``\matlab like''
+to use the new syntax.
+
+For a \fatrix,
+the default behavior of the
+\ty{forward_project}
+and
+\ty{back_project}
+subroutines
+is that they expect
+a column vector input
+and return
+a column vector output.
+Many of the \fatrix objects
+also support an array input,
+much like \fatrixx objects,
+but for a \fatrix
+the user must provide
+both the vector and array capability
+in the
+\ty{forward_project}
+and
+\ty{back_project}
+routines,
+which makes them more difficult to write.
+In contrast,
+for \fatrixx objects,
+the use provides subroutines
+that only work with arrays,
+and the \fatrixx object infrastructure itself
+takes care of the vector case.

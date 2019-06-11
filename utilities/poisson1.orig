@@ -1,0 +1,23 @@
+ function data = poisson1(xm)
+
+%function data = poisson1(xm)
+%	Generate poisson random column vector with mean xm
+%	by summing exponentials.
+%	Should only be used for small values, eg < 20.
+
+	rand('uniform')
+
+	data = zeros(length(xm),1);
+	id = 1:length(xm);
+	cc = ones(1,length(xm));
+
+	while id,
+		xx = xm(id);
+		kk = 2*max(xx);
+		cc = cumprod([cc; rand(kk, length(xx))]);
+		ss = sum(cc > ones(1+kk,1)*exp(-xx)')'-1;
+		data(id) = data(id) + ss;
+		ib = ss >= kk;
+		id = id(ib);
+		cc = cc(kk+1,ib);
+	end

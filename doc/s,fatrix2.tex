@@ -1,0 +1,453 @@
+% s,fatrix2
+
+\comment{
+\newcommand{\A} {\blmath{A}}
+\newcommand{\x} {\blmath{x}}
+\newcommand{\y} {\blmath{y}}
+\newcommand{\z} {\blmath{z}}
+}
+
+\subsection{The \fatrixx class}
+
+The pronunciation rhymes with matrix.
+Think ``fake matrix''
+or ``fancy matrix.''
+
+
+\subsubsection{Background}
+
+Most iterative algorithms
+for image reconstruction
+are described conveniently using matrix notation,
+but matrices are not necessarily
+the most suitable data structure
+for actually implementing an iterative algorithm
+for large sized problems.
+The \fatrixx class
+provides a convenient bridge
+between matrix notation
+and practical system models
+used for iterative image reconstruction.
+
+Consider the simple iterative algorithm
+for reconstructing \x from data \y
+expressed mathematically:
+\be
+\x^{n+1} = \x^n + \alpha \A' (\y - \A\x^n)
+,\ee{e,fatrixx,iter}
+where \A is the \emph{system matrix}
+associated with
+the image reconstruction problem at hand.
+%
+If \A is small enough
+to be stored as a matrix in \matlab
+(sparse or full),
+then this algorithm translates
+very nicely into \matlab as follows.
+%\begin{verbatim}
+\be
+\ty{x = x + alpha * A' * (y - A * x);}
+\ee{e,mat2}
+%\end{verbatim}
+You really cannot get any closer connection
+between the math and the program than this!
+But often we work
+with system models
+that are too big to store
+as matrices (even sparsely) in \matlab.
+Instead,
+the models
+are implemented by subroutines
+that compute the ``forward projection'' operation
+$\A \x$
+and the ``backprojection operation
+$\A' \z$
+for input vectors \x and \z respectively.
+%
+The conventional way
+to use one of these system models
+in \matlab (or C) would be to rewrite
+the above program as follows.
+\begin{verbatim}
+Ax = forward_project(system_arguments, x)
+residual = y - Ax;
+correction = back_project(system_arguments, residual)
+x = x + alpha * correction
+\end{verbatim}
+Yuch!
+This is displeasing for two reasons.
+First,
+the code looks a \emph{lot} less like the mathematics.
+Second,
+usually you end up with a different version of the code
+for every different system model
+(forward/back-projector subroutine pair)
+that you develop.
+Having multiple versions
+of a simple algorithm
+creates a software maintenance headache.
+
+The elegant solution
+is to develop \matlab objects
+that know how to perform
+the following operations:
+\blist
+\item
+\makebox[4em][l]{%
+\ty{A * x}
+}
+(matrix vector multiplication,
+operation \ty{mtimes})
+\item
+\makebox[4em][l]{%
+\ty{A'}
+}
+(\ty{transpose}), and
+\item
+\makebox[4em][l]{%
+\ty{A' * z}
+}
+(\ty{mtimes} again,
+with a transposed object).
+\elist
+Once such an object is
+defined,
+one can use \emph{exactly}
+the same iterative algorithm
+that one would have used
+with an ordinary matrix,
+\eg,
+\eref{e,mat2}.
+%
+The \fatrixx class
+provides a convenient mechanism
+for implementing
+such linear operators.
+
+\subsubsection{Creating a \fatrixx object}
+
+Suppose \x is of length 1000
+and \y is of length 2000.
+One can create a corresponding \fatrixx object
+using the following call:
+\begin{verbatimtab}
+A = fatrix2('imask', [1000 1], 'omask', [2000 1], ...
+	'arg', system_arguments, ...
+	'forw', @forward_project, 'back', @back_project);
+\end{verbatimtab}
+The resulting \fatrixx object \ty{A}
+acts just like a matrix
+in most important respects.
+In particular,
+we can use exactly the same iterative algorithm
+\eref{e,fatrixx,iter} as before,
+because
+\ty{Ax = A * x}
+is handled internally
+by calling
+\[
+\ty{
+Ax = forward_project(system_arguments, x)
+}
+\]
+and similarly for
+\ty{A' * z}.
+
+Basic operations
+like \ty{A(:,7)}
+are also implemented,
+but nonlinear operations
+like \ty{exp(A)}
+are not
+because those cannot be computed readily
+using \ty{forward_project}. 
+
+For many examples, see
+the \ty{systems} subdirectory of \irt.
+
+\subsubsection
+{
+Operations on a \fatrixx object
+that return another \fatrixx object
+}
+
+\blist
+\item
+\ty{B = A'} or \ty{B = ctranspose{A}}
+\\
+\fatrixx object Hermitian transpose
+\item
+\ty{C = A * B}
+\\
+\fatrixx object multiplication
+(requires compatible sizes)
+\item
+\ty{B = 7 * A}
+\\
+multiplying a scalar times a \fatrixx object
+\item
+\ty{A = [A1; A2; A3]}
+\\
+vertical concatenation (\ty{vertcat} is also supported)
+(requires compatible sizes)
+\item
+\ty{A = [A1, A2, A3]}
+\\
+horizontal concatenation (\ty{horzcat} is also supported) % todo?
+(requires compatible sizes)
+\item
+\ty{A(:,[3 7])} or \ty{A([3 7],:)} or \ty{A(:,2:end)} etc.
+\\
+these return a smaller sized \fatrixx
+%\item
+%\ty{A(:,newmask)} % todo
+\item
+\ty{C = B + A}
+\\
+\fatrixx object addition
+(requires compatible sizes)
+\elist
+
+
+\subsubsection
+{
+Operations on a \fatrixx object
+that return a vector.
+}
+
+\blist
+\item
+\ty{A(:,7)} or \ty{A(7,:)}
+\elist
+
+
+\subsubsection
+{
+Operations on a \fatrixx object
+that return a matrix.
+}
+
+These are practical only if \ty{A} has sufficiently small size!
+
+\blist
+\item
+\ty{A(:,:)} or \ty{full(A)}
+\item
+\ty{svd(A)}
+\item
+\ty{eig(A)}
+% todo: eigs inv
+\elist
+
+
+\subsubsection
+{
+Other operations on a \fatrixx object.
+}
+
+\blist
+\item
+\ty{A(7,9)}
+\\
+This returns a scalar value. % todo
+\item
+\ty{sparse(A)}
+\\
+By default, internally this will compute each column of \A
+using \ty{A(:,j)}
+and then create a sparse matrix
+from the nonzero elements of those columns.
+For most large cases,
+this will be very slow.
+However,
+a few \fatrixx objects
+such as \ty{Gdiag}
+have an internal \ty{sparse} method
+(provided by the \ty{'sparse'} option
+to the \ty{fatrix2} call)
+that is very efficient.
+
+\elist
+
+
+\subsubsection
+{
+Support for arrays instead of columns
+}
+
+For an image reconstruction problem
+with the mask illustrated in \fref{fig,reg,mask},
+the size of \ty{A} should be
+$\nd \times 8$
+where \nd is the number of rows of \A.
+
+So if we have a $6 \times 5$ image \ty{x}
+and we would like to compute
+$\A \x$,
+conventionally
+one would need to do the following:
+\\
+\cent{
+\ty{y = A * x(mask)}
+}
+
+The statement \ty{x(mask)}
+extracts the relevant $\np = 8$ values
+out of the $6 \times 5$ array \ty{x}.
+
+Objects in the \fatrixx class
+often can spare the user the need to use \ty{x(mask)}
+if the object is defined properly.
+
+Suppose that in a tomographic image reconstruction problem
+corresponding to \fref{fig,reg,mask},
+the sinogram size is $9 \times 8$
+so $\nd = 72$.
+
+Then if \ty{A} is one of the predefined tomographic system models
+in \irt such as \ty{Gtomo2_wtmex},
+then the statement
+\\
+\cent{
+\ty{yc = A * x(mask)}
+}
+\\
+will produce \emph{column vector} \ty{yc}
+with $\nd = 72$ elements.
+
+On the other hand,
+the convenient syntax
+\\
+\cent{
+\ty{ya = A * x}
+}
+\\
+will produce a $9 \times 8$ sinogram \emph{array} output \ty{ya}.
+The two different outputs
+are related by
+\\
+\cent{
+\ty{yc = ya(:)}
+}
+
+In other words,
+if the input is a column vector (of length \np),
+then the output will also be a column vector,
+just like one would expect for an ordinary matrix.
+But if the input is an \emph{array},
+of the appropriate dimensions,
+then the output will also be an array.
+
+When defining a new \fatrixx object,
+there are several options
+that one can use to specify
+the appropriate dimensions.
+
+\blist
+\item
+\ty{imask}
+is the usual input mask.
+Default is \ty{true(idim)}
+\\
+This can also be called just \ty{mask}
+for backwards compatibility with \fatrix objects.
+
+\item
+\ty{idim}
+describes the input array dimensions.
+Default is \ty{sum(imask(:))},
+\ie, an ordinary column vector.
+
+\item
+\ty{omask}
+is a rarely used option.
+Default is \ty{true(odim)}
+
+\item
+\ty{odim}
+describes the output array dimensions.
+Default is \ty{sum(omask(:))},
+\ie, an ordinary column vector.
+\elist
+
+For a typical \fatrixx object,
+one will use only the \ty{imask} and \ty{odim} options.
+
+For the tomography example above,
+we would add the name-value pairs
+\ty{'odim', [9 8]}
+to the \ty{fatrix2} call.
+
+
+\subsubsection{Defining \fatrixx methods}
+
+The key methods for a \fatrixx object
+are the \ty{forw} and \ty{back} operations.
+For the obsolete \fatrix objects,
+these methods had to support columns and arrays
+and multiples thereof
+which made them fairly complicated.
+For the new \fatrixx objects,
+this complexity is handled by the object itself,
+and the user-defined methods are much simpler.
+
+\blist
+\item
+The \ty{forw} routine
+accepts a single input array
+of size \ty{idim}
+and returns a single output array
+of size \ty{odim}.
+
+\item
+Caution:
+nonzero values in the input array
+outside of \ty{imask}
+may cause unpredictable results.
+
+\item
+Conversely,
+the \ty{back} routine
+accepts a single input array
+of size \ty{odim}
+and returns a single output array
+of size \ty{idim}.
+
+\item
+Caution:
+the output array of the \ty{back} routine
+must be zero for any pixels
+outsize of the \ty{omask}.
+%
+Sometimes this will happen automatically
+because a computationally efficient
+\ty{back} routine
+will only evaluate the output
+within the \ty{omask},
+and will set the other values to zero.
+%
+But for some objects,
+like \ty{Gdft},
+the \ty{back} routine
+first evaluates the entire output
+(using \ty{ifftn})
+and then performs a \ty{.*} with \ty{omask}
+to comply with the requirement.
+
+\elist
+
+
+\subsubsection{The 1D dilemma}
+
+Unfortunately,
+\matlab does not really support 1D arrays.
+(\matlab's \ty{size} command always returns 
+at least a two-element vectors.)
+So for any application where
+\ty{odim} is 1D,
+such as MRI with irregular non-Cartesian k-space samples,
+\ty{A' * y}
+will produce a 1D array
+not a 2D array
+even if \ty{imask} is 2D,
+because \ty{y} will be ``1D'' in such cases.

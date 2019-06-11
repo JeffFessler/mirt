@@ -1,0 +1,12 @@
+code by will grissom that implements the clever nufft method
+from the following paper
+
+@a greengard:04:atn siam-rev 46 3 443-54 . 2004
+Leslie Greengard  June-Yub Lee
+Accelerating the nonuniform fast Fourier transform
+@u doi 10.1137/S003614450343200X
+
+if you want to run this on a PC, you will need to use the matlab "mex"
+command to compile the back_grid.c and forw_grid.c routines into mex
+executables for the PC.  i don't know the specifics of how to do this
+on a PC but "help mex" should explain.

@@ -1,0 +1,62 @@
+# Makefile-oct, for octave
+# This makefile builds the .mex* files needed for NUFFT interpolation.
+
+include ../../mex/oct-setup.sh # sets extra CFLAGS
+suf = mex
+
+# where to install the compiled mex files:
+# for mac:
+dir = ../../mex/oct/${Arch}/
+
+mex = mkoctfile --mex
+mexo = $(mex) -o
+mexa = ls
+
+octh = $(octincdir)/mex.h
+doth = def,table.h $(octh)
+
+goal:	\
+	$(dir)interp1_table_mex.$(suf) \
+	$(dir)interp2_table_mex.$(suf) \
+	$(dir)interp3_table_mex.$(suf) \
+	$(dir)interp1_table_adj_mex.$(suf) \
+	$(dir)interp2_table_adj_mex.$(suf) \
+	$(dir)interp3_table_adj_mex.$(suf)
+	@echo working on $(suf)
+	rm *.o
+
+
+i1c = interp1_table1_for.c interp1_table_mex.c
+$(dir)interp1_table_mex.$(suf):	$(i1c) $(doth) def,table1.h
+	$(mexo) $@ $(i1c)
+	$(mexa) $@
+
+i2c = interp2_table1_for.c interp2_table_mex.c
+$(dir)interp2_table_mex.$(suf):	$(i2c) $(doth) def,table2.h
+	$(mexo) $@ $(i2c)
+	$(mexa) $@
+
+i3c = interp3_table1_for.c interp3_table_mex.c
+$(dir)interp3_table_mex.$(suf):	$(i3c) $(doth) def,table3.h
+	$(mexo) $@ $(i3c)
+	$(mexa) $@
+
+
+a1c = interp1_table1_adj.c interp1_table_adj_mex.c
+$(dir)interp1_table_adj_mex.$(suf):	$(a1c) $(doth) def,table1.h
+	$(mexo) $@ $(a1c)
+	$(mexa) $@
+
+a2c = interp2_table1_adj.c interp2_table_adj_mex.c
+$(dir)interp2_table_adj_mex.$(suf):	$(a2c) $(doth) def,table2.h
+	$(mexo) $@ $(a2c)
+	$(mexa) $@
+
+a3c = interp3_table1_adj.c interp3_table_adj_mex.c
+$(dir)interp3_table_adj_mex.$(suf):	$(a3c) $(doth) def,table3.h
+	$(mexo) $@ $(a3c)
+	$(mexa) $@
+
+
+reset:
+	/bin/rm -i $(dir)interp*table*mex.$(suf)

@@ -1,0 +1,13 @@
+this directory has various data files used in the examples,
+including George Zubal's phantom from http://noodle.med.yale.edu/zubal/
+
+and some slices of the NCAT phantom from UNC (or maybe now JHU)
+ncat,256,slice,140,ct,dens.fld
+see:
+@a segars:02:sot ieee-t-ns 49 3 675-679 jun 2002
+W P Segars  B M W Tsui
+Study of the efficacy of respiratory gating in myocardial SPECT using the new 4-D NCAT phantom
+
+please cite paul segar's paper(s) if you use that phantom image
+
+see subdirectories too

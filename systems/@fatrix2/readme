@@ -1,0 +1,73 @@
+caution: any routine that uses .handle_forw or .handle_back
+must also consider .scale
+
+done:
+
+abs.m
+ctranspose.m
+display.m
+end.m
+free.m
+full.m
+horzcat.m
+isfield.m
+minmax.m
+minus.m
+plus.m
+power.m
+size.m
+subsasgn.m
+subsref.m
+sum.m
+uminus.m
+vertcat.m
+
+partially done:
+
+fatrix2.m
+mtimes.m
+
+
+todo:
+cat.m
+
+Gblock.m
+blockify_data.m
+build_gram.m
+
+private/do_cascade.m
+private/fatrix2_block_sum.m
+
+removed (see @Fatrix if needed):
+block_setup.m
+
+
+dimensions for A * x in "vector" mode:
+
+[dim(2) (L)]
+reshape in mtimes
+[dim(2) *L]
+iembed
+
+[idim *L]
+forw (assuming 'does_many') - this is what the user routine must consider
+[odim *L]
+
+reshape to [prod(odim) *L] in mtimes
+oselect
+[dim(1) *L]
+reshape in mtimes
+[dim(1) (L)]
+
+usually iembed(x) is just embed(x, mask)
+usually oselect(y) is just y
+
+A' * y is the same execpt we swap
+dim -> [dim(2) dim(1)]
+iembed <-> oembed
+forw <-> back
+iselect <-> oselect
+idim <-> odim
+
+usually oembed(y) is just reshape(y, [odim *L])
+usually iselect(x) is just x(mask(:),:)

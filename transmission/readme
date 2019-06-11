@@ -1,0 +1,14 @@
+
+This directory contains transmission tomography reconstruction algorithms,
+mostly for monoenergetic sources, e.g., PET and SPECT transmission scans.
+The routines may also be useful for X-ray CT but be aware that CT
+does not satisfy exactly the Poisson statistical model assumed here.
+
+The ordered-subsets (OS) algorithms are not monotonic (with nsubset > 1).
+A possible modification would be to use the fast precomputed denominator
+and then check the cost function each iteration and if the cost function
+goes the wrong direction then backtrack to 1-subset case with optimal
+curvatures.  But for OS methods, checking the cost function is expensive
+since we would have to perform reprojection.
+
+The recommended routine here is: tpl_os_sps.m (see tpl_os_sps_test.m)

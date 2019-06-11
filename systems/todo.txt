@@ -1,0 +1,54 @@
+
+converted to fatrix2:
+
+Gblur.m
+Gcone.m
+Gdelaysum1.m
+Gdft.m
+Gdiag.m
+Gdown.m
+Gdsft.m
+Gdsft_gram.m
+Gmatrix.m
+Gmri.m
+Gmri_gram.m
+Gnufft.m
+Gnufft_gram.m
+Gsparse.m
+Gtomo2_strip.m
+Gtomo2_table.m
+Gtomo_nufft.m
+Gtranslate.m (todo: bspline and interpn adjoints not matched)
+
+
+todo:
+
+Gtomo2_dscmex.m
+Gtomo2_wtmex.m % todo: block version
+Gtomo3.m
+
+unfinished anyway:
+
+Gtomo_blob.m
+
+
+sparse matrix not *atrix:
+
+Glinear.m
+Gnearest.m
+
+
+indifferent:
+
+Gtomo_nufft_new.m
+Gtomosyn.m
+
+
+long:
+Gcone test (211.33)
+Gtomo2_wtmex_test (55.90)
+Gmri test (132.01)
+
+
+fails:
+

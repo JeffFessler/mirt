@@ -1,0 +1,74 @@
+SPSPpulseset.mat is a Matlab workspace that contains SPSP pulses computed with
+different "alpha" values based on our publication "Spectral-spatial pulse
+design for through-plane phase precompensatory slice selection in T2*-weighted
+functional MRI" in Magnetic Resonance in Medicine, 2009.  It includes three
+kinds of variables:
+
+
+1. gz		:real-value z gradient waveform (unit: Gauss/cm (g/cm))
+2. b		:complex-value RF waveform (unit: g)
+3. mresult	:complex-value Bloch simulation result (normalized)
+
+The number(s) in each b or gz variable name indicate the "alpha" value (in
+units of 1E-4 g/cm/Hz) for which the RF and z gradient waveforms were
+computed, and each of the (b,gz) pairs leads to Bloch simulation result in
+variable mresult with the same number(s). Please refer to
+centralscript_example.m for source code.  In the following we provide
+parameters with which the waveforms were computed and the Bloch simulation was
+performed:
+
+
+z gradient (gz)
+~~~~~~~~~~~~~~~
+sampling period = 4E-6 s
+max gradient amplitude = 4 g/cm
+max gradient slew rate = 15000 g/cm/s
+oscillation period (T, in s) and number of trapezoids (Ntraps):
+
+%   alpha=-1:   T = 0.0025;   Ntraps = 6;
+%   alpha=-1.25:T = 0.0025;   Ntraps = 6;
+%   alpha=-1.5: T = 0.0025;   Ntraps = 6;
+%   alpha=-1.75:T = 0.0025;   Ntraps = 7;
+%   alpha=-2:   T = 0.003;    Ntraps = 7;
+%   alpha=-2.25:T = 0.003;    Ntraps = 7;
+%   alpha=-2.5: T = 0.003;    Ntraps = 8;
+%   alpha=-2.75:T = 0.003;    Ntraps = 8;
+%   alpha=-3:   T = 0.003;    Ntraps = 9;
+%   alpha=-3.25:T = 0.003;    Ntraps = 10;
+%   alpha=-3.5: T = 0.003;    Ntraps = 10;
+                                
+RF pulse (b)
+~~~~~~~~~~~~
+sampling period = 4E-6 s
+slice thickness = 0.5 cm
+flip angle = 30 degrees
+slice profile = 'rectangular'
+desired pattern specifications:
+	range in z (space) = 20 cm
+	number of samples in z = 1200
+	range in f (frequency) = 500 Hz
+	number of samples in f = 300
+zshift = -0.25 m
+alpha = indicated in variable name, in units of 1E-4 g/cm/Hz
+TE = 30 ms
+conjugate gradient:
+	number of iterations = 100
+	beta (Tikhonov regularization) = 0
+
+Bloch simulation (mresult)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+range in z (space) = 3 cm
+number of samples in z = 200
+range in f (frequency) = 500 Hz
+number of samples in f = 200
+
+
+Thank you for your interest in our spectral-spatial pulses.
+
+Please contact Chun-yu Yip (chunyuy@nmr.mgh.harvard.edu) if you have
+questions or problems.  Enjoy!
+
+
+
+
+

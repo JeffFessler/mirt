@@ -1,0 +1,23 @@
+This directory contains code for MRI RF pulse design
+in both the small-tip and large-tip regimes, for
+parallel transmit cases.
+This code was developed by Will Grissom initially while
+he was at UM, and then continued when he was at Stanford.
+
+The algorithms are based on this paper:
+
+@a grissom:09:flt ieee-t-mi 28 10 1548-59 oct 2009
+William A Grissom   Dan Xu  Adam B Kerr  J A Fessler  Douglas C Noll
+Fast large-tip-angle multidimensional and parallel RF pulse design in MRI
+@u doi 10.1109/TMI.2009.2020064
+
+To see how the code works, run ptx_test.m
+
+From a 2009-03-18 email from Will Grissom:
+
+Gocrf.m: The fast optimal control object.
+	Contains everything you need, including a spin-domain Bloch simulator.
+exckspace.mat: Example accelerated spiral and EP trajectories
+fdtdsens.mat: Steve Wright's simulated transmit sensitivities.
+	I got his permission to include these here.
+ptx_test.m: The script that puts it all together!

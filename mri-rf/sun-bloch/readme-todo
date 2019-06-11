@@ -1,0 +1,4 @@
+
+blochCim.c does not check the type of the variables passed in
+(double vs float)
+this needs to be added!

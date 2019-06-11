@@ -1,0 +1,7 @@
+This directory contains files related to RF pulse design for MRI.
+
+sun-bloch/
+Bloch simulator for RF pulse design by Hao Sun 2012
+
+yip-spsp
+Spectral-spatial pulse design by Chun-Yu Yip

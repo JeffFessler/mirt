@@ -1,0 +1,21 @@
+#!/bin/csh -e
+#	test-fbp
+#	test FBP reconstruction of 2D PET transmission data using ASPIRE
+
+#	i fbp2t dsc image.out sino.out- yi bi- bi_factor ri- ri_factor \
+#		[system.dsc] [window] [slices,frames] [fix_negatives]
+
+set dsc = t.dsc
+
+#set fwhm = 1.2	# cm
+#set fbpwin = gauss,1,$fwhm,1
+set fbpwin = -
+
+#op point t0 128 128 1
+op ellipse t0 128 128 0 0 40 40 0 1 3
+i proj2 t1 t0 $dsc
+#i fbp dsc t3 t1 $dsc $fbpwin
+#i fbp2e dsc t4 - t1 - 1 - 0 $dsc $fbpwin
+#op nonlin exp t2 t1 -1 1
+i fbp2t dsc t5 - t2 - 1 - 0 $dsc $fbpwin
+op range t0 t5

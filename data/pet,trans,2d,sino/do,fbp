@@ -1,0 +1,30 @@
+#!/bin/csh -e
+#	do,fbp
+#	FBP reconstruction of 2D PET transmission data using ASPIRE
+
+#	i fbp2t dsc image.out sino.out- yi bi- bi_factor ri- ri_factor \
+#		[system.dsc] [window] [slices,frames] [fix_negatives]
+
+#	convert to matlab for simplicity of loading for others!
+if 0 then
+	op float phan,trans.mat phan,trans.fld
+	op float phan,blank.mat phan,blank.fld
+exit
+endif
+
+if 1 then
+	set yi = phan,trans.fld 
+	set bi = phan,blank.fld 
+	set fbp = phan,fbp.fld 
+else	# for testing
+	set yi = y.mat
+	set bi = -
+	set fbp = x.mat
+endif
+
+set dsc = ecat921.dsc
+set fwhm = 1.2	# cm
+set fbpwin = gauss,1,$fwhm,1
+set fbpwin = -
+
+i fbp2t dsc $fbp - $yi $bi 1 - 0 $dsc $fbpwin

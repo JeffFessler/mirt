@@ -1,0 +1,30 @@
+
+Tue Jun 12 14:25:59 EDT 2001
+this directory has MR data from Doug Noll
+for testing PWLS type of phase fitting.
+
+In phfit.mat there is a complex image (variable: m1)
+where the phase represents the magnetic field inhomogeneity and the
+magnitude is just the image.
+
+The echo-time difference associated with this scan is 2ms.
+
+I don't remember what the file phfile.mat is.
+
+For the benefit of those who cannot read .mat files,
+I also include the big endian 64x64 float files
+	phfit_im.raw
+	phfit_re.raw
+and the corresponding .fld header files (read with fld_read.m):
+	phfit_im.fld
+	phfit_re.fld
+
+These phase data were used in my 2005 T-SP paper on Toeplitz based MR
+image reconstruction.
+
+
+Sat Jan 12 22:55:30 EST 2008
+for amanda funai's field map estimation paper
+load biggerbrain
+fld_write('mag128.fld', single(bigger_mag))
+fld_write('fieldmap128.fld', single(bigger_w/2/pi))

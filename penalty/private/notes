@@ -1,0 +1,29 @@
+
+with zxy option, Rz.cgrad calls:
+
+Reg1_setup_zxy.m : Reg1_zxy_cgrad()
+Reg1_setup_zxy.m : Reg1_zxy_cgrad_denom()
+ 	penalty_mex('cgrad,denom,zxy')
+
+penalty_mex.c : reg_cgrad_denom_zxy_mex()
+
+reg_cgrad_denom_zxy() with "reg_end_replicate"
+
+
+Rx.cgrad calls:
+
+Reg1.m : Reg1_com_cgrad()
+	arg.cgrad1_fun = @Reg1_mex_cgrad1
+Reg1.m : @Reg1_mex_cgrad1()
+	penalty_mex('cgrad,offset')
+
+penalty_mex.c : penalty_cdp_offset_mex()
+reg,grad.c : penalty_cgrad_offset()
+
+
+hct2/reg.c : hct_reg_grad()
+if zxy:
+reg_cgrad_zxy()
+
+otherwise
+penalty_cgrad_offset()

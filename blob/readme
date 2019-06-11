@@ -1,0 +1,11 @@
+These m-files are useful for creating the blurred blob footprints
+that are needed for SPECT reconstruction with depth-dependent detector
+response (and nonuniform attenuation compensation) using ASPIRE with
+the "3s" system model (see "i proj3" or the ASPIRE 3D user's guide).
+
+Type "help blob_li_blur" (or look at blob_li_blur.m) for more details.
+
+See blob_example.csh for an example recon script.  That script was used
+for the June 2004 PMB paper by Yendiki and Fessler on 3D SPECT using blobs.
+
+Email questions to nastazia@umich.edu 

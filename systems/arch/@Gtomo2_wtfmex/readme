@@ -1,0 +1,7 @@
+# links needed for this object
+ln -s ../Gtomo2/ctranspose.m .
+ln -s ../Gtomo2/display.m .
+ln -s ../Gtomo2/power.m .
+ln -s ../Gtomo2/size.m .
+ln -s ../Gtomo2/subsref.m .
+ln -s ../Gtomo2/sum.m .

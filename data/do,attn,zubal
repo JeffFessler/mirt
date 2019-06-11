@@ -1,0 +1,32 @@
+#/bin/csh -e
+#	do,attn,zubal
+#	extract attenuation map from zubal phantom
+#	useful for simulations of transmission scans
+
+if ($#argv > 0) then
+	set out = $1
+else
+	set out = t2
+endif
+
+alias o 'op -chat 0'
+
+#
+#	attenuation map
+#
+if 1 then
+	set dir = /n/ir4/z/fessler/phantom/zubal
+	set slice = "94 102"
+	set slice = "100 100"
+	o slice t0 $dir/zubal1.fld byte $slice
+	o index t1 t0 - \
+		0 2 0 3 0  3 3 0 0 2 \
+		1 2 0 0 0  0 0 0 0 0 \
+		0 0 0 2 0  0 3 0 0 0
+	o conv $out t1 byte
+	if $out == t2 then
+		j $out
+	endif
+	rm -f t0 t1
+#	op index phantom,attn.fld t2 - 0 0.002 0.0096 0.0120
+endif

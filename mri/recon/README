@@ -1,0 +1,34 @@
+Fast Iterative, Field-Corrected MR Reconstruction Code
+to accompany paper:
+Sutton, Fessler, Noll: Fast, Iterative, Field-Corrected 
+Image Reconstruction for MRI.  Submitted to IEEE Trans. 
+Med. Im. June 14, 2002.
+
+simul_test.m - Sample script for simulation object and field map
+that does slow and fast iterative recons.
+
+/NUFFT - Non-uniform Fast Fourier Transform code based on paper
+Fessler and Sutton: Nonuniform fast fourier transforms using 
+min-max interpolation.  Accepted for publication, IEEE Trans. 
+Sig. Proc., 2002.
+
+qpwls_pcg - Quadratic Penalized Weighted Least Squares script.
+
+@fast_mr - Fast MR object with field map using NUFFT and time segmentation. 
+
+@mridft - Slow MR object using mex file to perform DFT.
+
+ktraj.mat - kspace trajectory for spiral.
+
+ww.mat - density compensation weightings generated using voronoi areas.
+
+
+note from brad:
+
+For the rect basis functions for object and piecewise linear for field map,
+the code I use to do this is in ~bpsutton/Matlab/@mr_wt_z/, use like fast_mr.
+This object calls a mex file in ~bpsutton/Cfiles/mvsswtzp.c
+Replace ~bpsutton with /n/ir5/u/bpsutton on eecs machines.
+Instead of doing a sinc(kx)sinc(ky) for the rect basis functions, it does a
+sinc(kx + Xt)sinc(ky+Yt) where X and Y are the slopes in x and y.
+

@@ -1,0 +1,103 @@
+% feldkamp_example.m
+% example of how to use feldkamp.m for cone-beam CT reconstruction
+% Copyright 2004-8-28, Nicole Caparanis, Patty Laskowsky, Taka Masuda,
+% and Jeff Fessler, The University of Michigan
+
+if ~isvar('proj'), disp 'do proj'
+	if ~isvar('down'), down = 4; end
+	ns = 256/down;
+	nt = 240/down;
+	if ~isvar('na')
+		na = 288/down;
+	end
+	ds = 1024/ns;
+	dt = ds;
+	dis_src_det = 949.075;
+	dis_iso_det = 408.075;
+	dis_src_iso = dis_src_det - dis_iso_det;
+	dis_foc_src = inf; % flat detector panel
+%	dis_foc_src = 0; % arc detector
+	if ~isvar('offset_st')
+		offset_st = [0.25 0.0]; % quarter detector
+	end
+
+	ss = ([-(ns-1)/2:(ns-1)/2]' - offset_st(1)) * ds;
+	tt = ([-(nt-1)/2:(nt-1)/2]' - offset_st(2)) * dt;
+	printf('rmax=%g', dis_src_iso*sin(atan(max(abs(ss)) / dis_src_det)))
+
+	ell = [ ...
+		[20 10 10	150 150 180	0 0.01]; % 30cm diam "cylinder"
+		[80 10 10	50 50 30	0 0.01]; % bone-like inserts
+		[-10 10 75	40 40 40	0 0.01];
+		[-10 70 10	30 30 30	0 0.01];
+	];
+
+	proj = ellipsoid_proj(ell, ss, tt, na, ...
+		dis_src_iso, dis_iso_det, dis_foc_src);
+
+	nx = 256/down;
+	ny = 240/down;
+	nz = 200/down;
+	dx = 2*down; dy = dx; dz = dx; % 2mm voxels * down-sampling
+	xtrue = ellipsoids(nx, ny, nz, ell, dx, dy, dz);
+
+	im clf, pl=330;
+	im(pl+1, xtrue, 'x true'), cbar
+	im(pl+4, proj, 'true projections'), cbar
+prompt
+end
+
+% noisy data and estimated line integrals
+if ~isvar('li_hat'), disp 'li_hat'
+	% noisy data, if blank scan value has been specified.
+	if isvar('bi') & isvar('ri')
+		yb = bi .* exp(-proj) + ri;
+		yi = poisson(yb);
+		li_hat = -log((yi-ri) ./ bi);
+		li_hat(yi-ri <= 0) = 0; % fix: need something better here...
+	else
+		li_hat = proj; % noiseless
+	end
+end
+
+% FDK cone-beam reconstruction
+if ~isvar('mask2')
+	mask2 = logical(ones([nx ny]));
+	mask2(end) = 0; % trick: test it
+end
+
+if ~isvar('xfdk'), disp 'fdk'
+	% cone-beam system geometry, generalized from fan-beam geometry.
+	% see ASPIRE users guide under tech. reports on web page for details.
+	xfdk = feldkamp(li_hat, mask2, ...
+		'use_mex', 1, ...
+		'nz', nz, ...
+		'orbit', 360, 'orbit_start', 0, ...
+		'dx', dx, 'ds', ds, ...
+		'dis_src_det', dis_src_det, ...
+		'dis_iso_det', dis_iso_det, ...
+		'dis_foc_src', dis_foc_src, ...
+		'offset_st', offset_st);
+end
+
+if 1 & ~isempty(xfdk)
+	% show results (off-center slices worse than central slice)
+	im(pl+2, xfdk, 'FDK recon'), cbar
+	im(pl+3, xfdk - xtrue, 'FDK error'), cbar
+
+	subplot(pl+5)
+	ix = 1:nx; iy = ceil(ny/2); iz = ceil(nz/2);
+	plot(ix, xtrue(ix,iy,iz), '-', ix, xfdk(ix,iy,iz), '--')
+	axis([1 nx -0.003 0.023])
+%	legend('true', 'FDK recon', 'location', 'southoutside')
+	title 'middle slice', xlabel 'ix'
+
+	subplot(pl+6)
+	iz=1:nz; ix = 1+floor(nx/2); iy = 1+floor(ny/2);
+	plot(iz, squeeze(xtrue(ix,iy,iz)), '-', iz, squeeze(xfdk(ix,iy,iz)), '--')
+	axis([1 nz -0.003 0.023])
+%	legend('true', 'FDK recon', 2), xlabel 'iz'
+	title(sprintf('profile at (ix,iy)=(%g,%g)', ix,iy))
+	xlabel iz
+prompt
+end

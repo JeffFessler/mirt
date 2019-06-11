@@ -1,0 +1,8 @@
+
+2010-10-22 from kim khalsa
+
+This sense_recon.m code works on impulse response for made up smaps (peak = 1), but not for the real ones (peak = 10, but in correct location).
+
+See:
+sense_recon('test2');
+

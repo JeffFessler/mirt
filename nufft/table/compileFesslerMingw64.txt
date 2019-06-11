@@ -1,0 +1,98 @@
+::1) using MINGW64 to avoid Visual Studio dependency hell on msvcr90.dll, which appears as "Invalid MEX file" errors in Matlab.
+::2) compile as C++ to avoid limitations of C90 and lack of C99 compiler support
+::3) disambiguate "floor" function by replacing "2" with "2." to make the whole expression evaluate as a double
+::4) fixed missing casts from (void*) to (double*)
+
+:: --export-all-symbols avoids the need for a separate .DEF file just for mexFunction
+
+@echo off
+
+set GCC=d:\mingw64\bin\g++
+set MATLAB=C:\Program Files\MATLAB\R2012b
+set MATEXT=mexw64
+
+:: compiling options
+set GCC_OPT1=-m64 -shared -I"%MATLAB%\extern\include" -DMATLAB_MEX_FILE -Wl,--export-all-symbols 
+set GCC_OPT1a=-I"irt\mex\src\def" -DMmex -DIs_pc
+:: linking options
+set GCC_OPT2=-L"%MATLAB%\bin\win64" -lmex -lmx -leng -lmat
+
+:: table gridding mex files
+
+set INDIR=irt\nufft\table
+set OUTDIR=irt\mex\v7
+set DEFDIR=irt\mex\src\def
+
+::goto :work
+
+%GCC% %GCC_OPT1% -o %OUTDIR%\interp1_table_mex.%MATEXT% %INDIR%\interp1_table_mex.c %INDIR%\interp1_table1_for.c  %GCC_OPT2%
+%GCC% %GCC_OPT1% -o %OUTDIR%\interp1_table_adj_mex.%MATEXT% %INDIR%\interp1_table_adj_mex.c %INDIR%\interp1_table1_adj.c  %GCC_OPT2%
+
+%GCC% %GCC_OPT1% -o %OUTDIR%\interp2_table_mex.%MATEXT% %INDIR%\interp2_table_mex.c %INDIR%\interp2_table1_for.c  %GCC_OPT2%
+%GCC% %GCC_OPT1% -o %OUTDIR%\interp2_table_adj_mex.%MATEXT% %INDIR%\interp2_table_adj_mex.c %INDIR%\interp2_table1_adj.c  %GCC_OPT2%
+
+%GCC% %GCC_OPT1% -o %OUTDIR%\interp3_table_mex.%MATEXT% %INDIR%\interp3_table_mex.c %INDIR%\interp3_table1_for.c  %GCC_OPT2%
+%GCC% %GCC_OPT1% -o %OUTDIR%\interp3_table_adj_mex.%MATEXT% %INDIR%\interp3_table_adj_mex.c %INDIR%\interp3_table1_adj.c  %GCC_OPT2%
+
+%GCC% %GCC_OPT1% %GCC_OPT1a% -o %OUTDIR%\interp4_table_mex.%MATEXT% %INDIR%\interp4_table_mex.c %INDIR%\interp4_table1_for.c  %GCC_OPT2%
+%GCC% %GCC_OPT1% %GCC_OPT1a% -o %OUTDIR%\interp4_table_adj_mex.%MATEXT% %INDIR%\interp4_table_adj_mex.c %INDIR%\interp4_table1_adj.c  %GCC_OPT2%
+
+
+:: mri exponential evaluation
+
+set INDIR=irt\mri
+
+%GCC% %GCC_OPT1% -o %OUTDIR%\exp_xform_mex.%MATEXT% %INDIR%\exp_xform_mex.c  %GCC_OPT2%
+%GCC% %GCC_OPT1% -o %OUTDIR%\mri_exp_mult_mex.%MATEXT% %INDIR%\mri_exp_mult_mex.c  %GCC_OPT2%
+
+
+:: penalty files 
+set INDIR=irt\mex\src\penalty
+
+:: more include files
+set GCC_OPT1a=-I"irt\mex\src\def" -DMmex -DIs_pc
+
+%GCC% %GCC_OPT1% %GCC_OPT1a% -o %OUTDIR%\penalty_mex.%MATEXT% %INDIR%\penalty_mex.c %DEFDIR%\mexarg.c %INDIR%\penalty,diff.c  %GCC_OPT2%
+
+
+
+:: misc files 
+set INDIR=irt\mex\src\misc
+
+:: -fpermissive is required for the style of calloc/malloc used in this file.
+set GCC_OPT1a=-I"irt\mex\src\def" -DMmex -DIs_pc -DNeed_delaysum1_mex_gateway -fpermissive
+
+:: additional linking with OMP for threading support
+set GCC_OPT2a=-lgomp
+
+%GCC% %GCC_OPT1% %GCC_OPT1a% -o %OUTDIR%\delaysum1_mex.%MATEXT% %INDIR%\delaysum1_mex.c %DEFDIR%\mexarg.c %DEFDIR%\jf,thread1.c  %GCC_OPT2%   %GCC_OPT2a%  
+
+
+:: fdk-orig
+set INDIR=irt\mex\src\fdk\fdk-orig
+
+:: -fpermissive is required for the style of calloc/malloc used in this file.
+set GCC_OPT1a=-I"irt\mex\src\def" -DMmex -DIs_pc -DUse_thread -DUse_fdk_mex -fpermissive
+
+:: additional linking with winpthread for POSIX threading support
+set GCC_OPT2a=-lwinpthread -lgomp
+
+%GCC% %GCC_OPT1% %GCC_OPT1a% -o %OUTDIR%\fdk_mex.%MATEXT% %INDIR%\*.c %DEFDIR%\mexarg.c %DEFDIR%\jf,thread1.c %DEFDIR%\jf,time.c  %GCC_OPT2%   %GCC_OPT2a%  
+
+        
+
+
+:: greengard gaussian nufft
+set INDIR=irt\nufft\greengard
+
+%GCC% %GCC_OPT1%  -o %OUTDIR%\back_grid.%MATEXT% %INDIR%\back_grid.c  %GCC_OPT2% 
+%GCC% %GCC_OPT1%  -o %OUTDIR%\back_grid_pow.%MATEXT% %INDIR%\back_grid_pow.c  %GCC_OPT2% 
+%GCC% %GCC_OPT1%  -o %OUTDIR%\forw_grid.%MATEXT% %INDIR%\forw_grid.c  %GCC_OPT2% 
+%GCC% %GCC_OPT1%  -o %OUTDIR%\forw_grid_pow.%MATEXT% %INDIR%\forw_grid_pow.c  %GCC_OPT2% 
+
+
+:work
+goto :end
+
+
+:end

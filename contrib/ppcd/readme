@@ -1,0 +1,12 @@
+
+These m-files are related to a claim we make in a recently submitted paper
+that PPCD converges faster than GCD.
+Although it is difficulty to show that claim analytically,
+the m-files in this directory give empirical evidence of that claim.
+
+Note: you must be patient when executing this code!
+
+Note to me:
+The m-files for testing are in /n/ir4/x/ssotthiv/blockCD/mpi/2d/.
+16x16 GCD and 16-PPCD take more time to run.
+Comparing only 4x4 GCD, 4-PPCD, and CD takes about 10 mins.

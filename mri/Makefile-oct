@@ -1,0 +1,59 @@
+# mri/Makefile
+
+# compile MRI-related .mex* files
+
+include $(HOME)/l/src/make/Makedef.$(Arch)
+include $(HOME)/l/src/make/Makedef.$(Arch)
+
+include ../mex/oct-setup.sh # sets extra CFLAGS
+suf = mex
+
+doth = $(octincdir)/mex.h
+
+# where to install the compiled mex files:
+# for mac:
+dir = ../mex/oct/${Arch}
+mex = mkoctfile --mex
+
+
+#suf_i686 = mexglx
+#suf_ppc = mexmac
+#suf_ = suf_i686; # default is linux
+#suf = $(suf_$(Arch))
+#suf = mex$(MatlabSuf)
+suf = mex
+# from Makedef.*
+
+#dir = ../mex/v7
+#mex = $(MatlabCom)
+#mex = mex
+
+goal1 = $(dir)/mri_exp_mult_mex.$(suf)
+goal2 = $(dir)/exp_xform_mex.$(suf)
+
+goal: \
+	$(goal1) $(goal2)
+
+aflag_x86_64 = -fPIC
+aflag_mi64 = -arch x86_64
+aflag = $(aflag_$(Arch))
+
+CFLAGS = -D_GNU_SOURCE \
+	-std=c99 -Wall -Wshadow -Wpointer-arith -W -Werror $(aflag)
+
+#com = $(mex) CFLAGS='$(CFLAGS) -fexceptions'
+com = $(mex)
+
+$(goal1):	mri_exp_mult_mex.c mri_exp_mult_template.c $(doth)
+	$(com) mri_exp_mult_mex.c
+	mv mri_exp_mult_mex.$(suf) $@
+	chmod 755 $@
+
+$(goal2):	exp_xform_mex.c exp_xform_template.c $(doth)
+	$(com) exp_xform_mex.c
+	mv exp_xform_mex.$(suf) $@
+	chmod 755 $@
+
+reset:
+	@echo suf = $(suf)
+	rm -i $(goal1) $(goal2)

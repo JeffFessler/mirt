@@ -1,0 +1,6 @@
+this directory contains reconstruction algorithms
+that work for general image-reconstruction type cost functions.
+
+and optimization methods that work on general cost functions.
+
+and some iterative algorithms like ART that are not based on cost functions.

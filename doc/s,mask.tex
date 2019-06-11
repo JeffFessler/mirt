@@ -1,0 +1,80 @@
+% s,mask
+
+\subsection{Masking}
+
+One subtle point is that we usually display images
+as a rectangular grid of $\ty{nx} \times \ty{ny}$ pixels,
+but usually the iterative algorithms
+work on column vectors.
+Often only a subset of the pixels are updated,
+as illustrated in
+\fref{fig,reg,mask}.
+A logical array called the \ty{mask}
+specifies which pixels are to be updated.
+The function call
+\ty{x_col = x_array(mask(:))}
+extracts the relevant pixel elements
+``within the mask''
+into a column vector.
+Conversely, the call
+\ty{x_array = embed(x_col, mask)}
+puts the elements of the column vector
+back into the appropriate places
+in the array.
+
+\newcommand{\fdir}{book/c-reg/fig}
+%\infig{fig,reg,mask}{0.4}
+
+\begin{figure}
+\cent{
+\input{\fdir/fig,reg,mask,pic,6,5}
+}
+\caption{
+A $6 \times 5$
+image lattice with approximately circular FOV. 
+Only the $\np = 8$ pixels with indices shown are estimated.
+}
+\label{fig,reg,mask}
+\end{figure}
+
+The following code illustrates these ideas.
+
+\begin{verbatim}
+mask = false(6,5); mask([9 10 14:17 21 22]) = true;
+xc = [10:5:45]';
+xa = embed(xc, mask)
+\end{verbatim}
+
+\noindent
+Here is the resulting output.
+
+\begin{verbatim}
+0     0     0     0     0
+0     0    20     0     0
+0    10    25    40     0
+0    15    30    45     0
+0     0    35     0     0
+0     0     0     0     0
+\end{verbatim}
+
+\noindent
+Conversely,
+typing the following
+produces a vector that is the same as the original \ty{xc} vector.
+\begin{verbatim}
+xa(mask)
+\end{verbatim}
+
+When first working on image reconstruction problems,
+it is quite tempting to disregard
+using any such mask
+and try to reconstruct
+the ``full'' image
+because it seems simpler.
+However,
+estimating more parameters than are needed
+to describe the object
+usually requires more computation time
+and often degrades the conditioning
+of the problem
+leading to slower convergence.

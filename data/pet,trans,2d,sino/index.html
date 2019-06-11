@@ -1,0 +1,90 @@
+<html>
+<head>
+<title>Fessler, Jeffrey A.: PET Data</title>
+</head>
+
+<body>
+
+<center>
+<h1>PET Data: Try your favorite algorithm!</h1>
+</center>
+
+This page provides free access to some PET sinogram data.
+You can use this data in any way you wish, no strings attached.
+If you publish results using this data
+(on paper, electronically, or whatever),
+it would be appropriate to acknowledge its source.
+
+<hr>
+<center>
+<h2>PET Thorax Phantom, Transmission Scan, CTI ECAT EXACT System</h2>
+
+<img src="blank-prompt.jpg">
+<br>
+The left image is the "blank" scan,
+and the right image is the transmission scan.
+</center>
+<br>
+For FBP reconstruction,
+take the ratio of transmission over the blank scan,
+smooth the resulting sinogram radially,
+take the negative logarithm,
+apply the ramp filter,
+and then backproject.
+Here is what you should get:
+<center>
+<img src="phan,fbp.jpg">
+</center>
+All this is easily done using the
+<a href="../../aspire"> ASPIRE software package.</a>
+
+<p>
+For better results,
+I recommend the
+<a href="http://dx.doi.org/10.1109/42.563662">
+grouped-coordinate ascent algorithm</a>
+(IEEE T-MI Apr. 1997)
+maximizing a penalized-likelihood objective function,
+also available in ASPIRE.
+Here is what you get:
+<center>
+<img src="phan,pl.jpg">
+</center>
+
+<p>
+To access the raw data,
+<a href="phan,blank.raw"> click here for the blank data</a>
+and
+<a href="phan,trans.raw"> click here for the transmission data.</a>
+<br>
+Probably you want to shift-click.
+
+<p>
+Blank data:
+<ul>
+<li> 4 byte IEEE floating point values in SUN byte order
+<li> 160 radial samples (varies fastest) by 192 angular samples (over 180 degrees)
+<li> range of values: 30.76 to 98.28, sum is 1.75756e+06
+</ul>
+
+Transmission data:
+<ul>
+<li> 2 byte signed integers in SUN byte order.
+<li> 160 radial samples (varies fastest) by 192 angular samples (over 180 degree
+<li> range of values: 0 to 130, sum is 920653
+</ul>
+
+The attenuation coefficient of water at 511 keV is about 0.1 / cm,
+and the phantom is mostly water except for the teflon spine
+and the styrofoam lungs.
+
+<hr>
+This data came from an Siemens/CTI ECAT/EXACT PET scanner.
+Details about this scanner are described in:
+"Performance evaluation of a new generation positron scanner ECAT EXACT,"
+K Wienhard  L Eriksson  S Grootoonk  M Casey  U Pietrzyk  W D Heiss,
+JCAT, 16(5):804-13, Sep. 1992.
+(J. Comput. Aid. Tomo.)
+
+<hr>
+<a href="http://www.eecs.umich.edu/~fessler"> Back to Fessler home page </a>
