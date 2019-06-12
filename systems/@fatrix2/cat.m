@@ -11,11 +11,11 @@
 % purge any empty cells so [[]; ob] returns ob
 is_empty = cellfun(@isempty, varargin);
 if any(is_empty)
-%	varargin = {varargin{~is_empty}};
-	varargin = {varargin(~is_empty)}; % 2016-04-19
+	varargin = varargin(~is_empty); % 2016-04-19
 end
 if numel(varargin) == 1
 	ob = varargin{1};
+  return;
 end
 
 switch dim
