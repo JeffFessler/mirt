@@ -71,7 +71,7 @@ if ~isvar('yi') % noisy kspace data % [Npf Ncoil Nframe] (Npf = # PE per frame)
 	ytrue = reshape(ytrue, [], Nframe, Ncoil);
 	ytrue = permute(ytrue, [1 3 2]); % [Npf Ncoil Nframe]
 	if any(ytrue(:) == 0), error 'bug?', end
-	snr2sigma = @(db, yb) exp(-db/20) * norm(ytrue(:)) ...
+	snr2sigma = @(db, yb) 10^(-db/20) * norm(ytrue(:)) ...
 		/ sqrt(numel(ytrue)) / sqrt(2); % for complex noise
 
 	rng(0)

@@ -73,10 +73,10 @@ im('row', 1, 2, ztrue), cbar
 
 rng(0)
 snr = 50;
-snr2sigma = @(db, yb) exp(-db/20) * norm(yb(:)) / sqrt(numel(yb)) / sqrt(2); % for complex noise
+snr2sigma = @(db, yb) 10^(-db/20) * norm(yb(:)) / sqrt(numel(yb)) / sqrt(2); % for complex noise
 sigma = snr2sigma(snr, ztrue);
 zi = ztrue + sigma * (randn(size(ztrue)) + 1i * randn(size(ztrue)));
-printm('snr = %g dB', 20*log(norm(ztrue(:)) / norm(col(ztrue-zi))))
+printm('snr = %g dB', 20*log10(norm(ztrue(:)) / norm(col(ztrue-zi))))
 
 im('row', 1, 3, zi), cbar
 

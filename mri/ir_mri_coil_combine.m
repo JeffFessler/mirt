@@ -124,7 +124,7 @@ end
 if 1 % y
 	ytrue = smap .* repmat(xtrue, [1 1 4]);
 	rng(0)
-	snr2sigma = @(db, yb) exp(-db/20) * norm(yb(:)) / sqrt(numel(yb)) / sqrt(2); % for complex noise
+	snr2sigma = @(db, yb) 10^(-db/20) * norm(yb(:)) / sqrt(numel(yb)) / sqrt(2); % for complex noise
 	sig = snr2sigma(50, ytrue);
 %	sig = 0; % noiseless
 	ykj = ytrue + sig * (randn(size(ytrue)) + 1i * randn(size(ytrue)));
