@@ -22,7 +22,7 @@
 %| 2013-06-28 Jeff Fessler, added 'exact' option for non-rotated cuboids
 
 if nargin == 1 && streq(ig, 'test'), cuboid_im_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage,, end
 
 arg.oversample = 1;
 arg.type = '';
@@ -195,10 +195,15 @@ if 1 % check exact for unaligned case
 	max_percent_diff(vol_phantom2, vol_true)
 	pr '[vol_phantom2 vol_true vol_phantom]'
 
-	im plc 1 3
+	phantom4 = cuboid_im(ig, params, 'type', 'lowmem1', 'oversample', 2);
+
+	im plc 2 3
 	im(1, phantom_exact), cbar
-	im(2, phantom2), cbar
-	im(3, phantom2 - phantom_exact), cbar
+	im(2, phantom2, 'sample'), cbar
+	im(5, phantom2 - phantom_exact, 'sample-exact'), cbar
+	im(3, phantom4, 'lowmem1'), cbar
+	im(6, phantom4 - phantom_exact, 'lowmem1-exact'), cbar
+	jf_equal(phantom2, phantom4)
 end
 
 if 1 % aligned case
