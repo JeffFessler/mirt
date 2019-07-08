@@ -67,7 +67,7 @@ if arg.nring * coils_per_ring ~= arg.ncoil
 	fail('nring must be divisor of ncoil')
 end
 
-[ring_smap x y z] = ir_mri_sensemap_sim_do(...
+[ring_smap, x, y, z] = ir_mri_sensemap_sim_do(...
 	arg.nx, arg.ny, arg.nz, ...
 	arg.dx, arg.dy, arg.dz, ...
 	arg.ncoil, coils_per_ring, arg.rcoil, arg.dz_coil, ...
@@ -125,7 +125,7 @@ end
 x = ([1:nx] - (nx+1)/2) * dx;
 y = ([1:ny] - (ny+1)/2) * dy;
 z = ([1:nz] - (nz+1)/2) * dz;
-[xx yy zz] = ndgrid(x,y,z);
+[xx,yy,zz] = ndgrid(x,y,z);
 
 smap = zeros(nx, ny, nz, ncoilpr, nring, 'single');
 for ir = 1:nring
@@ -145,7 +145,7 @@ for ir = 1:nring
 		end
 
 		% compute sensitivity vectors in coil coordinates
-		[sx sy sz] = ir_mri_smap1(xr, yr, zr, rlist(ic,ir));
+		[sx,sy,sz] = ir_mri_smap1(xr, yr, zr, rlist(ic,ir));
 
 		% coil response depends on tranverse magnetization only?
 		% todo: unsure if this should depend on sy and ulist in 3D
