@@ -403,41 +403,51 @@ if scale ~= 1
 	end
 end
 
-% unfortunately, colormaps affect the entire figure, not just the axes
-if opt.blue0 || state.blue0
-	cmap = [[0 0 1]; gray(256)];
-	colormap_gca(cmap)
-	zt = zz;
-	zz(zt > 0) = 1+floor(255 * zz(zt > 0) / (abs(max(zt(:))) + eps));
-	zz(zt == 0) = 1;
 
-elseif (opt.colorneg || state.colorneg) && ~ir_is_octave
-	if 1 % original
-		cmap = hot(512);	cmap = flipud(cmap(1:256,:));
-		cmap = [cmap; [0 0 1]; gray(256)];
-	else % +green -red
-		tmp = [0:255]'/255;
-		cmap = [flipud(tmp)*[1 0 0]; [0 0 1]; tmp*[0 1 0]];
-	end
-	colormap_gca(cmap)
-	zt = zz;
-	zz(zt > 0) = 257+1+floor(255 * zz(zt > 0) / (abs(max(zt(:))) + eps));
-	zz(zt == 0) = 257;
-	zz(zt < 0) = 1+floor(-255 * zz(zt < 0) / (abs(min(zt(:))) + eps));
+%% determine colormap and adjust data zz if necessary
+function [zz, cmap] = im_cmap(zz, opt, state)
+	cmap = [];
+	if opt.blue0 || state.blue0
+		cmap = [[0 0 1]; gray(256)];
+%		colormap_gca(cmap)
+%		colormap_cmap = cmap;
+		zt = zz;
+		zz(zt > 0) = 1+floor(255 * zz(zt > 0) / (abs(max(zt(:))) + eps));
+		zz(zt == 0) = 1;
 
-elseif opt.hsv
-	colormap_gca(hsv(256))
+	elseif (opt.colorneg || state.colorneg) && ~ir_is_octave
+		if 1 % original
+			cmap = hot(512);	cmap = flipud(cmap(1:256,:));
+			cmap = [cmap; [0 0 1]; gray(256)];
+		else % +green -red
+			tmp = [0:255]'/255;
+			cmap = [flipud(tmp)*[1 0 0]; [0 0 1]; tmp*[0 1 0]];
+		end
+	%	colormap_gca(cmap)
+	%	colormap_cmap = cmap;
+		zt = zz;
+		zz(zt > 0) = 257+1+floor(255 * zz(zt > 0) / (abs(max(zt(:))) + eps));
+		zz(zt == 0) = 257;
+		zz(zt < 0) = 1+floor(-255 * zz(zt < 0) / (abs(min(zt(:))) + eps));
 
-else
-	switch state.colormap_control
-	case 'gray'
-		colormap_gca(gray(256))
-	case ''
-		% do nothing
-	otherwise
-		fail('unknown colormap_control "%s"', state.colormap_control)
+	elseif opt.hsv
+	%	colormap_gca(hsv(256))
+		cmap = hsv(256);
+
+	else
+		switch state.colormap_control
+		case 'gray'
+		%	colormap_gca(gray(256))
+			cmap = gray(256);
+		case ''
+			% do nothing
+		otherwise
+			fail('unknown colormap_control "%s"', state.colormap_control)
+		end
 	end
 end
+
+[zz, colormap_cmap] = im_cmap(zz, opt, state);
 
 if scale ~= 1 % fix: use clim?
 	n = size(colormap,1);
@@ -593,6 +603,10 @@ else % 3d
 	end
 end
 
+if ~isempty(colormap_cmap)
+	colormap_gca(colormap_cmap)
+end
+
 if (zmax == zmin)
 %	fprintf('Uniform image %g [', zmin)
 %	fprintf(' %g', size(zz))
@@ -647,71 +661,79 @@ if opt.cbar, cbar, end
 
 if state.drawnow, drawnow, end
 
+end % im()
+
 
 % ir_im_reset()
 % reset state to its defaults
 function state = ir_im_reset
-state.display = true;
-state.display_quiet = false;
-state.colorneg = false;
-state.db = 0;
-state.blue0 = false;
-state.nan_fail = false;
-state.drawnow = false;
-state.tick = true;
-state.ticks = 'tick1'; % [1 N] ticks, or [0 N-1] if 'tick0'
-state.octave_yflip = true; % 3.8.2 octave seems to ignore 'axis ij' and ydir
-state.montage = {}; % for montager
-state.next_sub = 1; % next subplot index % todo
-state.sub_m = []; % for subplot
-state.sub_n = [];
-state.n2min = 1;
-state.pl_tight = false;
-state.line3plot = true;
-state.line3type = 'y-';
-state.line3width = 1;
-state.line1type = '-'; % for 1D plots
-state.colormap_control = 'gray'; % default is to set it to gray(256) each time
+	state.display = true;
+	state.display_quiet = false;
+	state.colorneg = false;
+	state.db = 0;
+	state.blue0 = false;
+	state.nan_fail = false;
+	state.drawnow = false;
+	state.tick = true;
+	state.ticks = 'tick1'; % [1 N] ticks, or [0 N-1] if 'tick0'
+	state.octave_yflip = true; % 3.8.2 octave seems to ignore 'axis ij' and ydir
+	state.montage = {}; % for montager
+	state.next_sub = 1; % next subplot index % todo
+	state.sub_m = []; % for subplot
+	state.sub_n = [];
+	state.n2min = 1;
+	state.pl_tight = false;
+	state.line3plot = true;
+	state.line3type = 'y-';
+	state.line3width = 1;
+	state.line1type = '-'; % for 1D plots
+	state.colormap_control = 'gray'; % default is to set it to gray(256) each time
+end
 
 
 function x = ir_ensure_num(x)
-if ischar(x), x = str2num(x); end
+	if ischar(x), x = str2num(x); end
+end
 
 
 function colormap_gca(cmap)
-if ir_is_octave || isfreemat
-	colormap(cmap)
-else
-	colormap(gca, cmap)
+	if ir_is_octave || isfreemat
+		colormap(cmap)
+	else
+		colormap(gca, cmap)
+	end
 end
 
 
 function state = im_subplot(state, num)
-if state.display
-	if state.pl_tight
-		num = num - 1;
-		x = 1 / state.sub_n;
-		y = 1 / state.sub_m;
-		ny = floor(num / state.sub_n);
-		nx = num - ny * state.sub_n;
-		ny = state.sub_m - ny - 1;
-		subplot('position', [nx*x ny*y x y])
-	else
-		subplot(state.sub_m, state.sub_n, num)
+	if state.display
+		if state.pl_tight
+			num = num - 1;
+			x = 1 / state.sub_n;
+			y = 1 / state.sub_m;
+			ny = floor(num / state.sub_n);
+			nx = num - ny * state.sub_n;
+			ny = state.sub_m - ny - 1;
+			subplot('position', [nx*x ny*y x y])
+		else
+			subplot(state.sub_m, state.sub_n, num)
+		end
+		state.next_sub = num;
 	end
-	state.next_sub = num;
 end
 
 
 function setgca(varargin)
-set(gca, varargin{:})
+	set(gca, varargin{:})
+end
 
 
 function im_test
-im clf, im(rand(6))
-im clf, im pl-tight 2 3
-im(1, rand(3))
-im(2, rand(3))
-im(5, ones(3))
-prompt
-im clf, im(rand(2^7,2^7-2,4))
+	im clf, im(rand(6))
+	im clf, im pl-tight 2 3
+	im(1, rand(3))
+	im(2, rand(3))
+	im(5, ones(3))
+	prompt
+	im clf, im(rand(2^7,2^7-2,4))
+end
