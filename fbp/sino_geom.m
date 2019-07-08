@@ -74,7 +74,7 @@
 %| Copyright 2006-1-18, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(type, 'test'), sino_geom_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 if streq(type, 'ge1') % special case
 	st = sino_geom_ge1(type, varargin{:});
@@ -527,7 +527,7 @@ x = x(:);
 y = y(:);
 switch st.type
 case 'par'
-	tau = (x * cos(st.ar) + y * cos(st.ar)) / st.dr;
+	tau = (x * cos(st.ar) + y * sin(st.ar)) / st.dr;
 case 'fan'
 	b = st.ar'; % row vector, for outer-product
 	xb = x * cos(b) + y * sin(b);
