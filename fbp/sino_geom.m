@@ -152,6 +152,8 @@ end
 
 if isempty(st.strip_width) || st.strip_width == 0
 	warn 'strip_width=0 is rarely realistic! are you sure?'
+	[name, line] = caller_name;
+	warn('called from "%s : %d"', name, line)
 end
 
 
