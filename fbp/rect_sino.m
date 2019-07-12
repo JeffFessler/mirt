@@ -1,5 +1,5 @@
-  function [sino, pos, ang] = rect_sino(sg, rects, varargin)
-%|function [sino, pos, ang] = rect_sino(sg, rects, [options])
+ function [sino, pos, ang] = rect_sino(sg, rects, varargin)
+%function [sino, pos, ang] = rect_sino(sg, rects, [options])
 %|
 %| Create sinogram projection of one or more rectangles.
 %| Works for both parallel-beam geometry and for fan-beam geometry.
@@ -22,7 +22,7 @@
 %| 2008-08-04, Yong Long, adapted from ellipse_sino()
 %| Copyright 2003-10-22, Jeff Fessler, University of Michigan
 
-if ~nargin, help(mfilename), error(mfilename), end
+if ~nargin, ir_usage, end
 if streq(sg, 'test')
 	rect_sino_test % no test on moj
 return
@@ -36,7 +36,7 @@ arg = vararg_pair(arg, varargin);
 
 switch sg.type
 case 'fan'
-	[sino pos] = rect_sino_go(rects, ...
+	[sino, pos] = rect_sino_go(rects, ...
 		sg.nb, sg.ds, sg.offset_s, ...
 		sg.na, sg.ar, ...
 		sg.dso, sg.dod, sg.dfs, ...
@@ -44,7 +44,7 @@ case 'fan'
 		arg.xscale, arg.yscale, arg.oversample, 0);
 
 case 'par'
-	[sino pos] = rect_sino_go(rects, ...
+	[sino, pos] = rect_sino_go(rects, ...
 		sg.nb, sg.dr, sg.offset_r, ...
 		sg.na, sg.ar, ...
 		inf, 1, 0, ...
@@ -52,7 +52,7 @@ case 'par'
 		arg.xscale, arg.yscale, arg.oversample, 0);
 
 case 'moj'
-	[sino pos] = rect_sino_go(rects, ...
+	[sino, pos] = rect_sino_go(rects, ...
 		sg.nb, [], sg.offset_r, ...
 		sg.na, sg.ar, ...
 		inf, 1, 0, ...
@@ -78,14 +78,14 @@ function [sino, pos] = rect_sino_go(rects, ...
 	xscale, yscale, ...
 	oversample, mojette);
 
-[pos pos2] = rect_sino_pos([], nb, ds, offset_s, ...
+[pos, pos2] = rect_sino_pos([], nb, ds, offset_s, ...
 		oversample, mojette, ang);
 
 sino = rect_sino_do(rects, pos2, ang(:)', ...
 	xscale, yscale, ...
 	dso, dod, dfs, source_offset);
 
-if oversample
+if oversample > 1
 	sino = downsample2(sino, [oversample 1]);
 end
 
@@ -248,7 +248,7 @@ down = 1;
 % wtfmex outperforms DD obviously
 ig = image_geom('nx', 512, 'ny', 504, 'fov', 500, 'down', down);
 rect = [[60 10.5 38 27]*ig.dx 0 1];
-[xtrue rect] = rect_im(ig, rect, 'oversample', 3);
+[xtrue, rect] = rect_im(ig, rect, 'oversample', 3);
 %unique(xtrue(:))
 
 sg = sino_geom('ge1', 'strip_width', 'd', 'down', down);
