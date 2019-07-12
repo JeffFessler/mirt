@@ -22,7 +22,7 @@
 %|
 %| Copyright 2003-10-22, Jeff Fessler, University of Michigan
 
-if ~nargin, help(mfilename), error(mfilename), end
+if ~nargin, ir_usage, end
 if streq(sg, 'test')
 	ellipse_sino_test
 	prompt
@@ -84,14 +84,14 @@ if isempty(ang)
 	ang = deg2rad(orbit_start + [0:na-1]/na * orbit);
 end
 
-[pos pos2] = ellipse_sino_pos(pos(:), nb, ds, offset_s, ...
+[pos, pos2] = ellipse_sino_pos(pos(:), nb, ds, offset_s, ...
 		oversample, mojette, ang);
 
 sino = ellipse_sino_do(ells, pos2, ang(:)', ...
 	xscale, yscale, ...
 	dso, dod, dfs, source_offset);
 
-if oversample
+if oversample > 1
 	sino = downsample2(sino, [oversample 1]);
 end
 
@@ -323,7 +323,7 @@ subs = {'dr', 'ds'; 'ray_spacing', 'ds'; 'channel_offset', 'offset_s'; ...
 	};
 arg = vararg_pair(arg, varargin, 'subs', subs);
 
-[sino pos ang] = ellipse_sino_go(ells, ...
+[sino, pos, ang] = ellipse_sino_go(ells, ...
 	arg.pos, arg.ang, ...
 	arg.nb, arg.ds, arg.offset_s, ...
 	arg.na, arg.orbit, arg.orbit_start, ...
@@ -376,12 +376,14 @@ function ellipse_sino_test
 down = 4;
 ig = image_geom('nx', 512, 'ny', 504, 'dx', 1, 'down', down);
 ell = [40 70 50 150 20 10];
-[xtrue ell] = ellipse_im(ig, ell, 'oversample', 4);
+[xtrue, ell] = ellipse_im(ig, ell, 'oversample', 4);
 
 gf = sino_geom('fan', 'nb', 888, 'na', 984, 'ds', 1.0, 'offset_s', 0.25, ...
+	'strip_width', 0, ... % for comparing to aspire
 	'orbit', 360, 'orbit_start', 0, 'dsd', 949, 'dod', 408, 'down', down);
 %	'dfs', inf, 'source_offset', 0.7, ... % flat fan, not working!
 gp = sino_geom('par', 'nb', 888, 'na', 984, 'dr', 0.5, 'offset_r', 0.25, ...
+	'strip_width', 0, ... % for comparing to aspire
 	'orbit', gf.orbit, 'orbit_start', gf.orbit_start, 'down', down);
 
 oversample = 8;
@@ -436,15 +438,17 @@ nb = ceil(max(ig.nx,ig.ny)*sqrt(2)/2)*2;
 na = 984/down;
 dr = ig.dx;
 offset_r = 0.25; % quarter detector
-gp = sino_geom('par', 'nb', nb, 'na', na, 'dr', dr, 'offset_r', offset_r);
-gm = sino_geom('moj', 'nb', nb, 'na', na, 'dx', ig.dx, 'offset_r', offset_r);
+gp = sino_geom('par', 'nb', nb, 'na', na, 'dr', dr, 'offset_r', offset_r, ...
+	'strip_width', 'd');
+gm = sino_geom('moj', 'nb', nb, 'na', na, 'dx', ig.dx, 'offset_r', offset_r, ...
+	'strip_width', 'd');
 
 ell = [40 25 150 60 30 10];
 
 oversample = 8;
-[sinop pos] = ellipse_sino(gp, ell, 'oversample', oversample);
-[sinom1 pos] = ellipse_sino(gm, ell, 'oversample', 1);
-[sinom2 pos] = ellipse_sino(gm, ell, 'oversample', oversample);
+[sinop, pos] = ellipse_sino(gp, ell, 'oversample', oversample);
+[sinom1, pos] = ellipse_sino(gm, ell, 'oversample', 1);
+[sinom2, pos] = ellipse_sino(gm, ell, 'oversample', oversample);
 
 xtrue = ellipse_im(ig, ell, 'oversample', 4);
 
