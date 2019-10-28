@@ -21,10 +21,7 @@
 %| Copyright 2016-12-09, Jeff Fessler, University of Michigan
 
 if nargin < 1, ir_usage, end
-if nargin == 1 && streq(idata, 'test')
-	ir_mri_coil_compress_test
-return
-end
+if nargin == 1 && streq(idata, 'test'), ir_mri_coil_compress_test, return, end
 
 arg.ncoil = 1;
 arg = vararg_pair(arg, varargin);
@@ -32,13 +29,11 @@ arg = vararg_pair(arg, varargin);
 idim = size(idata);
 n_in = idim(end);
 idata = reshape(idata, [], n_in); % [*N n_in]
-[~, S, V] = svd(idata, 'econ');
+[~, sing, V] = svd(idata, 'econ');
 
 Vr = V(:,1:arg.ncoil); % [n_in ncoil] compression matrix with rank = ncoil
 odata = idata * Vr; % [*N ncoil] compressed data
 odata = reshape(odata, [idim(1:end-1), arg.ncoil]); % [(N) ncoil]
-
-sing = diag(S);
 
 
 function ir_mri_coil_compress_test
@@ -101,5 +96,5 @@ if im
 	im(5, 'row', 1, odata)
 	im subplot 6
 	plot(1:nkeep, S(1:nkeep), 'o', nkeep+1:ncoil, S(nkeep+1:ncoil), 'x')
-	titlef('percent kept %.1f\%%', (norm(S(1:nkeep)) / norm(S))^2*100)
+	titlef('percent kept %.1f\\%%', (norm(S(1:nkeep)) / norm(S))^2*100)
 end
