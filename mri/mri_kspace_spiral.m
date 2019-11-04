@@ -51,6 +51,8 @@ kspace = [kx ky];
 omega = 2*pi*[kx ky] / arg.N;
 if max(omega(:)) > pi, error 'bad spiral', end
 
+end
+
 
 %
 % genkspace
@@ -175,6 +177,8 @@ if nargout>2
 end
 
 
+end
+
 
 % genspi()
 % this is translation of C code from scanner, exactly what is played
@@ -266,7 +270,7 @@ gy = (nl/(D*gamma)).*dthdt.*(s + theta.*c);
 gabs = abs(gx + 1i.*gy);
 % cut short if over peak
 gmax = abs(gamp./(theta+eps) + 1i*gamp);
-l1 = length(t) - sum(gabs>gmax);
+l1 = length(t) - sum(gabs > gmax);
 ts = t(l1);
 thetas = theta(l1);
 
@@ -280,25 +284,26 @@ if Gmax > gamp
 	if T > Tmax
 		fail('gmax limited readout too long')
 	end
-	t = [ts+dt:dt:T];
+	t = (ts+dt):dt:T;
 	theta = sqrt(thetas*thetas + (2*gamma*gamp*D).*(t-ts)./nl);
 	c = cos(theta);
 	s = sin(theta);
-	ind2 = l1+[1:length(t)];
+	ind2 = l1 + (1:length(t));
 	gx(ind2) = gamp.*(c./theta - s);
 	gy(ind2) = gamp.*(s./theta + c);
 	l3 = length(t);
 end
 
 l2 = l1 + l3;
+
 Gx = gx(1:2:l2); % or gx(1:2:l2)*MAX_PG_WAMP/gamp
 Gy = gy(1:2:l2); % or gy(1:2:l2)*MAX_PG_WAMP/gamp
 g = Gx + 1i*Gy; % slew rate vector
-s = diff(g)./(gts*1000);  % grad vector
+s = diff(g) / (gts*1000); % grad vector
 Kx = cumsum([0 Gx])*gts*opfov*gambar;
 Ky = cumsum([0 Gy])*gts*opfov*gambar;
 k = Kx + 1i*Ky;  % kspace vector
-t = [0:gts:T]; % time vector
+t = 0:gts:T; % time vector
 matrix = max(abs(k))*2;
 maxg = max(abs(g));
 maxs = max(abs(s));
@@ -309,18 +314,21 @@ ky = imag(k);
 sx = real(s);
 sy = imag(s);
 
+end
+
 
 function mri_kspace_spiral_test
-k0 = mri_kspace_spiral;
-k20 = mri_kspace_spiral('fov', 20, 'Nt', 0);
-k22 = mri_kspace_spiral('fov', 22, 'Nt', 0);
-if im
-	pr size(k0)
-	pr size(k20)
-	pr size(k22)
-	plot(k0(:,1), k0(:,2), 'b.')
-	hold on
-	plot(k20(:,1), k20(:,2), 'r.', k22(:,1), k22(:,2), 'g.')
-	hold off
-	axis([-1 1 -1 1]*32), axis square
+	k0 = mri_kspace_spiral;
+	k20 = mri_kspace_spiral('fov', 20, 'Nt', 0);
+	k22 = mri_kspace_spiral('fov', 22, 'Nt', 0);
+	if im
+		pr size(k0)
+		pr size(k20)
+		pr size(k22)
+		plot(k0(:,1), k0(:,2), 'b.')
+		hold on
+		plot(k20(:,1), k20(:,2), 'r.', k22(:,1), k22(:,2), 'g.')
+		hold off
+		axis([-1 1 -1 1]*32), axis square
+	end
 end
