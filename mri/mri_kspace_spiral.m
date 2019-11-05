@@ -45,7 +45,7 @@ if arg.fov > 100
 end
 
 % generate spiral k-space trajectory
-[kx ky] = genkspace(arg.fov, arg.N, nl*arg.Nt, nl, gamp, gslew, arg.dt);
+[kx, ky] = genkspace(arg.fov, arg.N, nl*arg.Nt, nl, gamp, gslew, arg.dt);
 
 kspace = [kx ky];
 omega = 2*pi*[kx ky] / arg.N;
@@ -87,17 +87,20 @@ end
 dts = 4e-6; % 5e-6 [sec]
 [Gx, Gy, kxi, kyi, sx, sy] = genspi(FOV, N, nint, gamp, gslew);
 
-% todo: use dts
-kxt = interp1([0:4e-6:4e-6*length(kxi)-4e-6],kxi,[0:tsamp:4e-6*length(kxi)-tsamp])';
-kyt = interp1([0:4e-6:4e-6*length(kyi)-4e-6],kyi,[0:tsamp:4e-6*length(kyi)-tsamp])';
+ik = 0:(length(kxi)-1);
+tk = 0:tsamp:(dts*length(kxi)-tsamp);
+kxt = interp1(ik*dts, kxi, tk)';
+kyt = interp1(ik*dts, kyi, tk)';
 
-if nargout>2
-	gxt=interp1([0:4e-6:4e-6*length(Gx)-4e-6],Gx,[0:tsamp:4e-6*length(Gx)-tsamp])';
-	gyt=interp1([0:4e-6:4e-6*length(Gx)-4e-6],Gy,[0:tsamp:4e-6*length(Gx)-tsamp])';
+if nargout > 2
+	ig = 0:(length(Gx)-1);
+	tg = 0:tsamp:(dts*length(Gx)-tsamp);
+	gxt = interp1(ig*dts, Gx, tg)';
+	gyt = interp1(ig*dts, Gy, tg)';
 end
 
 if flag
-	nk = length(kxt)-2;
+	nk = length(kxt) - 2;
 end
 
 kx = zeros(nk,nint);
@@ -118,26 +121,28 @@ if nargout>2
 	gyo = gyt(1:nk);
 end
 
-%if length(kxi)==nk;
-%  kxo = kxi.';
-%  kyo = kyi.';
-%else
+%{
+	if length(kxi)==nk;
+		kxo = kxi.';
+		kyo = kyi.';
+	else
 
-%  kxo(1) = kxi(1);
-%  kyo(1) = kyi(1);
+		kxo(1) = kxi(1);
+		kyo(1) = kyi(1);
 
-%  nki = length(kxi);
-%  sprintf('Interpolating %d kspace pts to %d',nki,nk)
+		nki = length(kxi);
+		sprintf('Interpolating %d kspace pts to %d',nki,nk)
 
-%  sf = (nki-1)/(nk-1);  %scaling factor
-%  for ii = 1:(nk-2);
-%    ind = ii*sf;
-%    kxo(ii+1) = kxi(floor(ind)+1)*(1+floor(ind)-ind)+kxi(ceil(ind)+1)*(ind-floor(ind));
-%    kyo(ii+1) = kyi(floor(ind)+1)*(1+floor(ind)-ind)+kyi(ceil(ind)+1)*(ind-floor(ind));
-%  end
-%  kxo(end) = kxi(end);
-%  kyo(end) = kyi(end);
-%end
+		sf = (nki-1)/(nk-1); % scaling factor
+		for ii = 1:(nk-2);
+			ind = ii*sf;
+			kxo(ii+1) = kxi(floor(ind)+1)*(1+floor(ind)-ind)+kxi(ceil(ind)+1)*(ind-floor(ind));
+			kyo(ii+1) = kyi(floor(ind)+1)*(1+floor(ind)-ind)+kyi(ceil(ind)+1)*(ind-floor(ind));
+		end
+		kxo(end) = kxi(end);
+		kyo(end) = kyi(end);
+	end
+%}
 
 %rotate matrix for proper orientation
 phir = -rotamount*pi/2;
@@ -182,17 +187,18 @@ end
 
 % genspi()
 % this is translation of C code from scanner, exactly what is played
-% out to gradients at 4us. 
+% out to gradients at 4us.
 %
-%   multi- shot spiral design
-%    uses Duyn's approximate slewrate limited design
-%    augmented with archimedian gmax limit
+% multi- shot spiral design
+% uses Duyn's approximate slewrate limited design
+% augmented with archimedian gmax limit
+%
 % inputs (args)
-%        D = FOV, cm
-%        N = matrix size
-%	 Tmax = longest acquisition allowed, s
-%	 dts = output sample spacing, s
-%        gtype = trajectory type
+%	D = FOV, cm
+%	N = matrix size
+%	Tmax = longest acquisition allowed, s
+%	dts = output sample spacing, s
+%	gtype = trajectory type
 % inputs (CVs)
 %	nl = number of interleaves
 %	gamp = design grad max, G/cm
@@ -210,11 +216,11 @@ end
 % modified to take more input cv's
 function [Gx, Gy, kx, ky, sx, sy] = genspi(D, N, nl, gamp, gslew)
 
-%%%%%%%%%% Predefined variables
+%% Predefined variables
 
 GRESMAX= 21000;
 if ~exist('nl','var')
-	nl=1   % Number of interleaves
+	nl=1 % Number of interleaves
 end
 if ~exist('gamp','var')
 	gamp=2.2; %3.50; % 2.2 for both 1.5 T and 3 T data
@@ -233,7 +239,7 @@ Tmax = GRESMAX*gts;
 dts = gts;
 opfov = D;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
 
 gamma = 2*pi*4.257e3;
 gambar = gamma/(2*pi);
@@ -298,16 +304,16 @@ l2 = l1 + l3;
 
 Gx = gx(1:2:l2); % or gx(1:2:l2)*MAX_PG_WAMP/gamp
 Gy = gy(1:2:l2); % or gy(1:2:l2)*MAX_PG_WAMP/gamp
-g = Gx + 1i*Gy; % slew rate vector
+g = Gx + 1i * Gy; % slew rate vector
 s = diff(g) / (gts*1000); % grad vector
-Kx = cumsum([0 Gx])*gts*opfov*gambar;
-Ky = cumsum([0 Gy])*gts*opfov*gambar;
-k = Kx + 1i*Ky;  % kspace vector
+Kx = cumsum([0 Gx]) * gts*opfov*gambar;
+Ky = cumsum([0 Gy]) * gts*opfov*gambar;
+k = Kx + 1i * Ky; % kspace vector
 t = 0:gts:T; % time vector
 matrix = max(abs(k))*2;
 maxg = max(abs(g));
 maxs = max(abs(s));
-maxt = max(t).*1000;
+maxt = max(t) * 1000;
 
 kx = real(k);
 ky = imag(k);
