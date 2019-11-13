@@ -73,13 +73,13 @@ ir_fontsize im_axes 5
 ir_fontsize title 10
 ir_fontsize label 10
 im plc 3 5
-im(1, abs(xtrue), 'true')
-im(2, sampling)
+im(1, abs(xtrue), 'true'), cbar
+im(2, sampling), cbar
 tmp = @(k, n) unique([1 n minmax(k)']);
 xtick(tmp(kx, nx))
 ytick(tmp(ky, ny))
-im_log(6, kspace, 'full k-space')
-im_log(7, embed(partial_kspace(:), sampling), 'partial')
+im_log(6, kspace, 'full k-space'), cbar
+im_log(7, embed(partial_kspace(:), sampling), 'partial'), cbar
 
 if nz > 1
 	full_dims = [nx ny nz];
@@ -95,15 +95,15 @@ if ~isvar('img_est')
 %		'init', xtrue, ... % of course it works
 end
 
-im(5, abs(img_est)), title '|img_est|'
-im(10, angle(img_est)), title '\angle < img_est'
+im(5, abs(img_est)), title '|img_est|', cbar
+im(10, angle(img_est)), title '\angle < img_est', cbar
 
 diff_img = img_est - xtrue;
 %im(9, abs(img), '|Recon|'), cbar
-im(11, abs(diff_img), 'Error')
+im(11, abs(diff_img), 'Error'), cbar
 xlabelf('max = %.3g', max(abs(diff_img(:))))
-im_log(15, full_kspace, 'kspace est')
-im_log(12, full_kspace - kspace, 'kspace err')
+im_log(15, full_kspace, 'kspace est'), cbar
+im_log(12, full_kspace - kspace, 'kspace err'), cbar
 
 if 0
 	im plc 1 1
