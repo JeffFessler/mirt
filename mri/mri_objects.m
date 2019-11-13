@@ -45,7 +45,7 @@ while length(varargin)
 		st = mri_objects('rect2', [0 0 fov/2 fov/2 1]);
 		return
 	case 'rect3half'
-		st = mri_objects('rect3', [0 0 0 fov/2 1]);
+		st = mri_objects('rect3', [0 0 0 [1 1 1]*fov/2 1]);
 		return
 	case 'case1'
 		st = mri_objects_case1(fov, varargin{2:end});
