@@ -97,12 +97,12 @@ flag = (nk == 0); % auto determine number of k-space points
 % resample genspi waveforms to "tsamp" over same total duration
 
 ik = 0:(length(kxi)-1);
-tk = (0:(dts/tsamp*length(kxi)-1))*tsamp;
+tk = (0:(dts/tsamp*length(kxi)))*tsamp;
 kxt = interp1(ik*dts, kxi, tk)';
 kyt = interp1(ik*dts, kyi, tk)';
 
 ig = 0:(length(Gx)-1);
-tg = (0:(dts/tsamp*length(Gx)-1))*tsamp;
+tg = (0:(dts/tsamp*length(Gx)))*tsamp;
 gxt = interp1(ig*dts, Gx, tg)';
 gyt = interp1(ig*dts, Gy, tg)';
 
@@ -114,7 +114,6 @@ end
 
 kx = zeros(nk,nint);
 ky = zeros(nk,nint);
-
 kxo = kxt(1:nk);
 kyo = kyt(1:nk);
 
