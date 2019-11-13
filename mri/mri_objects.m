@@ -496,7 +496,7 @@ out = {'cyl3', cp, 'rect3', rp, 'gauss3', gp};
 % 2d tests
 %
 function mri_objects_test2
-ig = image_geom('nx', 2^7, 'offsets', 'dsp', 'dx', 4);
+ig = image_geom('nx', 2^7, 'ny', 2^7+2, 'offsets', 'dsp', 'dx', 4);
 
 if 1 % test transforms of each object type
 	shift = [0.1 0.2] .* ig.fovs;
@@ -515,6 +515,7 @@ if 1 % test transforms of each object type
 		s2 = s2 * abs(ig.dx * ig.dy);
 		fg = ig.fg;
 		f2 = st.kspace(fg{:});
+	%	pr sum(i2(:)) * abs(ig.dx * ig.dy)
 		max_percent_diff(f2, s2)
 
 		im(1+3*(ii-1), i2, otype), cbar
