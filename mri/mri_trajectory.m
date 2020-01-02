@@ -197,8 +197,7 @@ wi = ones(size(omega,1), 1, 'single') / prod(fov);
 
 % mri_trajectory_gads()
 % emulate 2D golden angle radial sampling with data sharing
-function [omega wi] = mri_trajectory_gads(N, fov, varargin)
-rng(0)
+function [omega, wi] = mri_trajectory_gads(N, fov, varargin)
 arg.Nro = max(N); % # of samples in each readout/spoke
 arg.delta_ro = 1 / arg.Nro;
 %arg.shift = 0;

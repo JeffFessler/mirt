@@ -46,9 +46,17 @@ elseif isstruct(x)
 	end
 
 elseif ~isempty(dim)
+	if ~isreal(x)
+		x = abs(x)
+		warn('taking magnitude of complex data')
+	end
 	r = [min(x, [], dim); max(x, [], dim)];
 
 else
+	if ~isreal(x)
+		x = abs(x)
+		warn('taking magnitude of complex data')
+	end
 	r = [min(x(:)); max(x(:))];
 end
 
@@ -58,7 +66,7 @@ end
 
 if nargout == 0
 	if isempty(str) && ~isempty(inputname(1))
-		[cname line] = caller_name;
+		[cname, line] = caller_name;
 		cname = sprintf('%s %d', cname, line);
 		str = [cname ': ' inputname(1) ':'];
 	end
@@ -88,7 +96,6 @@ if nargout == 0
 end
 
 
-%
 % minmax_struct(st, prefix)
 % show min/max of all elements of a structure, descending recursively.
 %
