@@ -1,5 +1,5 @@
 %% mri_example_b0.m
-% Example of field-corrected MR reconstruction for a spiral k-space trajectory.
+% Example B0 field-corrected MR reconstruction for a spiral k-space trajectory.
 % Copyright 2005-7-29, Jeff Fessler, University of Michigan
 
 %% true zmap
@@ -76,7 +76,6 @@ if ~isvar('ti')
 end
 
 
-
 %% "exact" system for generating the data, for less inverse crime
 if ~isvar('Ge_zmap'), printm 'Ge_zmap'
 	f.basis = 'rect';
@@ -91,6 +90,11 @@ if ~isvar('Ge_zmap'), printm 'Ge_zmap'
 
 	Ge_zmap = feval(Ge_ft.arg.new_zmap, Ge_ft, ti, zmap, {});
 	clear yi
+end
+
+if 0 % test
+	im(embed(Ge_zmap' * (wi_basis .* (Ge_zmap * xtrue)), ig.mask)), cbar
+return
 end
 
 
@@ -132,7 +136,7 @@ prompt
 end
 
 
-%% "uncorrected" conj. phase recon
+%% "uncorrected" conjugate phase reconstruction
 if ~isvar('xup0'), printm 'xup0'
 	xup0 = Ge_ft' * (wi_basis .* yi);
 	xup0 = embed(xup0, ig.mask);
