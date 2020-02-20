@@ -58,7 +58,7 @@ if ischar(file)
 
 elseif issparse(file)
 	ob.G = file;
-	if nargin < 6, help(mfilename), error(mfilename), end
+	if nargin < 6, ir_usage, end
 	ob.nx = nx;
 	ob.ny = ny;
 	ob.nb = nb;

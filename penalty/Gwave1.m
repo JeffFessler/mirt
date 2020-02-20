@@ -39,7 +39,7 @@
 %|
 %| Copyright 2009-11-7, Michael Allison, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(varargin{1}, 'test'), Gwave1_test, return, end
 
 arg.mask = [];

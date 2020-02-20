@@ -26,7 +26,7 @@
 % Copyright 2006-12-4, Jeff Fessler, The University of Michigan
 
 if nargin == 1 & streq(isize, 'test'), Cdiffs_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 %if has_mex_jf, penalty_mex('help'), end
 
 % option defaults

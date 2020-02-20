@@ -83,7 +83,7 @@
 %| Copyright 2007-6-3, Jeff Fessler, The University of Michigan
 
 if nargin == 1 && streq(om_in, 'test'), newfft_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 cpu etic
 

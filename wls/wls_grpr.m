@@ -19,7 +19,7 @@
 %
 %	Copyright Dec. 2000,	Jeff Fessler, University of Michigan
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 if ~isvar('W') || isempty(W)
 	W = 1;

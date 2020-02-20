@@ -41,7 +41,7 @@
 %| 2015-11-30, tweaks by Jeff Fessler
 
 if nargin == 1 && streq(x, 'test'), ir_pwls_os_rlalm_test, return, end
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 % defaults
 arg.niter = 1;

@@ -11,7 +11,7 @@
 %| 2014, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(A, 'test'), ir_wls_init_scale_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 if nargin < 3
 	xold = A' * y; % default that is sensible only for some applications

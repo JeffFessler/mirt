@@ -19,7 +19,7 @@
 %| Copyright 2013-12-05, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(mask, 'test'), Ginterp1_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 arg.mask = mask;
 

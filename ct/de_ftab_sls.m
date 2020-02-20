@@ -28,7 +28,7 @@ if nargin == 1 && streq(varargin{1}, 'test')
 	de_ftab_sls_test
 return
 end
-if ~nargout, help(mfilename), error(mfilename), end
+if ~nargout, ir_usage, end
 
 sls.sl = {};
 sls.n = [];

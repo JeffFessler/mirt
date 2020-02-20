@@ -24,7 +24,7 @@
 %|
 %| Copyright 2008-09-28, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(fit, 'test'), fail('run de_ftab test'), return, end
 
 % option defaults

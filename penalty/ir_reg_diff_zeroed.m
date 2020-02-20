@@ -26,7 +26,7 @@
 %| Michael Allison (original version ir_circ_zeroed_reg.m)
 %| 2015-08-09 Jeff Fessler revised to do 1D,2D,3D with built-in test
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(idim, 'test'), ir_reg_diff_zeroed_test, return, end
 
 arg.order = 2;

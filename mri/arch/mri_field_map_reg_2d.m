@@ -45,7 +45,7 @@ if nargin >= 1 && streq(yi, 'test')
 return
 end
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 % Specify defaults & check argument inputs
 arg.l2b = -3;

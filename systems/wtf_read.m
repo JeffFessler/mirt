@@ -6,7 +6,7 @@
 %|	'parse'	0|1	if 1, do it by old matlab parsing way (old wtfread.m)
 %| Copyright 2008-9-26, Jeff Fessler, University of Michigan
 
-if ~nargin, help(mfilename), error(mfilename), end
+if ~nargin, ir_usage, end
 if nargin == 1 && streq(file, 'test'), wtf_read_test, return, end
 
 arg.chat = 0;

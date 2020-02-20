@@ -17,7 +17,7 @@
 %| Copyright 2006-05-21, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(fit, 'test'), de_ftab_s_iter_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 arg.ctype = '';
 arg.niter = 1;

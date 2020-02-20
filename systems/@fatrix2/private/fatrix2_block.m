@@ -25,7 +25,7 @@
 
 fail 'under construction'
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(blocks, 'test')
 	run_mfile_local fatrix2_block_test
 return

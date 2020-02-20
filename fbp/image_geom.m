@@ -58,7 +58,7 @@
 %| Copyright 2006-1-19, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(varargin{1}, 'test'), image_geom_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 % defaults
 st.nx = [];

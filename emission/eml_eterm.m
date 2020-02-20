@@ -9,7 +9,7 @@
 %
 % Copyright 2005-2-17, Jeff Fessler, The University of Michigan
 
-if nargin < 5, help(mfilename), error(mfilename), end
+if nargin < 5, ir_usage, end
 
 if nargin == 6 % os case, should be phased out!
 	[nb na] = size(yi);

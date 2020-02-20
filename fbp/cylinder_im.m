@@ -23,7 +23,7 @@
 if nargin == 1 && streq(ig, 'test'), cylinder_im_test, return, end
 if nargin == 1 && streq(ig, 'profile'), cylinder_im_profile, return, end
 if nargin == 1 && streq(ig, 'big'), cylinder_im_test_big, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 if isempty(ig)
 	ig = image_geom('nx', 64, 'ny', 60, 'nz', 16, 'dx', 1, 'dz', 1);

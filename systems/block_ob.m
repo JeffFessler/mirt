@@ -20,7 +20,7 @@
 out = block_op(varargin{:}); % todo: retire block_ob and use block_op
 return
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 switch arg
 case 'is'

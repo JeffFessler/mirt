@@ -12,7 +12,7 @@
 %|
 %| Copyright 2004-6-28, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), return, end
+if nargin < 1, ir_usage, return, end
 if streq(xs, 'test'), fftn_fast_test, return, end
 
 % around version 7.4, fftn was fastest, so hardwire that!

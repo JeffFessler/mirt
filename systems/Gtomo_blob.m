@@ -42,7 +42,7 @@
 %| Copyright 2005-7-26, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(mask, 'test'), Gtomo_blob_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 arg.mask = mask;
 [arg.nx arg.ny] = size(mask);

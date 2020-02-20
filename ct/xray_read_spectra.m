@@ -40,7 +40,7 @@
 %|
 %| Copyright 2001-04-27, Jeff Fessler, University of Michigan
 
-if ~nargin, help(mfilename), error(mfilename), return, end
+if ~nargin, ir_usage, end
 if streq(stype, 'test'), xray_read_spectra_test, return, end
 
 % defaults

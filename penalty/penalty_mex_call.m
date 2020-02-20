@@ -3,7 +3,7 @@
 %| convenience routine for calling penalty_mex
 %| to handle both real and complex case
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 offsets = int32(offsets);
 ndim = int32(ndim);

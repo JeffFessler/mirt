@@ -43,7 +43,7 @@
 %| 2015-08-16, Jeff Fessler, added support for Ab with negatives
 
 if nargin == 1 && streq(x, 'test'), ir_pwls_os_lalm_test, return, end
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 % defaults
 arg.niter = 1;

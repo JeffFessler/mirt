@@ -43,7 +43,7 @@
 %|
 %| Copyright 2004-5-18, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(ptype, 'test') ir_potential_fun_test, return, end
 if streq(ptype, 'test_lpp') ir_potential_fun_test_lpp, return, end
 

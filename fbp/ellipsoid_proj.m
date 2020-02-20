@@ -20,7 +20,7 @@
 %| and Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(cg, 'test'), ellipsoid_proj_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 arg.oversample = 1;
 arg = vararg_pair(arg, varargin);

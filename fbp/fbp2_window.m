@@ -3,7 +3,7 @@
 %| compute an apodizing window of length n and fft shift it
 
 if nargin == 1 && streq(n, 'test'), fbp2_window_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 if ischar(window)
 	if isempty(window) || streq(window, 'boxcar') || streq(window, 'ramp')

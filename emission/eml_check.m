@@ -8,7 +8,7 @@
 % or just:
 % reshaper(yi, '2d') 
 
-if nargin < 3, error(mfilename), end
+if nargin < 3, ir_usage, end
 
 if iscell(yi)
 %	if length(yi) ~= length(ci)

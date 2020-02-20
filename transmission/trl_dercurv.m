@@ -19,7 +19,7 @@
 %
 % Copyright 2004-2-1, Jeff Fessler, The University of Michigan
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 if nargin < 3, curvtype = 'pc'; end
 
 yi = data{1};

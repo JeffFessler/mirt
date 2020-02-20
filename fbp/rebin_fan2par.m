@@ -21,7 +21,7 @@
 %| Copyright 2005-12-10, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(fsino, 'test'), rebin_fan2par_test, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 % defaults
 arg.ob = false;

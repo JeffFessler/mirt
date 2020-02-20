@@ -16,7 +16,7 @@
 %| Copyright 2005-8-2, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(A, 'test'), Fatrix_test_basic_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 arg.x = [];
 arg.multi = true;

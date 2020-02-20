@@ -3,7 +3,7 @@
 %| for R2=1/T2 estimation from images
 
 if nargin == 1 && streq(r2, 'test'), mri_r2_fit_costgrad_r2_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 yi = data.yi; % [(nd) nt] images
 pd = data.pd; % [(nd)] pd maps

@@ -21,7 +21,7 @@
 %| Copyright 2012-06-06, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(kern, 'test'), Gdsft_gram test2, clear kern, return, end
-if nargin ~= 2, help(mfilename), error(mfilename), end
+if nargin ~= 2, ir_usage, end
 
 dim = size(kern);
 if numel(dim) == 2 && dim(2) == 1

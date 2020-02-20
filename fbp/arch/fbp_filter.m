@@ -19,7 +19,7 @@
 % Copyright 2005-12-16, Jeff Fessler, The University of Michigan
 
 if nargin == 1 && streq(type, 'test'), fbp_filter_test, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 arg.Dsd = [];
 arg.window = '';

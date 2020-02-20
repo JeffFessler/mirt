@@ -29,7 +29,7 @@
 
 % fix: add warning that this is supercede by pl_iot.m
 
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 Gb = block_ob(Gb, 'ensure'); % make it a block object (if not already)
 nblock = block_ob(Gb, 'n');

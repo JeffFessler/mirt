@@ -23,7 +23,7 @@
 %|
 %| Copyright 2004-11-14, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(pic, 'test'), ugibb_test, return, end
 
 arg.threshold = 0;

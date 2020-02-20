@@ -33,7 +33,7 @@
 % NOTE: Even for the original KB formula, the JOSA FT formula
 %	is derived only for m > -1 !
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 if nargin == 1 && streq(x, 'test') % example plots
 	J = 8; alpha = 2.34 * J;

@@ -10,9 +10,7 @@ if nargin == 2 & ischar(x) & streq(x, 'exists')
 	return
 end
 
-if nargin ~= 4
-	error(mfilename)
-end
+if nargin ~= 4, ir_usage, end
 
 x = double(x); % sparse insists
 

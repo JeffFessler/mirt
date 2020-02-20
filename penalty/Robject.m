@@ -62,7 +62,7 @@
 %|
 %| Copyright 2004-11-14, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(kappa, 'test'), run_mfile_local 'Robject_test', return, end
 
 % option defaults

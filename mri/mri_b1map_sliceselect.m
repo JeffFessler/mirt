@@ -37,7 +37,7 @@
 %|
 %| Copyright 2008-7, Amanda Funai, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(yy, 'test'), mri_b1map_test, return, end
 if streq(yy, 'spatial'), mri_b1map_test_spatial, return, end
 if streq(yy, 'spatial2'), mri_b1map_test_spatial2, return, end

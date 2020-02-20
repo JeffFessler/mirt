@@ -79,7 +79,7 @@
 %| Copyright 2006-1-18, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(type, 'test'), ct_geom_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 if streq(type, 'ge1') % special case: GE fan-beam
 	st = ct_geom_ge1(type, varargin{:});

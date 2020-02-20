@@ -12,7 +12,7 @@
 % Copyright 2004-6-29, Jeff Fessler & Hugo Shi, The University of Michigan
 
 if nargin == 1 & streq(ob, 'test'), nufft_gram_test, return, end
-if nargin < 2 | nargin > 3, help(mfilename), error(mfilename), end
+if nargin < 2 | nargin > 3, ir_usage, end
 
 if ~isvar('reuse'), reuse = []; end
 

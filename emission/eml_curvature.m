@@ -23,7 +23,7 @@
 %| Jeff Fessler
 
 if nargin == 1 && streq(yi, 'test'), eml_curvature_test, return, end
-if nargin < 5, help(mfilename), error(mfilename), end
+if nargin < 5, ir_usage, end
 
 if ~isvar('ctype') || isempty(ctype)
 	ctype = 'oc'

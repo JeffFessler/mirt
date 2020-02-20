@@ -18,7 +18,7 @@
 %| If no output arguments, then display movie
 %| Copyright Aug 2000, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(x, 'test'), movie2_test, return, end
 
 arg.clim = [];

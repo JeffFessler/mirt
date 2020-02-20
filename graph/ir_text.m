@@ -5,7 +5,7 @@
 %|
 %| 2013-09-08, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 if 1 % do TeX replacement in the first string argument
 	for ii = 1:numel(varargin)

@@ -15,7 +15,7 @@
 %| Copyright 2005-8-1, Jeff Fessler, University of Michigan
 
 if nargin == 1, square_strip_int_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 % defaults
 arg.dx = 1; % pixel_size

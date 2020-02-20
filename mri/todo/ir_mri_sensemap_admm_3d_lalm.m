@@ -65,7 +65,7 @@
 if nargin == 1 && streq(ykj, 'test')
 	run_mfile_local('ir_mri_sensemap_admm_test')
 return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 % defaults
 arg.bodycoil = [];

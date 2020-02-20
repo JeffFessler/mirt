@@ -28,7 +28,7 @@
 %| Copyright 2004-05-1, Jeff Fessler, University of Michigan
 
 % default is to show example
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(mtype, 'test'), xray_read_atten_test, return, end
 if ~isvar('kev_in'), kev_in = []; end
 

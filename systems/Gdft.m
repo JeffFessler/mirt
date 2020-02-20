@@ -26,7 +26,7 @@
 %|
 %| Copyright 2003-6-1, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(varargin{1}, 'test'), Gdft_test, return, end
 
 arg.mask = [];

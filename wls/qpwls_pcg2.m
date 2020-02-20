@@ -37,7 +37,7 @@
 if nargin == 1 && streq(x, 'test')
 	run_mfile_local('qpwls_pcg2_test'), return
 end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 if ~isvar('C') || isempty(C), C = 0; end
 

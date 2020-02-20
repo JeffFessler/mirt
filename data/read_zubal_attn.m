@@ -9,7 +9,7 @@
 
 if nargin==1 && streq(varargin{1}, 'test'), read_zubal_attn_test, return, end
 
-if nargout == 0, help(mfilename), error(mfilename), end
+if nargout == 0, ir_usage, end
 
 arg.ddir = '';
 arg.file = 'zubal,attn.raw';

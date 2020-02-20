@@ -16,7 +16,7 @@
 %
 % Copyright 2005-2-17, Jeff Fessler, The University of Michigan
 
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 % defaults
 arg.niter = 2;

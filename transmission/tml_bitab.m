@@ -20,7 +20,7 @@
 %
 % Copyright Apr 2000, Jeff Fessler, University of Michigan
 
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 nblock = block_ob(Gb, 'n');
 

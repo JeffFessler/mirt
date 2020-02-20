@@ -22,7 +22,7 @@
 % center: as in 'center' penalty in ASPIRE
 
 if nargin == 1 && streq(arg0, 'test'), Csparse_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 warning 'Csparse is obsolete.  C2sparse is recommended instead!'
 

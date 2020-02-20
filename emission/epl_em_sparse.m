@@ -15,7 +15,7 @@
 %
 % Copyright 1998-2008, Jeff Fessler & Dan Lingenfelter, University of Michigan
 
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 if ~isvar('ci') || isempty(ci)
 	ci = 1;	% ones(size(yi(:)));

@@ -17,7 +17,7 @@
 %
 % Copyright 2002-3-14, Jeff Fessler, The University of Michigan
 
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 Gf = block_ob(Gf, 'ensure'); % make it a block object (if not already)
 nblock = Gf.nblock;

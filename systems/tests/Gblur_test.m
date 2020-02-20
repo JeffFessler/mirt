@@ -115,7 +115,7 @@ if 1 % time Fatrix vs fatrix2
 		cpu etic
 		y2 = A2 * x;
 		cpu('etoc', ['fatrix2 ' type ' time: '])
-		jf_equal(y1, y2)
+		equivs(y1, y2)
 	end
 %profile report
 end

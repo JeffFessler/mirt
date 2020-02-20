@@ -2,7 +2,7 @@ function h = huber_pot(t, d)
 %| function h = huber_pot(t, d)
 %| huber potential function
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin < 2, huber_pot_test, return, end
 
 h = t.^2 / 2;

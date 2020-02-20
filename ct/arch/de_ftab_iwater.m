@@ -22,7 +22,7 @@ todo: under construction!
 %		ftab.fit.fmfun(s1, s2, ...)
 %
 % Copyright 2001-04-27, Jeff Fessler, The University of Michigan
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 ftab.show = false;
 ftab.sl = {};

@@ -31,7 +31,7 @@ if nargin == 1 && streq(cg, 'test')
 return
 end
 
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 warn 'this file is obsolete; use rebin_helix and fbp_helix_stat'
 

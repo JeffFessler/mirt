@@ -19,7 +19,7 @@
 %| 2014-08-21 Jeff Fessler and Mai Le, University of Michigan
 
 if nargin == 1 && streq(r10, 'test'), ir_mri_dce_r1d_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 arg.r1 = 4.5; % [mMol^-1 sec^-1] for Gd at 3T, Table 2 of sasaki:05:eea
 arg = vararg_pair(arg, varargin);

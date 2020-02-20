@@ -30,7 +30,7 @@
 %| 2014-08-21 Jeff Fessler
 
 if nargin == 1 && streq(ti, 'test'), ir_mri_dce_aif1_test, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 arg.h_power = 4; % [unitless] after [11] in yang:07:mrt
 arg.h_beta = 0.03; % [min] in Fig. 2 of yang:07:mrt

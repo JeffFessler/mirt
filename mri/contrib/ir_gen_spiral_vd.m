@@ -9,7 +9,7 @@
 %| variable density added by D. Noll, 10/25/01
 %| 2015-06-09 cosmetic changes by JF, including built-in test, renaming
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(D, 'test'), ir_gen_spiral_vd_test, return, end
 
 MAXDECRATIO = 32; % maximum allowed decimation of input ts

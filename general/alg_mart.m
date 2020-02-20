@@ -20,7 +20,7 @@
 %| Copyright 2006-4-2, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(x, 'test'), alg_art1_test, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 if isempty(x), x = ones(nrow(G),1); end
 
 % defaults

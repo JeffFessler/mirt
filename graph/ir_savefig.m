@@ -20,7 +20,7 @@
 %|
 %| Copyright 2002-2-1, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(varargin{1}, 'test'), savefig_test, return, end
 
 if ir_is_octave

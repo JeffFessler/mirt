@@ -17,7 +17,7 @@
 %|
 %| Copyright 2008-10-28, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(MM, 'test'), de_poly_expo_test, return, end
 
 arg.emax = 1;

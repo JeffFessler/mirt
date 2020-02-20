@@ -16,7 +16,7 @@
 %|
 %| Copyright 2005-8-2, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(A, 'test'), fatrix2_tests_test, return, end
 
 arg.x = [];

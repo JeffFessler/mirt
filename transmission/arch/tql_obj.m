@@ -4,7 +4,7 @@
 %
 %	Copyright May 1999, Jeff Fessler
 
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 if (nargin < 4 || isempty(bi))
 	bi = ones(size(yi(:)));
 end

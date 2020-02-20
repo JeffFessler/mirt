@@ -13,7 +13,7 @@
 %| Copyright 2006-12-6, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(offsets, 'test'), penalty_distance_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 displace = penalty_displace(offsets(:), sizes);
 distance = sqrt(sum(displace.^2, 2));

@@ -17,7 +17,7 @@
 %| Copyright 2004-7-8, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(Nd, 'test'), nufft_scale_test, return, end
-if nargin < 4, help(mfilename), help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 if nargin < 5, Nmid = (Nd-1)/2; end
 

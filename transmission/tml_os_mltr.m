@@ -25,7 +25,7 @@
 %|
 %| Copyright 2010-07-11, Jeff Fessler, University of Michigan
 
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 if ~isvar('bi') || isempty(bi)
 	bi = ones(size(yi), class(yi));

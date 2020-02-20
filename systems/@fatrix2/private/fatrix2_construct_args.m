@@ -11,7 +11,7 @@
 %|
 %| Copyright 2010-12-02, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 % user-definable properties
 name_user = {'arg', 'dim', 'caller', 'odim', 'mask', 'meth'};

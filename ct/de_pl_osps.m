@@ -25,7 +25,7 @@
 %
 % Copyright 2001-04-28, Jeff Fessler, The University of Michigan
 
-if nargin < 6, help(mfilename), error(mfilename), end
+if nargin < 6, ir_usage, end
 
 if ~isvar('Im') | isempty(Im)
 	Im = [1 1];

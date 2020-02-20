@@ -21,7 +21,7 @@
 %
 %	Copyright 2002-4-11	Jeff Fessler	The University of Michigan
 
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 if ~isvar('n_shift') || isempty(n_shift)
 	n_shift = [0];		% default is no shift, so n=0,1,...,N-1

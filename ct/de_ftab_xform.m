@@ -10,7 +10,7 @@
 %|
 %| Copyright 2002-2-15, Jeff Fessler, University of Michigan
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 [LL MM] = size(ftab.T);
 dim = size(fm);

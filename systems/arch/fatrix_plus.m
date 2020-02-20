@@ -12,7 +12,7 @@
 %
 % Copyright 2007-10-16, Jeff Fessler, The University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(varargin{1}, 'test'), fatrix_plus_test, return, end
 
 arg.blocks = varargin;

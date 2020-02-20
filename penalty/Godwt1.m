@@ -18,7 +18,7 @@
 %|
 %| Copyright 2012-05-17, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(mask, 'test'), Godwt1_test, return, end
 
 arg.mask = mask;

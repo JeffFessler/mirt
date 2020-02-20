@@ -15,7 +15,7 @@
 %|
 %| 2012-05-16, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(images, 'test'), mri_r2_fit_test, return, end
 
 arg.how = 'log-ls'; % ordinary LS fit to log data

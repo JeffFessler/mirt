@@ -11,7 +11,7 @@
 %
 % Copyright 2006-4-17, Jeff Fessler, The University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 st = nufft1_build(varargin{:});
 %pr sum(st.sn)-175.3399

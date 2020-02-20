@@ -19,7 +19,7 @@
 
 if nargin == 1 && streq(sg, 'test'), aspire_pair_test, return, end
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 opt.scale = 0; % default: transmission scaling
 opt.strip_width = []; % see below

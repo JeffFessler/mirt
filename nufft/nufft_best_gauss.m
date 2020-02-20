@@ -16,7 +16,7 @@
 %|
 %| Copyright 2002-4-11, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 if nargin == 1 && streq(J, 'test')
 	[sig, kernel, kernel_ft] = nufft_best_gauss(6)

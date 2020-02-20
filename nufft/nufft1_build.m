@@ -28,7 +28,7 @@
 %| Copyright 2006-4-15, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(J, 'test'), nufft1_build_test, return, end
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 % defaults
 st.J = J;

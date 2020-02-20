@@ -22,7 +22,7 @@
 %| Copyright 2008-10-27, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(xx, 'test'), de_poly_eval_test, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 arg.deriv = 0;
 arg.basis = false;

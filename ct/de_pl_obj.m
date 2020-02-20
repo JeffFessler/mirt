@@ -18,7 +18,7 @@
 %
 %	Copyright 2002-1-29	Jeff Fessler	The University of Michigan
 
-if nargin < 6, help(mfilename), error(mfilename), end
+if nargin < 6, ir_usage, end
 if ~isvar('rmi') | isempty(rmi)
 	rmi = ones(size(rmi));
 end

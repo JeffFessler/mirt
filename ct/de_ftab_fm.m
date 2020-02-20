@@ -12,7 +12,7 @@
 %| Copyright 2006-05-18, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(sll, 'test'), de_ftab_fm_test, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 [ne LL] = size(mac);
 MM = size(Ide,2);

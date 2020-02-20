@@ -19,7 +19,7 @@
 % 2002-2-20 changed so that funcitons have TWO arguments (allow weighting)
 % 2005-2-14 discovered that 'hyper' was missing sqrt()
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 % default is to plot, thereby testing
 if streq(type, 'test'), penalty_funcs_test, return, end

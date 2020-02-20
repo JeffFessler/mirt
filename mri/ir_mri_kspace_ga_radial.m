@@ -29,7 +29,7 @@ if nargin == 1 && streq(Nspoke, 'test')
 	ir_mri_kspace_ga_radial_test
 	return
 end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 arg.shift = 0;
 arg.angle = pi*(sqrt(5)-1)/2; % golden angle [radians]

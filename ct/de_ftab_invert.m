@@ -23,7 +23,7 @@
 %|
 %| Copyright 2002-02-13, Jeff Fessler, University of Michigan
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 % check for linear special case
 if isfield(ftab, 'basis_order') && ftab.basis_order == 1 ...

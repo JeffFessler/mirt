@@ -4,7 +4,7 @@
 %
 % Copyright Apr 1999, Jeff Fessler
 
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 if nargin == 6
 	xs = reshape(xs, size(xs,1)*size(xs,2), size(xs,3));

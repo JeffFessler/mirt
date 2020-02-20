@@ -11,7 +11,7 @@
 %
 % Copyright 2000-4-?, Jeff Fessler, The University of Michigan
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 starts = subset_start(nsubset);
 

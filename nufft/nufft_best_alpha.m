@@ -6,7 +6,7 @@
 %
 %	Copyright 2001-12-17	Jeff Fessler	The University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin < 2, L=2; end
 if nargin < 3, K_N=2; end
 

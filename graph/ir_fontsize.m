@@ -28,7 +28,7 @@ if ~isvar('fs') || isempty(fs)
 	fs = ir_fontsize_reset;
 end
 
-if ~nargin, help(mfilename), pr fs, error(mfilename), end
+if ~nargin, pr fs, ir_usage, end
 
 switch nargin
 case 1

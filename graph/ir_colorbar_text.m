@@ -6,7 +6,7 @@
 %| Needed as of octave 3.8.2 and matlab R2014b because they have incompatible
 %| graphics support for colorbars.
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(str, 'test'), ir_colorbar_text_test, return, end
 
 if ~im, return, end

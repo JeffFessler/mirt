@@ -30,7 +30,7 @@
 % arc detector case contributed by Yingying Zhang 2005-6-13
 
 if nargin == 1 && streq(proj, 'test'), run_mfile_local('feldkamp_example'), return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 if ~isvar('window') || isempty(window)
 	window = 'ramp';
 end

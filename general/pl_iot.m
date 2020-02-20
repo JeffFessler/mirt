@@ -44,7 +44,7 @@ if nargin == 1 && streq(x, 'test')
 	run_mfile_local('pwls_example')
 return
 end
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 cpu etic
 

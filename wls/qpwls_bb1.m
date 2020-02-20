@@ -36,7 +36,7 @@
 %| Copyright 2011-07-15, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(x, 'test'), qpwls_bb1_test, return, end
-if nargin < 5, help(mfilename), error(mfilename), end
+if nargin < 5, ir_usage, end
 
 % defaults
 arg.precon = 1;

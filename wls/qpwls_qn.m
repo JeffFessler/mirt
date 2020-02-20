@@ -18,7 +18,7 @@
 %
 % Copyright July 2000, Jeff Fessler, The University of Michigan
 
-if nargin < 3 || nargin > 7, help(mfilename), error(mfilename), end
+if nargin < 3 || nargin > 7, ir_usage, end
 np = ncol(G);
 
 if ~isvar('C')		| isempty(C),		C = 0;			end

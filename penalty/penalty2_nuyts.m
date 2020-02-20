@@ -21,7 +21,7 @@
 %|
 %| Copyright 2003-5-23, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 % self-test compares Nuyts design to Fourier-NNLS design.
 if nargin == 1 && streq(type, 'test')

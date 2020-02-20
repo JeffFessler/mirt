@@ -17,7 +17,7 @@
 %|
 %| Copyright 2006-12-9, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(y, 'test'), embed_out_test, clear y, return, end
 if nargin < 2, Mdim = size(y,1); end % trick: try to guess...
 

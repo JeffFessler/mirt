@@ -15,7 +15,7 @@
 %| Copyright 2008-04-27, Jeff Fessler, The University of Michigan
 
 % default is to show example
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(mtype, 'test'), xray_read_atomic_mass_test, return, end
 
 if isnumeric(mtype) && length(mtype) > 1

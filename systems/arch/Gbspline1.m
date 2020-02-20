@@ -31,7 +31,7 @@
 fail 'not done'
 
 if nargin == 1 && streq(mask, 'test'), Gbspline1_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 % option defaults
 arg.type = 'todo';

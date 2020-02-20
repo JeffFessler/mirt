@@ -21,7 +21,7 @@
 %|
 %| Copyright 2000-06, Jeff Fessler, University of Michigan
 
-if nargin < 5, help(mfilename), error(mfilename), end
+if nargin < 5, ir_usage, end
 
 if ~isvar('niter'), niter = 1; end
 

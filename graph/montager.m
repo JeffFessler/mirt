@@ -17,7 +17,7 @@
 %|
 %| Copyright 1997, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(xi, 'test'), montager_test, return, end
 
 arg.aspect = 1.2; % trick: default 1.2/1 aspect ratio

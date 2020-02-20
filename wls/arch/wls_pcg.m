@@ -20,7 +20,7 @@
 %
 % Copyright 1998-07-03, Jeff Fessler, The University of Michigan
 
-if nargin < 6 || nargin > 8, help(mfilename), error(mfilename), end
+if nargin < 6 || nargin > 8, ir_usage, end
 
 if isvar('mask') && ~isempty(mask), chat = 1; else, chat = 0; end
 if ~isvar('xmin') || isempty(xmin)

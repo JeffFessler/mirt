@@ -5,7 +5,7 @@
 %	we need to precompute the following backprojections:
 %		\sum_{i \in subset_m} a_ij = \sum_{i \in subset_m} c_i g_ij
 
-if nargin ~= 4, help(mfilename), error(mfilename), end
+if nargin ~= 4, ir_usage, end
 
 na = ncol(Gt) / nb;
 if na * nb ~= ncol(Gt)

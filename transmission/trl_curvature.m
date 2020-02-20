@@ -15,7 +15,7 @@
 %| Copyright 2002-1-28, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(yi, 'test'), trl_curvature_test, return, end
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 [h dh] = trl_h_dh;
 

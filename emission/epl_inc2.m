@@ -20,7 +20,7 @@
 %|
 %| Copyright 2005-2-17, Jeff Fessler, University of Michigan
 
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 Gb = block_op(Gb, 'ensure'); % make it a block object (if not already)
 nblock = block_op(Gb, 'n');

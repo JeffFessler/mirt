@@ -46,9 +46,8 @@
 
 if nargin == 1 && streq(kappa, 'test'), Cdiff_test, return, end
 if nargin < 1
-	help(mfilename)
 	if has_mex_jf, penalty_mex('help'), end
-	error(mfilename)
+	ir_usage
 end
 
 %

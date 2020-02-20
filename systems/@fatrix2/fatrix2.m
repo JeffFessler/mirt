@@ -171,8 +171,7 @@ return
 end
 
 if nargin < 2 % because ('arg', arg) is required at least!
-	help(mfilename)
-	error(mfilename)
+	ir_usage
 end
 
 ob = vararg_pair(ob, varargin, 'subs', { ...

@@ -19,7 +19,7 @@
 % Copyright 2005-4-07, Yingying Zhang & Jeff Fessler, The University of Michigan
 
 if nargin == 1 && streq(sg, 'test'), adw_fan_test, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 [x y] = ndgrid(ig.x, ig.y); % image domain pixel locations
 

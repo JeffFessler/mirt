@@ -13,7 +13,7 @@
 %
 % Copyright 2004-7-5, Jeff Fessler, The University of Michigan
 
-if nargin < 5, help(mfilename), error(mfilename), end
+if nargin < 5, ir_usage, end
 
 nL = length(Llist);
 mse = zeros(nL, ncol(Eh));

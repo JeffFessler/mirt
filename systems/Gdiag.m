@@ -16,7 +16,7 @@
 %| Copyright 2005-4-6, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(diag, 'test'), Gdiag_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 arg.mask = [];
 arg.class = 'fatrix2';

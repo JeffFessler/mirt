@@ -18,7 +18,7 @@ if nargin == 2
 elseif nargin == 3
 	tf = strncmp(a,b,n);
 else
-	error(mfilename)
+	ir_usage
 end
 
 function streq_test

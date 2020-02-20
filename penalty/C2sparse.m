@@ -26,7 +26,7 @@
 % Copyright 2002-1-30, Jeff Fessler, The University of Michigan
 
 if nargin == 1 && streq(type, 'test'), C2sparse_test, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 
 if ~isvar('chat'), chat = 0; end

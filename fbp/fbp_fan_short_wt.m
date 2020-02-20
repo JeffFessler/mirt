@@ -21,7 +21,7 @@
 %|
 %| Copyright 2009-12-10, Jeff Fessler and Janghwan Cho, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(sg, 'test')
 	[wt scale180] = fbp_fan_short_wt_test;
 	if ~nargout, clear wt scale180, end

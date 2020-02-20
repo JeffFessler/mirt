@@ -18,7 +18,7 @@
 %
 % Copyright 2005-7-29, Jeff Fessler, The University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(r, 'test'), kaiser_bessel_xray_test, return, end
 
 if ~isvar('J'), J = 4; end

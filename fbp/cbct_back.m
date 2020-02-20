@@ -29,7 +29,7 @@
 %| 2014-07-16 JF added row extrapolation by padding before calling mex version
 
 if nargin == 1 && streq(proj, 'test'), cbct_back_test, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 arg.use_mex = []; % see below
 arg.ia_skip = 1;

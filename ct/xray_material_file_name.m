@@ -13,7 +13,7 @@
 %|
 %| Copyright 2006-03-30, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(name, 'test'), xray_material_file_name_test, return, end
 
 arg.dir = [];

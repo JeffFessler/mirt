@@ -27,7 +27,7 @@
 %| Copyright 2005-12-19, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(type, 'test'), fbp2_sino_filter_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 arg.ds = 1;
 arg.dsd = [];

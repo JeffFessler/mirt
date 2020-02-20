@@ -63,7 +63,7 @@
 %| Fan-beam contributed by Yingying Zhang.  Basis etc. by Samuel Matej.
 
 if nargin == 1 && streq(sg, 'test'), run_mfile_local('Gtomo_nufft_test'), return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 if streq(sg.type, 'fan')
 	if sg.dfs ~= 0

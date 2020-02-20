@@ -20,7 +20,7 @@
 %| MJ Allison
 %| 2015-06-27 JF cosmetic changes
 
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 arg.fmax = 0.1;
 arg.dmax = 0.1;

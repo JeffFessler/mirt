@@ -15,7 +15,7 @@
 %|
 %| Copyright August 2006, Se Young Chun and Jeff Fessler, University of Michigan
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 argB.power = 0;
 argB.ig = ig;

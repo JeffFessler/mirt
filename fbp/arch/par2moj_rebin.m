@@ -13,7 +13,7 @@
 % Copyright 2005-12-7, Jeff Fessler, The University of Michigan
 
 if nargin == 1 && streq(psino, 'test'), par2moj_rebin_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 % parallel-beam defaults
 arg.dr = 1;

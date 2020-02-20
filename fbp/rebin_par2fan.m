@@ -22,7 +22,7 @@
 
 if nargin == 1 && streq(psino, 'test'), rebin_par2fan_test, return, end
 if nargin == 1 && streq(psino, 'test-moj'), rebin_par2fan_test_moj, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 % defaults
 arg.ob = false; % set to 1 to create (Fatrix or fatrix2) object

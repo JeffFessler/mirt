@@ -54,7 +54,7 @@
 % argsADMM = { 'bodycoil', bodycoil_s, 'maskD', maskObj_s,        'conds', ksADMM, 'condu0', ku0ADMM,'l2b', l2b,'niter',niter,...
 
 if nargin == 1 && streq(ykj, 'test'), ir_mri_sensemap_admm_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 % defaults
 arg.bodycoil = [];

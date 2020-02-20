@@ -7,7 +7,7 @@
 %| Used as part of many "back" (adjoint) methods to comply with fatrix2
 %| requirement that "back" method apply the mask.
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 if isempty(mask)
 	y = x;

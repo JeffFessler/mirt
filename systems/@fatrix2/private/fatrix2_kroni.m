@@ -13,7 +13,7 @@
 %|
 %| Copyright 2011-09-29, Jeff Fessler, University of Michigan
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 arg.Mkron = Mkron;
 arg.ob = ob;

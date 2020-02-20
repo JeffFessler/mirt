@@ -4,7 +4,7 @@
 %| by combination of downsampling and cropping
 
 if nargin == 1 && streq(x, 'test'), ir_phantom_resize_test, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 mx = size(x,1);
 my = size(x,2);

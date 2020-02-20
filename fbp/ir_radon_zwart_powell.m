@@ -20,7 +20,7 @@
 %| 2015-08-10 Jeff Fessler, added self test and parallelized
 
 if nargin == 1 && streq(theta, 'test'), ir_radon_zwart_powell_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 dim = size(theta);
 theta = theta(:);

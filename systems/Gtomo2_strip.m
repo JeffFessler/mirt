@@ -25,7 +25,7 @@
 %| Copyright 2005-8-16, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(sg, 'test'), Gtomo2_strip_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 % defaults
 arg.gam_max = 90; % degrees

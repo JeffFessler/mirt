@@ -4,7 +4,7 @@
 %| check that array x has dimensions "dim"
 %| account for the "trailing 1" of size() for 1d column vectors
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 siz = size(x);
 if numel(siz) == numel(dim) + 1 && siz(end) == 1

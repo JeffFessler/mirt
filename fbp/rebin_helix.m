@@ -34,7 +34,7 @@ if nargin == 1 && streq(cg, 'test')
 return
 end
 
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 arg.type = 'linear';
 arg.short = true;

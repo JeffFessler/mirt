@@ -31,7 +31,7 @@
 %| Copyright Jun 2000, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(x, 'test'), run_mfile_local('qpwls_psd_test_todo'), return, end
-if nargin < 5, help(mfilename), error(mfilename), end
+if nargin < 5, ir_usage, end
 
 % defaults
 arg.precon = 1;

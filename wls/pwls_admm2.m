@@ -43,7 +43,7 @@
 %| Copyright 2014-04-27, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(x, 'test'), pwls_admm2_test, return, end
-if nargin < 5, help(mfilename), error(mfilename), end
+if nargin < 5, ir_usage, end
 
 warn('todo: under construction')
 

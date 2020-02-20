@@ -34,7 +34,7 @@
 %| Copyright 2006-12-9, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(fun, 'test'), embed_mult_test, return, end
-if nargin < 10, help(mfilename), error(mfilename), end
+if nargin < 10, ir_usage, end
 
 switch is_array
 case 1

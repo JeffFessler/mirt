@@ -19,7 +19,7 @@
 %| Copyright 2013-05-08, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(isize, 'test'), Cdiff1_tune_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 arg.offset = [1];
 arg.order = 1;

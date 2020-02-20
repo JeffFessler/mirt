@@ -28,7 +28,7 @@
 %| and Jeff Fessler, The University of Michigan
 
 if nargin == 1 && streq(sino, 'test'), run_mfile_local('fbp_fan_flat_example'), return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 if ~isvar('window') || isempty(window)
 	window = 'ramp';
 end

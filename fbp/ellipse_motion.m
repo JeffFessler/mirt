@@ -18,7 +18,7 @@
 %
 % Copyright 2007-10-12, Jeff Fessler, The University of Michigan
 
-if ~nargin, help(mfilename), error(mfilename), end
+if ~nargin, ir_usage, end
 if streq(ells, 'test'), fbp2_motion_example, return, end
 
 % defaults

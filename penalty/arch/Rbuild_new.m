@@ -34,7 +34,7 @@
 %
 % Copyright 2002-3-14, Jeff Fessler, The University of Michigan
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 warning 'Rbuild_new is obsolete: use Robject'
 

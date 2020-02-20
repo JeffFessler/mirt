@@ -23,7 +23,7 @@
 %| Copyright 2011-07-16, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(sino, 'test'), fbp2_sino_hilbert_test, clear, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 arg.dr = 1;
 arg.window = '';

@@ -21,7 +21,7 @@
 %| Copyright 2006-2-2, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(ig, 'test'), rect_im_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 arg.oversample = 1;
 arg.replace = 0;

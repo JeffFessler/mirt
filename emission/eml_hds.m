@@ -2,7 +2,7 @@
 %function gam = eml_hds(Gb, ci, ri, hds)
 % precompute hidden data space factor, based on 1995 PML SAGE paper
 
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 if iscell(ci)
 	gam = inf;

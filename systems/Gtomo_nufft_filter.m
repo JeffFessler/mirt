@@ -12,7 +12,7 @@
 %| Copyright 2001-1, Jeff Fessler, University of Michigan
 %| Extend to fan-beam geometry, 2003-11, Yingying Zhang
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 % effect of image-domain shift
 y = exp(1i * (omega * ob.nxy_shift(:)));

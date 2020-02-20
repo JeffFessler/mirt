@@ -43,7 +43,7 @@
 %| Copyright 2006-3-3, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(sl, 'test'), de_ftab_fit_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 arg.show = false;
 arg.type = '';

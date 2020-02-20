@@ -21,7 +21,7 @@
 %| Copyright 2001-12-8, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(k, 'test'), nufft_diric_test, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 if nargin < 4
 	use_true_diric = false;

@@ -31,7 +31,7 @@ if nargin == 1 && streq(varargin{1}, 'test')
 	run_mfile_local('Gnufft_test')
 return
 end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 arg.class = 'fatrix2';
 arg.mask = [];

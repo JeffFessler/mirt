@@ -34,7 +34,7 @@
 %	st.z		z coordinates of each pixel
 %
 % Copyright October 2006, Se Young Chun and Jeff Fessler, University of Michigan
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 % defaults
 st.nx = [];

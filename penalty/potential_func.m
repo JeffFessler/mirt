@@ -22,7 +22,7 @@
 %|
 % Copyright 2004-5-18, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(type, 'test') potential_func_test, return, end
 
 pot.delta = [];

@@ -14,7 +14,7 @@
 %|
 %| 2012-05-15, Jeff Fessler, Univ. of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(label, 'test'), mri_brainweb_params_test, return, end
 
 arg.b0 = 1.5;

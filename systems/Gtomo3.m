@@ -45,7 +45,7 @@
 %| Copyright 01-04-22, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(sys_type, 'test'), Gtomo3_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 % handle new usage (for CT)
 % (cg, ig, [options])

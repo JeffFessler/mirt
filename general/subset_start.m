@@ -13,7 +13,7 @@
 %|
 %| Copyright 2000-4-?, Jeff Fessler, University of Michigan
 
-% if nargin < 1, help(mfilename), error(mfilename), end
+% if nargin < 1, ir_usage, end
 if nargin == 1 && streq(nsubset, 'test'), subset_start_test, return, end
 
 if ~nargin || isempty(nsubset)

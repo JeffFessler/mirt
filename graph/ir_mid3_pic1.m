@@ -15,7 +15,7 @@
 %|
 %| 2012-10-01, Jeff Fessler
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(x, 'test'), ir_mid3_pic1_test, return, end
 
 arg.clim = [800 1200];

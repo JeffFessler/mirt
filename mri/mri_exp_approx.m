@@ -55,7 +55,7 @@
 %| Copyright 2004-7-1, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(ti, 'test'), mri_exp_approx_test, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 persistent warned
 if isempty(warned), warned = 0; end

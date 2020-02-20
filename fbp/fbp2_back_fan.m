@@ -18,7 +18,7 @@
 %| Copyright 2006-4-19 by Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(sg, 'test'), fbp2_back_fan_test, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 arg.ia_skip = 1;
 arg = vararg_pair(arg, varargin);

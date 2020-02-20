@@ -10,7 +10,7 @@
 %|	mac.mac	[ne L]
 %|	mac.bar	[M L]	effective mass attenuation coefficents near 0
 %|
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 mac.mac = mas.mac(xrs.en); % [ne L]
 mac.bar = mas.mean(xrs.en, xrs.Ide); % [M L]

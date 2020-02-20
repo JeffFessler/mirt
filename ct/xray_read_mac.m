@@ -31,7 +31,7 @@
 %|
 %| Copyright 2008-6-15, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(mtype, 'test'), xray_read_mac_test, return, end
 if nargin == 1 && streq(mtype, 'test-water'), xray_read_mac_water, return, end
 

@@ -22,7 +22,7 @@
 %	Copyright Mar 2000, Jeff Fessler, The University of Michigan
 %	2002-2-20 update for Gblock object
 
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 if ~isvar('bi') || isempty(bi)
 	bi = ones(size(yi));

@@ -17,7 +17,7 @@
 %| Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(varargin{1}, 'test'), read_ncat_test, return, end
-if ~nargout, help(mfilename), error(mfilename), end
+if ~nargout, ir_usage, end
 
 arg.nx = 1024;
 arg.ny = [];

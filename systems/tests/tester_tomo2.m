@@ -19,7 +19,7 @@
 %|
 %| Copyright 2005-8-2, Jeff Fessler, University of Michigan
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 arg.multi = true;
 arg.A2 = [];

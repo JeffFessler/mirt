@@ -6,7 +6,7 @@
 %| Jeff Fessler, based on:
 %| http://stackoverflow.com/questions/6082896/remove-titlebar-from-matlab-gui-for-full-screen-display
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 switch class(x)
 case 'uint8'

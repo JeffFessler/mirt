@@ -23,7 +23,7 @@
 %| 2014-08-21 Jeff Fessler and Mai Le, University of Michigan
 
 if nargin == 1 && streq(r1d, 'test'), ir_mri_dce_gre_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 arg.TR = 5e-3; % 5ms TR
 arg.TE = 0;

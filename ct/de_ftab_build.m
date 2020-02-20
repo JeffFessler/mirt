@@ -27,7 +27,7 @@
 %|
 %| Copyright 2001-04-27, Jeff Fessler, The University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(s_arg, 'test'), de_ftab_build_test, return, end
 
 ftab.show = false;

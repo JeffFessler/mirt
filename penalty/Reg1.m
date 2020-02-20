@@ -84,7 +84,7 @@
 %|
 %| Copyright 2006-12-6, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(kappa, 'test'), run_mfile_local 'Reg1_test', return, end
 
 % option defaults

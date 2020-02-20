@@ -6,7 +6,7 @@
 %	ys	[N,L]		or ?
 
 if nargin == 1 && streq(x, 'test'), subplot_stack_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 if ~isvar('colors') || isempty(colors), colors = {'c', 'y'}; end
 if ~isvar('str_title') || isempty(str_title)
 	str_title = '';

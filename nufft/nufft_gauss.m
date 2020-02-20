@@ -15,7 +15,7 @@
 
 % if no arguments, give an example, comparing ft to zn
 if nargin < 1
-	help(mfilename)
+
 	N = 256; K = 2*N; J = 4;
 	[kernel, kernel_ft] = nufft_gauss('inline', J);
 
@@ -31,7 +31,7 @@ if nargin < 1
 	legend('1/FT', '1/zn')
 	xlabel 't', ylabel '\Psi(t)', title 'Reciprocal of Fourier transform'
 
-	error(mfilename)
+	ir_usage
 end
 
 if ~isvar('type') || isempty(type), type = 'string'; end

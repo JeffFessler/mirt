@@ -23,7 +23,7 @@
 %
 % Copyright May 1999, Jeff Fessler
 
-if nargin < 6, help(mfilename), error(mfilename), end
+if nargin < 6, ir_usage, end
 if ~isvar('bi') || isempty(bi)
 	bi = ones(size(yi(:)));
 end

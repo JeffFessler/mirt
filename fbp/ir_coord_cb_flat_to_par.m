@@ -11,7 +11,7 @@
 %|
 %| 2013-05-24, Jeff Fessler, University of Michigan
 
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 Ds = dso;
 Dd = dod;

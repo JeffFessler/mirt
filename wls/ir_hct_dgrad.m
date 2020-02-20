@@ -11,7 +11,7 @@
 %| Jeff Fessler, 2012-06-17
 
 if nargin == 1 && streq(x, 'test'), ir_hct_dgrad_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 arg.clean = true; % remove files after?
 arg.dir = ''; % work directory

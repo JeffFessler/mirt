@@ -30,7 +30,7 @@
 %| 2012-8-1 'interpn,linear,circ' option added by F. Zhao and M. Muckley
 
 if nargin == 1 && streq(mask, 'test'), Gtranslate_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 arg.mask = mask;
 

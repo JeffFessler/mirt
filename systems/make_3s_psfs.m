@@ -10,9 +10,7 @@
 % out
 %	psfs		[npsf npsf ny]
 
-if nargin < 5
-	help(mfilename), error(mfilename)
-end
+if nargin < 5, ir_usage, end
 
 %
 % system-dependent factors

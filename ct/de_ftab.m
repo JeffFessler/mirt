@@ -42,7 +42,7 @@
 %| Copyright 2008-6-15, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(xrs, 'test'), de_ftab_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 ftab.show = false;
 ftab.sls = struct([]);

@@ -4,9 +4,7 @@
 % called by Gblock.m
 % Copyright 2002-2-19, Jeff Fessler, The University of Michigan
 
-if nargin < 2
-	error(mfilename)
-end
+if nargin < 2, ir_usage, end
 
 out = in; % copy entire object
 

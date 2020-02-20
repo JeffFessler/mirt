@@ -18,7 +18,7 @@
 %| 2012-05-16, Jeff Fessler, University of Michigan
 
 %if nargin == 1 && streq(x, 'test'), mri_r2_fit_normalize_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 arg.threshold = 0.5;
 arg.chat = 0;

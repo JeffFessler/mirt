@@ -27,7 +27,7 @@
 %| Copyright 2006-12-9, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(x, 'test'), embed_in_test, clear x, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 if nargin < 3, np = sum(mask(:)); end
 
 % convert input to [(N) *L]

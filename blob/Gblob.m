@@ -16,7 +16,7 @@
 %	ipsf	(2*J+1)^ndim	inverse psf
 %
 if nargin == 1 && streq(varargin{1}, 'test'), Gblob_test, return, end
-%if nargin < 3, help(mfilename), error(mfilename), end
+%if nargin < 3, ir_usage, end
 
 arg.mask = [];
 arg.ndim = 2;

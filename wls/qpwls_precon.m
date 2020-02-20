@@ -30,7 +30,7 @@
 %| Copyright 2004-6-29, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(type, 'test'), qpwls_precon_test, return, end
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 arg.chat = false;
 arg.kappa = [];

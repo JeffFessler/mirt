@@ -19,7 +19,7 @@
 %|
 %| 2013-05-27, Jeff Fessler, University of Michigan
 
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 uu = rr;
 polar = -asin(tt / dsd);

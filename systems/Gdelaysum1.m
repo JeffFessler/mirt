@@ -22,7 +22,7 @@
 %| Copyright 2006-8-25, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(varargin{1}, 'test'), Gdelaysum1_test, return, end
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 % defaults
 arg.Ny = [];

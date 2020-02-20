@@ -17,7 +17,7 @@
 if nargin == 1 && streq(ob, 'test'), Gnufft_gram_test, return, end
 if nargin == 1 && streq(ob, 'test1'), Gnufft_gram_test1, return, end
 if nargin == 1 && streq(ob, 'test2'), Gnufft_gram_test2, return, end
-if nargin < 2 || nargin > 3, help(mfilename), error(mfilename), end
+if nargin < 2 || nargin > 3, ir_usage, end
 
 if ~isvar('reuse'), reuse = []; end
 

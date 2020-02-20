@@ -3,7 +3,7 @@
 % zero pad an input signal x symmetrically around "0" (image center)
 % by A. Yendiki
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(x, 'test'), zpad0_test, return, end
 
 if nargin == 2

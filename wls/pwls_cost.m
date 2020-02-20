@@ -20,7 +20,7 @@
 %|
 %| Copyright 2002-2-12, Jeff Fessler, University of Michigan
 
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 if ~isvar('R'), R = []; end
 

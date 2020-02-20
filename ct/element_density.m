@@ -1,7 +1,7 @@
  function rho = element_density(elem)
 %function rho = element_density(elem)
 % density of an element (in g/cc)
-if ~nargin, help(mfilename), error(mfilename), return, end
+if ~nargin, ir_usage, return, end
 
 % http://environmentalchemistry.com/yogi/periodic/density.html 
 % awk '{print $5, $4, $3, $1, $2}' < tt | sort -n > element_density.m

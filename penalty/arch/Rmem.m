@@ -55,7 +55,7 @@
 %
 % Copyright 2006-5-23, Jeff Fessler, The University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(kappa, 'test'), run_mfile_local 'Rmem_test', return, end
 
 % option defaults

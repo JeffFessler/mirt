@@ -13,7 +13,7 @@
 %|
 %| Copyright 2008-9-23, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(buff, 'test'), aspire_buff2mat_test, return, end
 
 sp = aspire_buff_parse(buff); % parse buffer

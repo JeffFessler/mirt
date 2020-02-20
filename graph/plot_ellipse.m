@@ -7,7 +7,7 @@
 %|	'hold'	1|0	if 1, then add to current plot.  default: 0
 
 if nargin == 1 && streq(cx, 'test'), plot_ellipse_test, return, end
-if nargin < 5, help(mfilename), error(mfilename), end
+if nargin < 5, ir_usage, end
 
 arg.n = 301;
 arg.c = 'b-';

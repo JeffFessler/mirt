@@ -15,7 +15,7 @@
 %
 % Copyright 2004-8-13, Patty Laskowsky, Nicole Caparanis, Taka Masuda,
 % and Jeff Fessler, The University of Michigan
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 if nargout > 1
 	warning 'units of output params not finished'

@@ -26,7 +26,7 @@ if nargin == 1 && streq(undersamp_data, 'test')
 return
 end
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 if ~islogical(sampling_pattern)
 	fail 'sampling_pattern must be logical'

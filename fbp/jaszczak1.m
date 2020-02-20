@@ -3,7 +3,7 @@
 % Generate ellipse parameters for a Jaszczak phantom of diameter diam.
 % Copyright 2005-8-26, Jeff Fessler, The University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(diam, 'test'), jaszczak1_test, return, end
 
 nrow = [8 6:-1:2]; % how many rows of disks for each wedge

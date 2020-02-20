@@ -15,7 +15,7 @@
 %|
 %| Copyright 2006-12-6, Jeff Fessler, University of Michigan
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 if isempty(offsets)
 	switch length(isize)

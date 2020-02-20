@@ -15,7 +15,7 @@
 %|
 %| Jeff Fessler, University of Michigan
 
-if ~nargin, help(mfilename), error(mfilename), end
+if ~nargin, ir_usage, end
 if streq(data, 'test'), jf_slicer_test, return, end
 
 arg.clim = [];

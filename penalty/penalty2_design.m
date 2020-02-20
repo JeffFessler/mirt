@@ -19,7 +19,7 @@
 %|
 %| Copyright 2003-5-23, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 % run a self-test to compare my analytical solution
 % to the numerical solution computed using NNLS.
@@ -30,9 +30,7 @@ end
 
 % analytical design of 1st-order difference, 2nd-order neighborhood
 if streq(type, 'quad,d1', 7)
-	if length(varargin) < 1 || length(varargin) > 3
-		help(mfilename), error(mfilename)
-	end
+	if length(varargin) < 1 || length(varargin) > 3, ir_usage, end
 
 	if ischar(varargin{1})
 		Ctype = varargin{1};

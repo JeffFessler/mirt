@@ -37,7 +37,7 @@ if nargin == 1 && streq(cg, 'test')
 	run_mfile_local('feldkamp_example')
 return
 end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 if isnumeric(cg)
 	img = feldkamp_old(cg, ig, proj, varargin{:});

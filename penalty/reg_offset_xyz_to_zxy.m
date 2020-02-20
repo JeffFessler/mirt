@@ -17,7 +17,7 @@ if nargin == 1 && streq(offset_xyz, 'test')
 	reg_offset_xyz_to_zxy_test
 return
 end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 if numel(dim_xyz) ~= 3
 	fail('expected dim_zxy to be [3]')

@@ -21,7 +21,7 @@
 %
 % Copyright Jan 1998, Jeff Fessler, The University of Michigan
 
-if nargin < 8 || nargin > 10, help(mfilename), error(mfilename), end
+if nargin < 8 || nargin > 10, ir_usage, end
 
 if ~isvar('chat') || isempty(chat), chat = 0; end
 

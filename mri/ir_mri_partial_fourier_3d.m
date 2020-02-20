@@ -46,7 +46,7 @@ if nargin == 1 && streq(partial_kspace, 'test')
 	run_mfile_local ir_mri_partial_fourier_3d_test2 % 2D test
 	return
 end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 % options
 arg.pf_location = [1 0 1];

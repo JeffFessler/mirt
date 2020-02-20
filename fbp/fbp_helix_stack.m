@@ -28,7 +28,7 @@ if nargin == 1 && streq(cg, 'test')
 return
 end
 
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 arg.window = ''; % ramp
 arg.short = true;

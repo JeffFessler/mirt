@@ -56,7 +56,7 @@
 %| Copyright 2006-12-2, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(kappa, 'test'), Rweights_self_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 % arguments
 arg.offsets = offsets;

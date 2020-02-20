@@ -7,7 +7,7 @@
 %| if it is the first option.
 
 if nargin == 1 && streq(x, 'test'), texts_test, return, end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 xl = get(gca, 'xlim');
 yl = get(gca, 'ylim');

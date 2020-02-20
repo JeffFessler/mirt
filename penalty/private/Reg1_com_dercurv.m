@@ -17,7 +17,7 @@
 %|
 %| Jeff Fessler, University of Michigan
 
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 siz = size(C1x);
 C1x = reshape(C1x, [prod(sr.dim) sr.M]); % [*N M]

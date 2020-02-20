@@ -12,7 +12,7 @@
 %|
 %| Copyright 2011-3-4, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 [buff sp.head] = aspire_buff_skip_ff(buff);
 

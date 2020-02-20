@@ -24,7 +24,7 @@
 %
 % Copyright Jan 1998, Jeff Fessler, The University of Michigan
 
-if nargin < 5, help(mfilename), error(mfilename), end
+if nargin < 5, ir_usage, end
 
 % defaults
 arg.precon = 1;

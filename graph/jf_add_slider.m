@@ -12,7 +12,7 @@
 %|
 %| Copyright 2010-1-11, Jeff Fessler, University of Michigan
 
-if ~nargin && ~nargout, help(mfilename), error(mfilename), end
+if ~nargin && ~nargout, ir_usage, end
 if nargin && streq(varargin{1}, 'test'), jf_add_slider_test, return, end
 
 arg.callback = @jf_add_slider_call;

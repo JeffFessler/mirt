@@ -16,7 +16,7 @@
 %| Copyright 2004-05-1, Jeff Fessler, University of Michigan
 
 % default is to show example
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(kev, 'test'), xray_atten_interp_test, return, end
 
 % = {'linear', 'extrap'};

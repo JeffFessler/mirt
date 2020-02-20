@@ -5,7 +5,7 @@
 %|
 %| Copyright 2001-12-8, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(x, 'test'), nufft_sinc_test, return, end
 
 iz = find(x == 0); % indices of zero arguments

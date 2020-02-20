@@ -70,7 +70,7 @@
 % Fan-beam contributed by Yingying Zhang.  Basis etc. by Samuel Matej.
 
 if nargin == 1 && streq(mask, 'test'), Gtomo_nufft_test, return, end
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 
 arg.mask = mask;
 [arg.nx arg.ny] = size(mask);

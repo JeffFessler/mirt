@@ -1,7 +1,7 @@
   function total = ugibb_sum(ugibb)
 %|function total = ugibb_sum(ugibb)
 %| check total wjk sum for each pixel given a ugibb stack
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(ugibb, 'test'), ugibb_form('test'), return, end
 
 %

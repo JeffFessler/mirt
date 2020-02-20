@@ -13,7 +13,7 @@
 %|
 %| Copyright 2010-12-21, Jeff Fessler, University of Michigan
 
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 
 if ~isempty(mask)
 	z = y(mask(:),:);

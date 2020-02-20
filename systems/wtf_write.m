@@ -8,7 +8,7 @@
 %! Copyright 2008-9-26, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(file, 'test'), wtf_write_test, return, end
-if nargin < 6, help(mfilename), error(mfilename), end
+if nargin < 6, ir_usage, end
 
 arg.chat = 0;
 arg.row_grouped = 0;

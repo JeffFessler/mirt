@@ -6,7 +6,7 @@
 %|
 %| Jeff Fessler
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if streq(ob, 'test'), Gmri_gram_test, return, end
 
 if isempty(W)

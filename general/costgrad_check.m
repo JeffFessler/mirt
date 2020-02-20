@@ -17,7 +17,7 @@
 if nargin == 1 && streq(x, 'test')
 	run_mfile_local('costgrad_check_test'), return
 end
-if nargin < 3, help(mfilename), error(mfilename), end
+if nargin < 3, ir_usage, end
 if ~isa(costgrad, 'function_handle'), error 'costgrad not function handle?', end
 
 arg.step = 0.01; % dumb user default

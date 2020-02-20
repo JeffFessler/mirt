@@ -16,7 +16,7 @@
 %|
 %| Jeff Fessler and others, University of Michigan
 
-if nargin < 5, help(mfilename), error(mfilename), end
+if nargin < 5, ir_usage, end
 
 [ns nt na] = size(proj);
 npadh = 2^ceil(log2(2*ns-1));

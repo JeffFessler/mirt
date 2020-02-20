@@ -12,6 +12,6 @@
 %|
 %| Copyright 2010-12-04, Jeff Fessler, University of Michigan
 
-%if nargin ~= 2, help(mfilename), error(mfilename), end
+%if nargin ~= 2, ir_usage, end
 
 ob.scale = ob.scale * scalar;

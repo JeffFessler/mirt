@@ -6,7 +6,7 @@
 %| Jeff Fessler
 
 if nargin == 1 && streq(i1, 'test'), im_toggle_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 % find leading additional arguments corresponding to images
 iall = {i1, i2};

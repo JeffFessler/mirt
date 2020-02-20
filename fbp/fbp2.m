@@ -50,7 +50,7 @@ if nargin == 1 && streq(varargin{1}, 'test')
 	run_mfile_local fbp2_example
 	return
 end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 if ~isnumeric(varargin{1}) % setup
 	out = fbp2_setup(varargin{1}, varargin{2}, varargin{3:end});

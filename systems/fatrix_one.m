@@ -20,7 +20,7 @@
 %|
 %| Copyright 2007-12-14, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(dim, 'test'), fatrix_one_test, return, end
 if nargin == 1 && streq(dim, 'test0'), fatrix_one_test0, return, end
 

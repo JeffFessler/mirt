@@ -41,7 +41,7 @@
 %| Copyright 2005-5-19, Jeff Fessler, University of Michigan
 
 if nargin == 1 && streq(cg, 'test'), run_mfile_local Gcone_test, return, end
-if nargin < 2, help(mfilename), error(mfilename), end
+if nargin < 2, ir_usage, end
 
 % option defaults
 arg.type = ''; % see below

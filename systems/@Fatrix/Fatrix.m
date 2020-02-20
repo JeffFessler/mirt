@@ -80,8 +80,7 @@ return
 end
 
 if nargin < 2
-	help(mfilename)
-	error(mfilename)
+	ir_usage
 end
 
 ob.arg = arg;
