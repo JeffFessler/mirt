@@ -17,6 +17,8 @@ function ob = repmat(A, dims)
 %|
 %| numel(dims) > 2 is not supported
 
+if nargin < 2, ir_usage, end
+
 if numel(dims) > 2 || (prod(dims) > max(dims))
     fail('unsupported for 2d repmat, change to dims = [N 1] or [1 N]');
 end
@@ -38,7 +40,5 @@ else  % horizontal cat
     
     ob = cat(2,B{:});
 end
-
-
 
 end
