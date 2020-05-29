@@ -32,7 +32,7 @@ for kk=1:ncol(xs)
 %	like(kk) = sum(yi .* log(yp) - yp); % old basic way
 	like(kk) = sum(yi(good) .* log(yp(good))) - sum(yp); % new better way
 	if ~isempty(R)
-		if isstruct(R)
+		if isstruct(R) || isa(R, 'strum')
 			penal(kk) = R.penal(R, x);
 		else
 			penal(kk) = norm(col(R*x))^2/2; % norm(C * x).^2 / 2;
