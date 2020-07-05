@@ -288,7 +288,8 @@ axis normal
 % truncate to "digits" of precision:
 % trick with ceil and floor to avoid losing the label
 % need to "round" towards the middle of the clim range
-function tick = ir_cbar_tick(clim, digits)
+function tick = ir_cbar_tick(clim_in, digits)
+clim = clim_in;
 if clim(2) > 100
 	clim(2) = floor(clim(2));
 end
@@ -296,6 +297,9 @@ type2 = 'floor'; if clim(2) < 0, type2 = 'ceil'; end
 type1 = 'ceil'; if clim(1) < 0, type1 = 'floor'; end
 tick(1) = truncate_precision(clim(1), digits, 'type', type1);
 tick(2) = truncate_precision(clim(2), digits, 'type', type2);
+if tick(1) == tick(2) % revert to input if identical
+	tick = clim_in;
+end
 
 
 % ir_cbar_test
