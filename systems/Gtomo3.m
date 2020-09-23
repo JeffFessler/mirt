@@ -158,6 +158,7 @@ case 'fatrix2'
 	ob = fatrix2('mask', arg.mask, 'arg', arg, abs_arg{:}, ...
 		'does_many', 1, ...
 		'forw', forw, 'back', back, ...
+		'free', @Gtomo3_free, ...
 		'forw_block', forw_block, 'back_block', back_block);
 	if ~isempty(arg.scale)
 		ob = arg.scale * ob;
@@ -267,6 +268,7 @@ x = eo.shape(x, arg.mask, arg.np);
 function Gtomo3_free(arg)
 if arg.chat
 	printm('freeing Gtomo3 object static memory')
+	warn('further use of this Gtomo3 object is invalid')
 end
 f3d_mex('free:1', arg.optr);
 
