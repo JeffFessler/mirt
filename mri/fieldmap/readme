@@ -1,0 +1,18 @@
+The functions in this directory are all related to B0 field maps in MRI.
+
+Simulating B0 field maps:
+ mri_field_map_cyl.m
+ mri_field_map_sim.m
+
+Recommended methods for estimating B0 field maps:
+ fmap_est_pcg_ls.m
+ fmap_est_qm.m
+See code/data here:
+ https://github.com/ClaireYLin/regularized-field-map-estimation
+
+Older methods for estimating B0 field maps, retained for completeness:
+ mri_field_map_reg.m
+ ir_mri_field_map_reg_scale.m
+ mri_phase_denoise.m
+ mri_phase_denoise_sim1.m
+ unwrapping_sps_manysets.m

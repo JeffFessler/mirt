@@ -41,6 +41,7 @@ list = {...
 'general', ...		% generic image reconstruction
 'graph', ...		% graphics routines
 'mri', ...		% MRI reconstruction
+'mri/fieldmap', ...	% MRI B0 field map estimation
 'mri-rf/yip-spsp', ...	% MRI RF pulse design
 'nufft', ...		% nonuniform FFT (for a fast projector)
 'nufft/table', ...	% mex files for NUFFT
