@@ -18,6 +18,7 @@
 %| Copyright 2005-8-2, Jeff Fessler, University of Michigan
 
 if nargin < 1, ir_usage, end
+if streq(A, 'test'), test_adjoint_test, return, end
 
 arg.big = 0;
 arg.tolre = 0;
@@ -31,7 +32,7 @@ arg = vararg_pair(arg, varargin);
 test_adjoint_big(A, arg.nrep, arg.tol, arg.complex, arg.warn, arg.chat);
 if arg.big, return, end % stop here if 'big'
 
-[nd np] = size(A);
+[nd, np] = size(A);
 
 try
 	% must be very careful here because ob(:,:) calls full(ob) by default
@@ -44,7 +45,11 @@ try
 	if isa(A, 'Fatrix')
 		Af = A(:,:); % not for fatrix2! calls full()
 	else
-		Af = full(A, 'col'); % trick
+		if isa(A, 'fatrix2')
+			Af = full(A, 'col'); % trick
+		else
+			Af = full(A);
+		end
 	end
 	if arg.chat, printm 'done', end
 
@@ -53,7 +58,11 @@ try
 	if isa(Aa, 'Fatrix')
 		Aa = Aa(:,:); % not for fatrix2! calls full()
 	else
-		Aa = full(Aa, 'col'); % trick
+		if isa(A, 'fatrix2')
+			Aa = full(Aa, 'col'); % trick
+		else
+			Af = full(A);
+		end
 	end
 	if arg.chat, printm 'done', end
 
@@ -100,6 +109,8 @@ else
 	end
 end
 
+end % test_adjoint
+
 
 % test_adjoint_big()
 % test for big operators using random vectors
@@ -107,10 +118,10 @@ function test_adjoint_big(A, nrep, tol, do_complex, do_warn, chat)
 rng(0)
 for ii=1:nrep
 	x = rand(size(A,2),1) - 0.5;
-	y = rand(size(A,1),1) - 0.5 ;
+	y = rand(size(A,1),1) - 0.5;
 	if do_complex
 		x = x + 1i * rand(size(A,2),1) - 0.5;
-		y = y + 1i * rand(size(A,1),1) - 0.5 ;
+		y = y + 1i * rand(size(A,1),1) - 0.5;
 	end
 	Ax = A * x;
 	if ~isreal(Ax) && ~do_complex
@@ -136,4 +147,15 @@ for ii=1:nrep
 		pr v1
 		pr v2
 	end
+end
+
+end % test_adjoint_big
+
+
+function test_adjoint_test
+	B = randn(4,3);
+	test_adjoint(B);
+	test_adjoint(B, 'big', true);
+	B = B + 2i;
+	test_adjoint(B, 'complex', true);
 end

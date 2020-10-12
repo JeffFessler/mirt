@@ -123,10 +123,12 @@ if ~isvar('xfbp'), printm 'fbp'
 	im(chang, 'chang'), cbar
 	im(xfbp, 'fbp'), cbar
 	im subplot 4
-	plot(	1:ig.nx, xtrue(:,end/2,end/2), ...
-		1:ig.nx, xfbp(:,end/2,end/2))
-	xlabel('x'); xlim([1,ig.nx])
-	ir_legend({'True', 'FBP'}, 'location', 'northwest')
+	if im
+		plot(	1:ig.nx, xtrue(:,end/2,end/2), ...
+			1:ig.nx, xfbp(:,end/2,end/2))
+		xlabel('x'); xlim([1,ig.nx])
+		ir_legend({'True', 'FBP'}, 'location', 'northwest')
+	end
 prompt
 end
 
@@ -335,7 +337,7 @@ if 1
 		obj.inc1 = eql_obj(xinc1, G, yi(:), ci(:), ri(:), R, ig.mask);
 	end
 
-	if 1
+	if im
 		ii = 0:f.niter;
 		o0 = obj.emdp1(1);
 		plot( ...
