@@ -1,0 +1,53 @@
+To anyone who is trying to compile the MEX files to run on a PC,
+
+See the instruction in the "help-pc" directory.
+
+The following instructions, provided by Greg Lee on 2008-5-13, may also help.
+
+
+Hi Jeff,
+
+Here are the details for the 2 things I had to change for Windows compilation
+of the code needed for MRI reconstruction:
+
+1.)  All of the interpolation table functions in the irt/nufft/table directory
+use round() which apparently isn't in the C math library used by visual studio.
+I got around this by defining round() near the top of each file:
+
+#if defined(_WIN32)   /* allow Windows compilation */
+double round(double x)
+{
+    return floor(x+.5);
+}
+#endif
+
+
+2.)  I had to add a flag to disable the "Buffer Security Check" feature of Visual Studio before the code in irt/mex/src/ would compile.  I based my MEX configuration file off of MATLAB\R2007a\bin\win64\mexopts\msvc80opts.bat.  After changing the paths to point to add the free version of Visual Studio I have installed,  I had to add an additional compiler flag /GS- to disable this security check.  
+
+More information on what this flag does can be found here:
+http://msdn.microsoft.com/en-us/library/8dbf701c(VS.80).aspx
+
+The relevant line with the GS option disabled is:
+set COMPFLAGS=-c -Zp8 -GR -W3 -EHs -D_CRT_SECURE_NO_DEPRECATE -D_SCL_SECURE_NO_DEPRECATE -D_SECURE_SCL=0 -DMATLAB_MEX_FILE -nologo /GS-
+
+The Matlab command I ran to observe the error was:
+mex penalty_mex.c mexarg.c 'penalty,diff.c' -DIs_pc -DMmex -outdir ../v7
+
+If the /GS- flag is not included, compilation fails during linking with the following output to the terminal:
+
+Microsoft (R) Incremental Linker Version 8.00.40310.39 
+Copyright (C) Microsoft Corporation.  All rights reserved. 
+ 
+C:\DOCUME~1\greglee\LOCALS~1\Temp\mex_36736A54-B97E-49AC-00B2-5B8017F68171\penalty_mex.obj C:\DOCUME~1\greglee\LOCALS~1\Temp\mex_36736A54-B97E-49AC-00B2-5B8017F68171\mexarg.obj C:\DOCUME~1\greglee\LOCALS~1\Temp\mex_36736A54-B97E-49AC-00B2-5B8017F68171\penalty,diff.obj  
+   Creating library C:\DOCUME~1\greglee\LOCALS~1\Temp\mex_36736A54-B97E-49AC-00B2-5B8017F68171\templib.x and object C:\DOCUME~1\greglee\LOCALS~1\Temp\mex_36736A54-B97E-49AC-00B2-5B8017F68171\templib.exp 
+penalty_mex.obj : error LNK2019: unresolved external symbol __security_cookie referenced in function penalty_wk_mex 
+mexarg.obj : error LNK2001: unresolved external symbol __security_cookie 
+penalty,diff.obj : error LNK2001: unresolved external symbol __security_cookie 
+penalty_mex.obj : error LNK2019: unresolved external symbol __security_check_cookie referenced in function penalty_wk_mex 
+mexarg.obj : error LNK2001: unresolved external symbol __security_check_cookie 
+penalty,diff.obj : error LNK2001: unresolved external symbol __security_check_cookie 
+..\v7\penalty_mex.mexw64 : fatal error LNK1120: 2 unresolved externals 
+ 
+  C:\PROGRA~1\MATLAB\R2007A\BIN\MEX.PL: Error: Link of '..\v7\penalty_mex.mexw64' failed. 
+
+- Greg

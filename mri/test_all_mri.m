@@ -3,6 +3,8 @@
 
 list = {...
 'exp_xform_mex_test',
+'fmap_est_pcg_ls test',
+'fmap_est_qm test',
 'image_geom_mri test',
 'ir_mri_coil_combine test',
 'ir_mri_coil_compress test',

@@ -47,14 +47,14 @@ elseif isstruct(x)
 
 elseif ~isempty(dim)
 	if ~isreal(x)
-		x = abs(x)
+		x = abs(x);
 		warn('taking magnitude of complex data')
 	end
 	r = [min(x, [], dim); max(x, [], dim)];
 
 else
 	if ~isreal(x)
-		x = abs(x)
+		x = abs(x);
 		warn('taking magnitude of complex data')
 	end
 	r = [min(x(:)); max(x(:))];

@@ -104,7 +104,8 @@ end
 
 % FBP recon for comparison
 if ~isvar('xfbp'), printm 'fbp'
-	sino = permute(yi, [1 3 2]); % projections to sinograms
+	% apply "oracle scatter correction" then convert
+	sino = permute(yi - ri, [1 3 2]); % projections to sinograms
 
 	tmp = fbp2(sg, ig);
 	xfbp = fbp2(sino, tmp, 'window', 'hann');
@@ -115,10 +116,19 @@ if ~isvar('xfbp'), printm 'fbp'
 	chang(chang == 0) = inf;
 	chang = sg.na ./ chang;
 	chang = chang / 2; % fix: not sure why!?
-%	im(chang, 'chang'), cbar
 	xfbp = xfbp .* chang;
 
+	im plc 2 2
+	im(xtrue, 'xtrue'), cbar
+	im(chang, 'chang'), cbar
 	im(xfbp, 'fbp'), cbar
+	im subplot 4
+	if im
+		plot(	1:ig.nx, xtrue(:,end/2,end/2), ...
+			1:ig.nx, xfbp(:,end/2,end/2))
+		xlabel('x'); xlim([1,ig.nx])
+		ir_legend({'True', 'FBP'}, 'location', 'northwest')
+	end
 prompt
 end
 
@@ -141,13 +151,14 @@ if 1
 	% choose initial image
 	if ~isvar('xinit'), printm 'xinit'
 		if 1
-			xinit = double6(ig.mask); % uniform
+			xinit = single(ig.mask); % uniform
 		else % osem
 			xinit = eml_osem(ig.mask(ig.mask), Gb, os_data{:}, ...
 					9+1, [], 'classic');
 			xinit = ig.embed(xinit);
 			xinit = xinit(:,:,:,end);
 		end
+		im clf
 		im(xinit, 'x init'), cbar
 		clear xmlem xosem xinc1 xinc3 like
 	prompt
@@ -156,8 +167,8 @@ if 1
 	% ordinary EM
 	if ~isvar('xmlem'), printm 'xmlem'
 		f.niter = 20;
-		xmlem = eml_em(xinit(ig.mask), Gb, yi(:), ci(:), ri(:), [], ...
-				f.niter+1);
+		xmlem = eml_em(xinit(ig.mask), Gb, yi(:), ci(:), ri(:), ...
+				'isave', 'all', 'niter', f.niter);
 		xmlem = ig.embed(xmlem);
 		im(xmlem(:,:,:,end), 'x ML-EM'), cbar
 	prompt
@@ -166,7 +177,7 @@ if 1
 	% OS EM
 	if ~isvar('xosem'), printm 'xosem'
 		xosem = eml_osem(xinit(ig.mask), Gb, os_data{:}, ...
-				'niter', f.niter);
+				'isave', 'all', 'niter', f.niter);
 		xosem = ig.embed(xosem);
 		im(xosem(:,:,:,end), 'x OS-EM'), cbar
 	prompt
@@ -200,13 +211,14 @@ if 1
 	if im
 		ii = 0:f.niter;
 		clf, plot( ...
-			ii, like.osem, '-o', ...
+			ii, like.osem, 'b-o', ...
 ... %			ii, like.inc3, '-+', ...
 ... %			ii, like.inc1, '-s', ...
-			ii, like.mlem, '-x')
+			ii, like.mlem, 'r-x')
 		ir_legend({'OSEM', 'MLEM'})
 %		ir_legend({'OSEM', 'INC EM 3', 'INC EM 1', 'MLEM'})
 		title 'Log-likelihood vs Iteration'
+		xlabel('iteration')
 %		axisy(6.921e7, 6.923e7)
 %		axisy(4.5908e7, 4.593e7)
 		if 1
@@ -234,14 +246,16 @@ if 1
 			voi_osem(:,ll) = voi_osem(:,ll) / voi_true(ll) * 100;
 		end
 		ii = 0:f.niter;
-		clf, plot(ii, voi_osem, 'c-o', ii, voi_mlem, 'y-x')
+		clf, plot(ii, voi_osem, 'b-o', ii, voi_mlem, 'r-x')
 		xlabel 'iteration', ylabel '% recovery'
 		ir_legend({'OSEM voi1', 'OSEM voi2', 'MLEM voi1', 'MLEM voi2'})
+	prompt
 	end
+end
 
 
 % penalized-likelihood case
-else
+if 1
 	if ~isvar('R'), printm 'R'
 		f.l2b = 2 - 3*log2(ig.nx/64);
 		R = Reg1(ig.mask, 'edge_type', 'tight', ...
@@ -257,7 +271,7 @@ else
 	% initialize
 	if ~isvar('xinit'), printm 'xinit'
 		xinit = max(xfbp, 0.1);
-		% xinit = double6(ig.mask);
+		% xinit = single(ig.mask);
 		if 1 % initialize with some OSDP iteration(s) (!)
 			xinit = eql_os_emdp(xinit(ig.mask), Gb, os_data{:}, ...
 					R, 'niter', 1, 'isave', 1);
@@ -270,7 +284,6 @@ else
 
 	% OSDP1 (non convergent)
 	if ~isvar('xosdp1'), printm 'xosdp1'
-		f.niter = 30;
 		xosdp1 = eql_os_emdp(xinit(ig.mask), Gb, os_data{:}, ...
 				R, 'niter', f.niter);
 		xosdp1 = ig.embed(xosdp1);
@@ -324,21 +337,26 @@ else
 		obj.inc1 = eql_obj(xinc1, G, yi(:), ci(:), ri(:), R, ig.mask);
 	end
 
-	if 1
+	if im
 		ii = 0:f.niter;
 		o0 = obj.emdp1(1);
 		plot( ...
-			ii(1:6:end), -o0+obj.inc3(1:6:end), 'b-v', ...
-			ii(2:6:end), -o0+obj.inc1(2:6:end), 'g-x', ...
-...%			ii(1:6:end), -o0+obj.osdp3(1:6:end), '-+', ...
-			ii(3:6:end), -o0+obj.osdp1(3:6:end), 'r-o', ...
-			ii(4:6:end), -o0+obj.emdp1(4:6:end), 'c-s', ...
-			ii, -o0+obj.inc3, '-', ...
-			ii, -o0+obj.inc1, '-', ...
-...%			ii, -o0+obj.osdp3, '-+', ...
-			ii, -o0+obj.osdp1, '-', ...
-			ii, -o0+obj.emdp1, '-')
-		ir_legend(	...
+			ii(1), -o0+obj.inc3(1), 'b-v', ...
+			ii(1), -o0+obj.inc1(1), 'g-x', ...
+...%			ii(1), -o0+obj.osdp3(1), 'm-+', ...
+			ii(1), -o0+obj.osdp1(1), 'r-o', ...
+			ii(1), -o0+obj.emdp1(1), 'c-s', ...
+			ii(1:5:end), -o0+obj.inc3(1:5:end), 'bv', ...
+			ii(2:5:end), -o0+obj.inc1(2:5:end), 'gx', ...
+...%			ii(1:5:end), -o0+obj.osdp3(1:5:end), 'm+', ...
+			ii(3:5:end), -o0+obj.osdp1(3:5:end), 'ro', ...
+			ii(4:5:end), -o0+obj.emdp1(4:5:end), 'cs', ...
+			ii, -o0+obj.inc3, 'b.-', ...
+			ii, -o0+obj.inc1, 'g.-', ...
+...%			ii, -o0+obj.osdp3, 'm.-', ...
+			ii, -o0+obj.osdp1, 'r.-', ...
+			ii, -o0+obj.emdp1, 'c.-')
+		ir_legend( ...
 			{'C-OS-3', 'INC EM', ...
 ...%			'OSDP3', ...
 			'OSDP', ...
@@ -346,7 +364,7 @@ else
 		ylabel 'Penalized-Likelihood Objective'
 		xlabel 'Iteration'
 %		axisy(6.1e5, 6.3e5)
-		axisx(0, 190)
+		axisx(0, f.niter)
 	end
 	[max(col(xinc3(:,:,:,end) - xemdp1(:,:,:,end))) ...
 	max(col(xinc3(:,:,:,end) - xinc1(:,:,:,end))) ...

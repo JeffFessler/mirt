@@ -78,9 +78,10 @@ case 'ncore'
 	try
 		maxNumCompThreads('automatic');
 		out = maxNumCompThreads;
-		if (out > 40)
-			warn 'limiting to 40 threads (over-ride with caution)'
-			out = 40;
+		persistent warned40
+		if (out > 40 && isempty(warned40))
+			warned40 = 1;
+			warn 'more than 40 threads!'
 		end
 		ncore = out;
 		return
