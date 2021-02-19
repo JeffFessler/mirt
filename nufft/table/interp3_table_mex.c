@@ -7,6 +7,9 @@
 #include "def,table3.h"
 
 
+#define Usage \
+"Usage: to be filled in...\n"
+
 // interp3_table_mex()
 static int interp3_table_mex(
 mxArray *plhs[],
@@ -148,7 +151,13 @@ void mexFunction(
 int nlhs, mxArray *plhs[],
 int nrhs, const mxArray *prhs[])
 {
-	// check for the proper number of arguments
+	if (!nlhs && !nrhs)
+	{
+		printf(Usage);
+		return;
+	}
+
+    // check for the proper number of arguments
 
 	if (nlhs == 0 && nrhs == 1 && mxIsChar(prhs[0])) // check
 		return;
