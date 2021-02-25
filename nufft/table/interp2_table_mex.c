@@ -8,7 +8,7 @@
 
 
 #define Usage \
-"Usage: to be filled in...\n"
+"Usage: fm = function(ck, h1, h2, J, L, tm, [order, flips])\n"
 
 // interp2_table_mex()
 static int interp2_table_mex(
