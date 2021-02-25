@@ -15,7 +15,7 @@
 
 
 #define Usage \
-"Usage: fm = function(ck, h_table, J, L, tm)\n"
+"Usage: fm = function(ck, h, J, L, tm, [order, flips])\n"
 
 // interp1_table_per_mex()
 static int interp1_table_per_mex(
