@@ -9,6 +9,10 @@
 #include "def,table3.h"
 
 
+#define Usage \
+"Usage: ck = function(fm, h1, h2, h3, J, L, tm, K) \n"
+
+
 // interp3_table_adj_mex()
 // Usage: ck = function(fm, h1, h2, h3, J, L, tm, K)
 static int interp3_table_adj_mex(
@@ -150,7 +154,13 @@ void mexFunction(
 const int nlhs, mxArray *plhs[],
 const int nrhs, const mxArray *prhs[])
 {
-	// check for the proper number of arguments
+	if (!nlhs && !nrhs)
+	{
+		printf(Usage);
+		return;
+	}
+
+    // check for the proper number of arguments
 
 	if (nlhs == 0 && nrhs == 1 && mxIsChar(prhs[0])) // check
 		return;

@@ -13,6 +13,10 @@
 #include "def,table1.h"
 
 
+
+#define Usage \
+"Usage: fm = function(ck, h, J, L, tm, [order, flips])\n"
+
 // interp1_table_per_mex()
 static int interp1_table_per_mex(
 mxArray *plhs[],
@@ -123,7 +127,13 @@ void mexFunction(
 int nlhs, mxArray *plhs[],
 int nrhs, const mxArray *prhs[])
 {
-	if (nlhs == 0 && nrhs == 1 && mxIsChar(prhs[0])) // check
+	if (!nlhs && !nrhs)
+	{
+		printf(Usage);
+		return;
+	}
+    
+    if (nlhs == 0 && nrhs == 1 && mxIsChar(prhs[0])) // check
 		return;
 
 	if (nrhs < 5 || nrhs > 7)
