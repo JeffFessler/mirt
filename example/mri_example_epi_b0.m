@@ -28,6 +28,7 @@ end
 if ~isvar('zmap'), printm 'zmap'
 	f.dir_fmap = [path_find_dir('mri') '/phase-data/'];
 	f.fmap = [f.dir_fmap 'fieldmap128.fld'];
+    test=0;
     fmap = ir_get_data(f.fmap);
 	fmap = fld_read(f.fmap); % [-40 128] Hz
 %	im(fmap + xtrue*10)
