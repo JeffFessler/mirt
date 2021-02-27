@@ -10,6 +10,7 @@
 *.log
 *.out
 Makefile
+data/downloads/
 freemat/
 give
 help-pc/
