@@ -203,10 +203,10 @@ nset = length(etime);
 R2 = 20; % 1/sec decay
 SNR = 20; % dB
 
-dir = [path_find_dir('mri') '/phase-data/'];
-wtrue = 2*pi * fld_read([dir 'fieldmap128.fld']); % "true" fieldmap
-mag = fld_read([dir 'mag128.fld']); % "true" magnitude
-[nx ny] = size(mag); % 128
+dir = fileparts(which('ir_get_data.m'));
+wtrue = 2*pi * ir_get_data([dir, '/mri/2001-phase-data/fieldmap128.fld']); % "true" fieldmap
+mag = ir_get_data([dir, '/mri/2001-phase-data/mag128.fld']); % "true" magnitude
+[nx, ny] = size(mag); % 128
 
 im plc 2 4
 im(1, wtrue/(2*pi), 'true field map', [-40, 128]), cbar('Hz')

@@ -153,10 +153,13 @@ nsets = length(etime);
 R2 = 20; % 1/sec decay
 SNR = 20; % dB
 
-dir = [path_find_dir('mri') '/phase-data/'];
-wtrue = 2*pi * fld_read([dir 'fieldmap128.fld']);
-mag = fld_read([dir 'mag128.fld']);
-[nx ny] = size(mag); % 128
+dir = fileparts(which('ir_get_data.m'));
+fmap_fn = [dir, '/mri/2001-phase-data/fieldmap128.fld'];
+fmap = ir_get_data(fmap_fn);
+wtrue = 2*pi * fmap;
+mag_fn = [dir, '/mri/2001-phase-data/mag128.fld'];
+mag = ir_get_data(mag_fn);
+[nx, ny] = size(mag); % 128
 
 im pl 2 3
 im(1, wtrue/(2*pi), 'true field map', [-40, 128]), cbar('Hz')
@@ -177,7 +180,7 @@ rng(0)
 yik = yik + noise_std * (randn(size(yik)) + 1i * randn(size(yik)));
 
 printm 'estimate field map'
-[wmap wconv] = mri_field_map_reg_2d(yik, etime, 'l2b', -6, varargin{:});
+[wmap, wconv] = mri_field_map_reg_2d(yik, etime, 'l2b', -6, varargin{:});
 
 mask = mag > 0.05 * max(mag(:));
 im(2, wconv / (2*pi), 'conventional field map', [-40,128]), cbar('Hz')

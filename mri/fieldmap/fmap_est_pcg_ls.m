@@ -314,9 +314,9 @@ printm 'simulate noisy multicoil 3d data'
 etime = [0 2 10] * 1e-3; % echo times
 SNR = 30; % dB
 ne = length(etime);
-dir = [path_find_dir('mri') '/phase-data/'];
-wtrue = 2*pi * fld_read([dir 'fieldmap128.fld']); % "true" fieldmap
-mag = fld_read([dir 'mag128.fld']); % "true" magnitude
+dir = fileparts(which('ir_get_data.m'));
+wtrue = 2*pi * ir_get_data([dir, '/mri/2001-phase-data/fieldmap128.fld']); % "true" fieldmap
+mag = ir_get_data([dir, '/mri/2001-phase-data/mag128.fld']); % "true" magnitude
 [nx ny] = size(mag); % 128
 nz = 2; nc = 4;
 wtrue = repmat(wtrue,[1,1,nz]);

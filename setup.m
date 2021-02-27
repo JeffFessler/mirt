@@ -35,6 +35,7 @@ list = {...
 'blob', ...		% blob (KB) basis
 'ct', ...		% x-ray CT (polyenergetic) recon
 'data', ...		% example data
+'data/downloads', ...		% example data
 'emission', ...		% emission image reconstruction
 'example', ...		% example applications
 'fbp', ...		% FBP (filtered backprojection) code

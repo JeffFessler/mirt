@@ -19,8 +19,9 @@ if ~isvar('A'), printm 'setup geometry, image, sinogram'
 	end
 
 	% read image
-	ddir = path_find_dir([filesep 'data']);
-	xtrue256 = fld_read([ddir filesep 'ncat,256,slice,140,ct,x100.fld']);
+    ddir = fileparts(which('ir_get_data.m'));
+    xtrue_fn = [ddir, '/ncat,256,slice,140,ct,x100.fld'];
+    xtrue256 = ir_get_data(xtrue_fn); 
 	xtrue256 = single(xtrue256) / 200 * 0.4; % convert to 1/cm units 
 
 	if 1 % more realistic sinogram from finer image, avoid "inverse crime"
