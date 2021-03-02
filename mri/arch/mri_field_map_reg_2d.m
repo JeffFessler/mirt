@@ -153,12 +153,9 @@ nsets = length(etime);
 R2 = 20; % 1/sec decay
 SNR = 20; % dB
 
-dir = fileparts(which('ir_get_data.m'));
-fmap_fn = [dir, '/mri/2001-phase-data/fieldmap128.fld'];
-fmap = ir_get_data(fmap_fn);
+fmap = ir_get_data(['mri',filesep,'2001-phase-data',filesep,'fieldmap128.fld']);
 wtrue = 2*pi * fmap;
-mag_fn = [dir, '/mri/2001-phase-data/mag128.fld'];
-mag = ir_get_data(mag_fn);
+mag = ir_get_data(['mri',filesep,'2001-phase-data',filesep,'mag128.fld']);
 [nx, ny] = size(mag); % 128
 
 im pl 2 3

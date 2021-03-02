@@ -189,8 +189,7 @@ curv = wi;
 function [xq, mask0] = mri_phase_denoise_test(type, varargin)
 
 % read data
-f.dir = fileparts(which('ir_get_data.m'));
-yi = ir_get_data([f.dir, '/mri/2001-phase-data/phfit.mat']);
+yi = ir_get_data(['mri',filesep,'2001-phase-data',filesep,'phfit.mat']);
 clim = [-0.5 1.5];
 
 %if nargout
