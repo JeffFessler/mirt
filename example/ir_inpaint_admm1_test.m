@@ -56,7 +56,7 @@ end
 
 if ~isvar('x0'), printm 'initialize'
 	[xx yy] = ndgrid(1:siz(1), 1:siz(2));
-	x0 = griddata(xx(samp), yy(samp), yi(samp), xx, yy);
+	x0 = griddata(xx(samp), yy(samp), double(yi(samp)), xx, yy);
 	x0(isnan(x0)) = mean(x0(~isnan(x0)));
 	clear xx yy
 	im(x0, clim)

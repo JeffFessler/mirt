@@ -32,8 +32,8 @@
 %|
 %| Copyright 2013-03-21, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error(mfilename), end
-if nargin == 1 && streq(yi, 'test'), ir_regress_admm1_test, return, end
+if nargin < 1, ir_usage, end
+if nargin == 1 && streq(yi, 'test'), l1_regress_example, return, end
 
 % defaults
 arg.x0 = [];
