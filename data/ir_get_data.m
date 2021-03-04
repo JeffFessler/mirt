@@ -1,6 +1,6 @@
 function [data] = ir_get_data(data_filename, varargin)
-% ir_get_data either returns the data at the specified filename, or grabs
-% if from the data/downloads folder. ir_get_data wil download the data from
+% ir_get_data either returns the data at the specifiled filename, or grabs
+% it from the data/downloads folder. ir_get_data wil download the data from
 % https://github.com/JeffFessler/MIRTdata/ using websave if needed.
 %
 % Optional inputs:
@@ -69,7 +69,4 @@ switch lower(fExt)
         error('Unexpected file extension: %s', fExt);
 end
 
-
-
 end
-
