@@ -34,7 +34,7 @@
 %| Copyright 2013-02-25, Jeff Fessler, University of Michigan
 
 if nargin < 1, help(mfilename), error(mfilename), end
-if nargin == 1 && streq(yi, 'test'), ir_denoise_admm1_test, return, end
+if nargin == 1 && streq(yi, 'test'), run_mfile_local('ir_denoise_admm1_test'), return, end
 
 % defaults
 arg.x0 = yi;

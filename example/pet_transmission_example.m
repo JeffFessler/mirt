@@ -6,8 +6,8 @@
 
 % read raw data
 if ~isvar('yi'), printm 'raw data'
-    yi = ir_get_data(['pet,trans,2d,sino',filesep,'phan,trans.mat']);
-    bi = ir_get_data(['pet,trans,2d,sino',filesep,'phan,blank.mat']);
+    yi = ir_get_data(fullfile('pet_trans_2d_sino','phan_trans.mat'));
+    bi = ir_get_data(fullfile('pet_trans_2d_sino','phan_blank.mat'));
 	im plc 2 2, im(1, yi, 'yi: transmission scan')
 	im(2, bi, 'bi: blank scan')
 

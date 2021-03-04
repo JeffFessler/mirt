@@ -19,7 +19,7 @@ if ~isvar('A'), printm 'setup geometry, image, sinogram'
 	end
 
 	% read image
-    xtrue256_2 = ir_get_data('ncat,256,slice,140,ct,x100.fld');
+    xtrue256 = ir_get_data('ncat_256_slice_140_ct_x100.fld');
 	xtrue256 = single(xtrue256) / 200 * 0.4; % convert to 1/cm units 
 
 	if 1 % more realistic sinogram from finer image, avoid "inverse crime"

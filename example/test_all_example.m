@@ -5,6 +5,7 @@ list = {
  'denoise_threshold_test'
  'ir_ip_unwrap_example'
  'ir_ct_fan_beam_sqs_vs_lalm'
+ 'ir_denoise_admm1_test'
  'l1_regress_example'
  'mri_cs_ist_example'
  'mri_example'
