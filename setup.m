@@ -35,6 +35,7 @@ list = {...
 'blob', ...		% blob (KB) basis
 'ct', ...		% x-ray CT (polyenergetic) recon
 'data', ...		% example data
+'data/downloads', ...		% example data
 'emission', ...		% emission image reconstruction
 'example', ...		% example applications
 'fbp', ...		% FBP (filtered backprojection) code
@@ -43,6 +44,7 @@ list = {...
 'mri', ...		% MRI reconstruction
 'mri/fieldmap', ...	% MRI B0 field map estimation
 'mri-rf/yip-spsp', ...	% MRI RF pulse design
+'mri/arch',... % MRI examples
 'nufft', ...		% nonuniform FFT (for a fast projector)
 'nufft/table', ...	% mex files for NUFFT
 'penalty', ...		% regularizing penalty functions
