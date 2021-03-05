@@ -8,6 +8,10 @@
 #include "def,table2.h"
 
 
+#define Usage \
+"Usage: ck = function(fm, h1_table, h2_table J, L, tm, K, [order, flips])\n"
+
+
 // interp2_table_adj_mex()
 // Usage: ck = function(fm, h1_table, h2_table J, L, tm, K, [order, flips])
 static int interp2_table_adj_mex(
@@ -132,7 +136,13 @@ void mexFunction(
 const int nlhs, mxArray *plhs[],
 const int nrhs, const mxArray *prhs[])
 {
-	if (nlhs == 0 && nrhs == 1 && mxIsChar(prhs[0])) // check
+	if (!nlhs && !nrhs)
+	{
+		printf(Usage);
+		return;
+	}
+    
+    if (nlhs == 0 && nrhs == 1 && mxIsChar(prhs[0])) // check
 		return;
 
 	if (nrhs < 7 || nrhs > 9)

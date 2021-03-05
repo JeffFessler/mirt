@@ -7,6 +7,9 @@
 #include "def,table2.h"
 
 
+#define Usage \
+"Usage: fm = function(ck, h1, h2, J, L, tm, [order, flips])\n"
+
 // interp2_table_mex()
 static int interp2_table_mex(
 mxArray *plhs[],
@@ -130,7 +133,12 @@ void mexFunction(
 int nlhs, mxArray *plhs[],
 int nrhs, const mxArray *prhs[])
 {
-	if (nlhs == 0 && nrhs == 1 && mxIsChar(prhs[0])) // check
+	if (!nlhs && !nrhs)
+	{
+		printf(Usage);
+		return;
+	}
+    if (nlhs == 0 && nrhs == 1 && mxIsChar(prhs[0])) // check
 		return;
 
 	if (nrhs < 6 || nrhs > 8)
