@@ -106,7 +106,9 @@ if ~isvar('xpcg')
 	end
 
 	beta = 2^-7 * size(omega,1); % good for quadratic
-	C = Cdiff(sqrt(beta) * mask, 'edge_type', 'tight');
+%	C = Cdiff(sqrt(beta) * mask, 'edge_type', 'tight'); % obsolete
+	R = Reg1(mask, 'beta', beta);
+	C = R.C;
 
 	if 0 % example PSF
 		qpwls_psf(Am, C, 1, mask);

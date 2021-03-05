@@ -120,7 +120,7 @@ if streq(atype, 'hist,', 5) || o.ctest
 		[hk zc] = hist_equal([imag(zmap(:)) real(zmap(:))], nhist); % 2d histogram
 		zk = outer_sum(1i*zc{1}, zc{2}); % [K1 K2]
 
-		if o.acorr % code by valur olafsson
+		if o.acorr % code by valur olafsson (for A'A)
 			hk = conv2(hk, flipdim(hk,1)); % acorr fmap, aconv on r2smap
 			zc{1} = [-(nhist(1)-1):(nhist(1)-1)]' * (zc{1}(2)-zc{1}(1));
 			zc{2} = linspace(2*min(zc{2}), 2*max(zc{2}), 2*nhist(2) - 1);
@@ -163,6 +163,7 @@ elseif streq(atype, 'time,unif') || streq(atype, 'hist,time,unif')
 		end
 
 		if rmsmax < 1 || o.ctest || streq(atype, 'hist,time,unif')
+			% TS choice of C for histogram, cf (16) in fessler:05:tbi:
 			Ch = exp(-tl * zk(:).'); % [L K]
 		end
 
@@ -170,16 +171,20 @@ elseif streq(atype, 'time,unif') || streq(atype, 'hist,time,unif')
 			warning 'For large L, try tol=''fro'''
 		end
 
-		if streq(atype, 'time,unif')
-			C = exp(-tl * zmap.'); % [L N] - classic TS
+		% Given C, the solution for B is E * C^+ = C' * (C*C')^+
+		if streq(atype, 'time,unif') % feasible only for small images ?
+			C = exp(-tl * zmap.'); % [L N] - classic TS, cf (16) in fessler:05:tbi
 			X = C.'; % [N L]
 			% X = X * inv(X'*X); % [N L]
 			X = pinv_tol(X, o.tol{:})'; % [N L]
+			% todo: smarter way to do this is to use C' * pinv(C*C')
+			% i didn't realize that back in the day.  so histogram not needed!
 			X = complexify(X);
 			B = mri_exp_mult_mex(X, complexify(zmap), ti).'; % [M L]
 
-		elseif streq(atype, 'hist,time,unif')
+		elseif streq(atype, 'hist,time,unif') % recommended (default)
 			W = spdiag(sqrt(hk), 'nowarn');
+			% like eqn (19)-(20) in fessler:05:tbi but (weighted) inv(C'C)*C'
 			P = pinv_tol(W * double(Ch.'), o.tol{:}) * W; % [L K], weighted pinv
 			if o.chat
 				rP = rank(P);

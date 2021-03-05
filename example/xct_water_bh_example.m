@@ -97,8 +97,8 @@ if ~isvar('G'), printm 'G'
 	end
 end
 
+f.beta = 2^1;
 if 0 % play with beta to find "desired" resolution
-	f.beta = 2^1;
 	R0 = Reg1(ig.mask, 'type_denom', 'matlab', 'beta', f.beta, ...
 		'pot_arg', {'hyper3', 0.1});
 	if 1

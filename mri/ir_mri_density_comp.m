@@ -63,7 +63,7 @@ end
 % in radial imaging, k-space origin is sampled multiple times, and
 % this non-uniqueness messes up matlab's voronoi routine.
 % here we find those "redundant" zeros and remove all but one them
-% for the voronoi call.  we then restore them with appropriate DCF.
+% for the voronoi call.  We then restore them with appropriate DCF.
 %
 function wi = ir_mri_dcf_voronoi0(kspace, fix_edge)
 M = size(kspace, 1);
@@ -106,19 +106,31 @@ if nbad
 end
 
 % points at the outer edges of k-space have infinite voronoi cell area
-% so are assigned wi=0 above.  to improve on 0, here we extrapolate
+% so are assigned wi=0 above.  To improve on 0, here we extrapolate
 % based on the points near the edge.
 switch fix_edge
 case 2
 	rho = sum(kspace.^2, 2); % radial frequency coordinate
 	igood = (rho > 0.6 * max(rho)) & (wi > 0);
-	pp = polyfit(rho(igood), wi(igood), 2);
-	wi(wi == 0) = polyval(pp, rho(wi == 0)); % extrapolate
+	if length(igood) < 10
+		warn('dubious extrapolation with %d points', length(igood))
+		xfit = rho(igood);
+		yfit = wi(igood);
+		[pp, ~, pc] = polyfit(xfit, yfit, 2);
+		clf, plot(xfit, yfit, 'o')
+		rtest = linspace(min(xfit), max(xfit), 101);
+		hold on
+		plot(rtest, polyval(pp, (rtest-pc(1))/pc(2)), '-')
+		hold off
+		prompt
+	end
+	[pp, ~, pc] = polyfit(rho(igood), wi(igood), 2);
+	wi(wi == 0) = polyval(pp, (rho(wi == 0) - pc(1)) / pc(2)); % extrapolate
 
 % old way: look for points close to convex hull and use max of other points?
 case 1
 	printm('trying to fix %d zeros of %d', sum(wi==0), M)
-	ii = logical(zeros(size(wi)));
+	ii = false(size(wi));
 	fac = 0.98;
 	for id=1:ncol(kspace) % find cartesian edges of k-space
 		k = kspace(:,id);
@@ -148,7 +160,7 @@ end
 function wi = ir_mri_dcf_jackson(kspace, G)
 M = size(kspace, 1);
 
-% todo: this is not *really* Jackson's method!  need to work on it!
+% todo: this is not *really* Jackson's method!  Need to work on it!
 if streq(G.arg.st.alpha, 'kaiser')
 	kb_m = G.arg.st.kb_m(1);
 	kb_alf = G.arg.st.kb_alf(1);
@@ -167,7 +179,7 @@ else
 	% wi = w * G.arg.st.sn(end/2,end/2)^(-2);
 	%	/ fov^2 / prod(G.arg.st.Kd) * N0^2;
 end
-    
+
 
 % ir_mri_dcf_pipe()
 % Pipe&Menon, based on equalty 1 = A A' w so w = w ./ (A A' w)
@@ -226,19 +238,20 @@ printm('pipe ended at iteration %d with %g', iter, max(abs(goal-1)))
 if isempty(arg.unitv)
 	warn 'no unitv so no scaling - user must fix scaling'
 else
-	fail 'todo: this needs tested1'
+	warn 'todo: this needs tested!'
 	last = wi_save(:,1);
 	psf_raw = G' * last;
-	e0 = ig.unitv % todo
-	scale = dot(e0, psf_raw) / norm(psf_raw(:)).^2;
+%	im(reshape(psf_raw, size(arg.unitv))), prompt
+	e0 = arg.unitv; % todo
+	scale = dot(e0(:), psf_raw(:)) / norm(psf_raw(:))^2;
+	scale = reale(scale);
 	wi_save = scale * wi_save;
+	wi = scale * wi;
 end
 
 if ~isempty(arg.isave)
 	wi = wi_save;
 end
-
-%wi = wi * scale; % todo: why?
 
 
 % ir_mri_density_comp_test()
@@ -311,7 +324,7 @@ case 'jackson'
 	wi = ir_mri_density_comp(kspace, dtype, 'G', G);
 case 'pipe'
 	wi = ir_mri_density_comp(kspace, dtype, 'G', G, 'arg_pipe', ...
-		{'fov', ig.fov});
+		{'unitv', ig.unitv, 'fov', ig.fov});
 otherwise
 	wi = ir_mri_density_comp(kspace, dtype, 'fix_edge', 2);
 end
@@ -340,11 +353,11 @@ xcp = ig.embed(G' * (wi .* ytrue));
 im(5, ig.x, ig.y, real(xcp), 'conj. phase'), cbar
 
 %sum(xcp(:)) / sum(xtrue(:))
-xlabelf('nrms %g\%%', 100*nrms(xcp(:), xtrue(:)))
+xlabelf('nrms %g%%', 100*nrms(xcp(:), xtrue(:)))
 
 if im
 	subplot(133)
-	plot(ig.x, xtrue(:,end/2), 'c-', ig.y, real(xcp(:,end/2)), 'y.-')
+	plot(ig.x, xtrue(:,end/2), 'r-', ig.y, real(xcp(:,end/2)), 'b.-')
 	axis tight
 	legend('true', 'CP', 'location', 'east')
 end
