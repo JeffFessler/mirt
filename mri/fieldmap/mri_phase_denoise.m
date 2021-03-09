@@ -189,13 +189,7 @@ curv = wi;
 function [xq, mask0] = mri_phase_denoise_test(type, varargin)
 
 % read data
-f.dir = path_find_dir('mri');
-f.dir = [f.dir '/phase-data/'];
-f.dat = [f.dir 'phfit.mat'];
-if ~exist(f.dat, 'file')
-	fail('edit the path in %s!', mfilename)
-end
-yi = ir_read_mat(f.dat);
+yi = ir_get_data(fullfile('mri','2001-phase-data','phfit.mat'));
 clim = [-0.5 1.5];
 
 %if nargout
