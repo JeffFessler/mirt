@@ -3,6 +3,8 @@
 %| process 'isave' and 'niter' options of iterative algorithms
 %| supporting char options 'all' and 'last' (default if empty)
 
+if nargin < 2, ir_usage, end
+
 persistent warned
 if ~isvar('warned') || isempty(warned)
 	warned = false;
