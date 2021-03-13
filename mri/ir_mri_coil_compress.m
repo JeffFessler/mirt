@@ -11,7 +11,8 @@
 %|	idata	[(N) n_in]	noisy complex images (2D or 3D) for each coil
 %|
 %| options
-%|	'ncoil'			desired # of virtual coils (default: 1)
+%|	'ncoil'		desired # of virtual coils (default: 1)
+%|  'thresh'    minimum compression threshold, 0-1 (default: unused)
 %|
 %| out
 %|	odata	[(N) ncoil]	virtual coil images
@@ -24,12 +25,20 @@ if nargin < 1, ir_usage, end
 if nargin == 1 && streq(idata, 'test'), ir_mri_coil_compress_test, return, end
 
 arg.ncoil = 1;
+arg.thresh = [];
 arg = vararg_pair(arg, varargin);
 
 idim = size(idata);
 n_in = idim(end);
 idata = reshape(idata, [], n_in); % [*N n_in]
 [~, sing, V] = svd(idata, 'econ');
+
+% select number of coils if cutoff set
+if arg.thresh
+    cum_sing = cumsum(diag(sing)) ./ sum(diag(sing));
+    over_ind = find(cum_sing > arg.thresh);
+    arg.ncoil = over_ind(1);
+end
 
 Vr = V(:,1:arg.ncoil); % [n_in ncoil] compression matrix with rank = ncoil
 odata = idata * Vr; % [*N ncoil] compressed data
