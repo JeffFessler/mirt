@@ -121,7 +121,9 @@ if isempty(arg.winit)
 	good = mag1 > arg.wthresh * max(mag1(:));
 	arg.winit(~good) = mean(arg.winit(good));
 else
-	jf_equal(size(arg.mask), arg.winit)
+	jf_equal(size(arg.mask), size(arg.winit))
+    wconv = angle(stackpick(yi2,2) .* conj(stackpick(yi2,1))) ...
+		/ (etime(2) - etime(1));
 end
 
 if any(isnan(arg.winit(:)))
