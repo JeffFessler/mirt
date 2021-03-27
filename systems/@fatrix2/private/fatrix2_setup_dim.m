@@ -5,6 +5,11 @@
 %|
 %| Copyright 2010-12-17, Jeff Fessler, University of Michigan
 
+persistent warned
+if ~isvar('warned') || isempty(warned)
+	warned = false;
+end
+
 arg = ob.arg; % this shall not be modified
 
 if isempty(ob.imask) && isfield(arg, 'mask')
@@ -74,6 +79,9 @@ if ~ob.accept1d
 	end
 
 	if numel(ob.odim) == 1 && numel(ob.idim) > 1 && ob.size(1) == prod(ob.odim)
-		warn '1d odim full omask, >1d idim: transpose may not work'
+        if ~warned
+            warn '1d odim full omask, >1d idim: transpose may not work'
+            warned = true;
+        end
 	end
 end

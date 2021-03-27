@@ -27,7 +27,12 @@ if nargin < 2, help(mfilename), error('Not enough input arguments.'), end
 % if sens is a matrix, convert to cell
 if ~iscell(sens)
     size_v = size(sens);
-    nc = size_v(end);
+    if numel(size_v) == 2
+        nc = 1;
+        sens = squeeze(mat2cell(sens, size_v(1), size_v(2), ones(nc,1)));
+    else
+        nc = size_v(end);
+    end
     if numel(size_v) == 3
         sens = squeeze(mat2cell(sens, size_v(1), size_v(2), ones(nc,1)));
     elseif numel(size_v) == 4

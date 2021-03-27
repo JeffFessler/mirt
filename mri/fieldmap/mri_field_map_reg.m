@@ -108,11 +108,12 @@ ycol2 = reshape(yi2, prod(dim_im), 2);		ycol2 = ycol2(arg.mask,:);
 % iterative estimation with quadratic regularization
 Rq = Reg1(arg.mask, 'beta', 2^arg.l2b, 'order', arg.order);
 
+% conventional field map estimate from first two scans
+wconv = angle(stackpick(yi2,2) .* conj(stackpick(yi2,1))) ...
+	/ (etime(2) - etime(1));
+		
 % if needed, use regularized initialization from first two data sets
 if isempty(arg.winit)
-	% start with conventional estimate
-	wconv = angle(stackpick(yi2,2) .* conj(stackpick(yi2,1))) ...
-		/ (etime(2) - etime(1));
 	arg.winit = unwrapping_sps_manysets(wconv(arg.mask), ycol2, ...
 		etime(1:2), Rq, 'niter', arg.niter_init);
 	arg.winit = embed(arg.winit(:,end), arg.mask);
@@ -121,7 +122,7 @@ if isempty(arg.winit)
 	good = mag1 > arg.wthresh * max(mag1(:));
 	arg.winit(~good) = mean(arg.winit(good));
 else
-	jf_equal(size(arg.mask), arg.winit)
+	jf_equal(size(arg.mask), size(arg.winit))
 end
 
 if any(isnan(arg.winit(:)))
