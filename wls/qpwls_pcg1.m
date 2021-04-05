@@ -86,16 +86,16 @@ end
 %info = zeros(arg.niter, ?); % trick: do not initialize because size may change
 
 % initialize projections
-ticker(mfilename, 1, arg.niter)
+if arg.chat, ticker(mfilename, 1, arg.niter); end
 Ax = A * x;
 Cx = C * x;
 
 % iterate
 for iter = 1:arg.niter
-	ticker(mfilename, iter, arg.niter)
+	if arg.chat, ticker(mfilename, iter, arg.niter); end
 
 	% (negative) gradient
-	ngrad = A' * (W * (yi-Ax)) - C' * Cx;
+	ngrad = A' * (W * (yi-Ax)) - C' * double(Cx);
 
 	if arg.stop_grad_tol && norm_grad(ngrad) < arg.stop_grad_tol
 		if arg.chat
@@ -143,7 +143,7 @@ for iter = 1:arg.niter
 
 	% step size in search direction
 	Adir = A * ddir;
-	Cdir = C * ddir;
+	Cdir = C * double(ddir);
 
 	denom = Adir'*(W*Adir) + Cdir'*Cdir;
 	denom = reale(denom, 'error', 'denom');
