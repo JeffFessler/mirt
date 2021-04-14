@@ -251,7 +251,7 @@ for it=1:3
 
 	if im
 		im plc 2 2
-		im(1, x, 'test image')
+		im(1, x, 'test image'), cbar
 		im(2, ya, 'sinogram ya'), cbar
 		im(4, yd, 'sinogram yd'), cbar
 		im(3, yd-ya, 'yd-ya'), cbar
