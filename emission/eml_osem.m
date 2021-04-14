@@ -139,7 +139,7 @@ for iter = 1:arg.niter
 
 		% fix: implement ahn's shift trick? no, just use classic.
 		nneg = sum(x < 0);
-		if nneg, printm('oh no! %d negatives', nneg), end
+		if nneg, printm('oh no! %d negatives', nneg), minmax(x), end
 
 		x = max(x,0);	% caution: if x becomes zero, it is always zero!
 		x = min(x,arg.pixmax);
