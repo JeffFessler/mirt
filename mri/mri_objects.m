@@ -22,6 +22,7 @@
 %|	'gauss3'	[N 7]	[xcent ycent zcent xwidth ywidth zwidth value]
 %|	'circ2'		[N 5]	[xcent ycent rad value]
 %|	'cyl3'		[N 6]	[xcent ycent zcent xrad zwidth value]
+%|	'sphere'	[N 5]	[xcent ycent zcent rad value]
 %|
 %| out
 %|	st	strum object with methods:
@@ -32,7 +33,7 @@
 %|
 %| Copyright 2007-6-28, Jeff Fessler, University of Michigan
 
-if nargin < 1, help(mfilename), error args, end
+if nargin < 1, ir_usage, end
 if nargin == 1 && streq(varargin{1}, 'test'), mri_objects_test; return, end
 
 fov = [];
@@ -65,6 +66,7 @@ st.types = {varargin{1:2:end}};
 st.params = {varargin{2:2:end}};
 
 is3 = ~isempty(strfind(col(char(st.types)')', '3')); % any 3D?
+is3 = is3 | ~isempty(strmatch('sphere', st.types));
 
 if is3
 	st = strum(st, { ...
@@ -165,6 +167,8 @@ for ii=1:length(st_types)
 		out = out + mri_objects_image_gauss3(params, x, y, z);
 	case 'rect3'
 		out = out + mri_objects_image_rect3(params, x, y, z, dd{:});
+	case 'sphere'
+		out = out + mri_objects_image_sphere(params, x, y, z);
 	otherwise
 		fail('unknown object type %s', st_types{ii})
 	end
@@ -192,6 +196,8 @@ for ii=1:length(st_types)
 		out = out + mri_objects_kspace_gauss3(params, u, v, w);
 	case 'rect3'
 		out = out + mri_objects_kspace_rect3(params, u, v, w);
+	case 'sphere'
+		out = out + mri_objects_kspace_sphere(params, u, v, w);
 	otherwise
 		fail('unknown object type %s', st_types{ii})
 	end
@@ -416,6 +422,54 @@ for ii=1:nrow(params)
 end
 
 
+% mri_objects_image_sphere()
+% param: [N,5] [xcent ycent zcent rad value]
+%
+function out = mri_objects_image_sphere(params, x,y,z)
+out = 0;
+if ncol(params) ~= 5, fail('sphere requires 5 parameters'), end
+for ii=1:nrow(params)
+	par = params(ii,:);
+	xc = par(1);
+	yc = par(2);
+	zc = par(3);
+	rad = par(4);
+	if (zc + rad) > max(z(:)) || (zc - rad) < min(z(:))
+		warn('zc=%g rad=%g vs zmin=%g zmax=%g', zc, rad, min(z(:)), max(z(:)))
+	end
+	out = out + par(5) * ((x-xc).^2 + (y-yc).^2 + (z-zc).^2 < rad^2);
+end
+
+
+% mri_objects_kspace_sphere()
+% param: [N,5] [xcent ycent zcent rad value]
+%
+function out = mri_objects_kspace_sphere(params, u,v,w)
+out = 0;
+if ncol(params) ~= 5, fail('sphere requires 5 parameters'), end
+s3 = sqrt(u.^2 + v.^2 + w.^2); % spherical "radial" coordinate
+for ii=1:nrow(params)
+	par = params(ii,:);
+	xc = par(1);
+	yc = par(2);
+	zc = par(3);
+	rad = par(4);
+	out = out + par(5) * rad^3 * sphere_transform(rad * s3) ...
+		.* exp(-2i*pi*(u*xc + v*yc + w*zc));
+end
+
+% unit sphere Fourier transform
+% p253 of Bracewell 1978, The Fourier transform and its applications
+% or see http://doi.org/10.1002/mrm.21292
+function out = sphere_transform(s)
+	out = 4/3 * pi * ones(size(s));
+	ig = s ~= 0; % indices of nonzero arguments
+	s = s(ig);
+	s2pi = (2*pi) * s;
+	out(ig) = (sin(s2pi) - s2pi .* cos(s2pi)) ./ ((2 * pi^2) * (s.^3));
+%end
+
+
 % mri_objects_case1()
 %
 function out = mri_objects_case1(fov, arg)
@@ -504,7 +558,7 @@ if 1 % test transforms of each object type
 		s2 = s2 * abs(ig.dx * ig.dy);
 		fg = ig.fg;
 		f2 = st.kspace(fg{:});
-		max_percent_diff(f2, s2)
+		max_percent_diff(f2, s2, otype)
 
 		im(1+3*(ii-1), i2, otype), cbar
 		im(2+3*(ii-1), abs(s2), 'fft'), cbar
@@ -513,10 +567,12 @@ if 1 % test transforms of each object type
 prompt
 end
 
-st = mri_objects('case1');
-xt = st.image(ig.xg, ig.yg);
-im clf, im(xt), cbar
+if 1
+	st = mri_objects('case1');
+	xt = st.image(ig.xg, ig.yg);
+	im clf, im(xt), cbar
 prompt
+end
 
 
 % mri_objects_test3()
@@ -525,14 +581,16 @@ function mri_objects_test3
 ig = image_geom('nx', 2^7, 'nz', 2^5, 'offsets', 'dsp', 'dx', 4, 'dz', 3);
 
 if 1 % test transforms of each object type
-	shift = [0.1 0.2 0.3] .* ig.fovs;
+	shift = [0.1 0.2 -0.15] .* ig.fovs;
 	sizes = [0.15 0.1 0.2] .* ig.fovs;
-	tests = {'cyl3', [shift sizes([1 3]) 2];
+	tests = {
+		'sphere', [shift min(sizes) 2];
+		'cyl3', [shift sizes([1 3]) 2];
 		'gauss3', [shift sizes 2];
 		'rect3', [shift sizes 2];
 		};
 
-	im plc 3 3
+	im plc 4 3
 	for ii=1:nrow(tests)
 		otype = tests{ii,1};
 		param = tests{ii,2};
@@ -543,7 +601,7 @@ if 1 % test transforms of each object type
 		s3 = s3 * abs(ig.dx * ig.dy * ig.dz);
 		fg = ig.fg;
 		f3 = st.kspace(fg{:});
-		max_percent_diff(f3, s3)
+		max_percent_diff(f3, s3, otype)
 		im(1+3*(ii-1), i3, otype), cbar
 		im(2+3*(ii-1), abs(s3), 'fft'), cbar
 		im(3+3*(ii-1), abs(f3), 'kspace'), cbar
@@ -551,9 +609,11 @@ if 1 % test transforms of each object type
 prompt
 end
 
-st = mri_objects('fov', ig.fovs, 'test4');
-xt = st.image(ig.xg, ig.yg, ig.zg);
-im clf, im(xt), cbar
+if 1
+	st = mri_objects('fov', ig.fovs, 'test4');
+	xt = st.image(ig.xg, ig.yg, ig.zg);
+	im clf, im(xt), cbar
+end
 
 
 % rect, or trapezoid to handle partial volume effects
