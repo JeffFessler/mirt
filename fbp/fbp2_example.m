@@ -23,17 +23,17 @@ if ~isvar('sino'), printm 'sino'
 	ell = []; clim = (1 + [-1 1] * 0.05) * 1000;
 %	ell = [100 70 f.ds/2 f.ds/2 0 100]; % point source
 
-	[xtrue ell] = ellipse_im(ig, ell, 'oversample', 4, 'rot', 90, ...
+	[xtrue, ell] = ellipse_im(ig, ell, 'oversample', 4, 'rot', 90, ...
 		'hu_scale', 1000);
 	sino = ellipse_sino(sg, ell, 'oversample', 4);
 
-	im plc 2 3
+	im plc 2 4
 	im(1, xtrue, 'xtrue', clim), cbar
-	im(4, sino, 'sino'), cbar
+	im(5, sg.s, sg.ad, sino, 'sino'), cbar
 
 	t = floor(min(sg.nb * sg.d, ig.fov)/2);
 	ig.mask = ellipse_im(ig, [0 0 t t 0 1]) > 0;
-	im(6, ig.mask)
+	im(8, ig.mask, 'mask'), cbar
 prompt
 end
 
@@ -48,7 +48,7 @@ if ~isvar('r_std'), printm 'fbp std'
 	cpu etoc 'fbp std recon time'
 
 	im(2, r_std, 'FBP matlab std', clim), cbar
-	im(5, r_std - xtrue, 'error'), cbar
+	im(6, r_std - xtrue, 'error'), cbar
 prompt
 end
 
@@ -89,7 +89,7 @@ if has_mex_jf
 		cpu etoc 'moj recon time'
 
 		im(3, r_moj, 'FBP mojette', clim), cbar
-		im(6, r_moj - xtrue, 'error'), cbar
+		im(7, r_moj - xtrue, 'error'), cbar
 	prompt
 	end
 
@@ -150,19 +150,22 @@ if ~isvar('r_asp')
 	end
 
 	r_asp = fld_read(f.image);
-	im(1, r_asp, 'aspire', clim), cbar
+	im(4, r_asp, 'aspire', clim), cbar
+	im(8, r_asp - xtrue, 'error'), cbar
 	max_percent_diff(r_std, r_asp)
 prompt
 end
 
 if 1 % show all images
-	im plc 2 3; clim = [0.99 1.04]*1000; elim = [-0.1 0.1]*1000;
-	im(1, r_asp, 'FBP aspire', clim), cbar
-	im(4, r_asp - xtrue, 'error', elim), cbar
+	im plc 2 4; clim = [0.99 1.04]*1000; elim = [-0.1 0.1]*1000;
+	im(1, xtrue, 'xtrue', clim), cbar
+	im(5, sg.s, sg.ad, sino, 'sino'), cbar
 	im(2, r_std, 'FBP matlab', clim), cbar
-	im(5, r_std - xtrue, 'error', elim), cbar
+	im(6, r_std - xtrue, 'error', elim), cbar
 	if has_mex_jf
 	im(3, r_moj, 'FBP mojette', clim), cbar
-	im(6, r_moj - xtrue, 'error', elim), cbar
+	im(7, r_moj - xtrue, 'error', elim), cbar
+	im(4, r_asp, 'FBP aspire', clim), cbar
+	im(8, r_asp - xtrue, 'error', elim), cbar
 	end
 end

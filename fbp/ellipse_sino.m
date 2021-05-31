@@ -81,7 +81,15 @@ function [sino, pos, ang] = ellipse_sino_go(ells, ...
 	oversample, mojette);
 
 if isempty(ang)
-	ang = deg2rad(orbit_start + [0:na-1]/na * orbit);
+	ang = orbit_start + (0:na-1)/na * orbit;
+	if 0
+		pr orbit_start
+		pr na
+		pr orbit
+		pr class(orbit)
+		pr class(ang)
+	end
+	ang = deg2rad(double(ang));
 end
 
 [pos, pos2] = ellipse_sino_pos(pos(:), nb, ds, offset_s, ...
