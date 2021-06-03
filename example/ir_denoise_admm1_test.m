@@ -19,7 +19,7 @@ end
 
 
 if ~isvar('xs'), printm 'run admm'
-	[xs snrs] = ir_denoise_admm1(yi, 'beta', 2^-1, ...
+	[xs, snrs] = ir_denoise_admm1(yi, 'beta', 2^-1, ...
 		'stop_diff_tol', 1e-4, 'chat', 0, ...
 		'isave', 'all', ...
 		'userfun', @(x, iter) snr(x), ...
@@ -37,11 +37,13 @@ if 1 % figures
 
 	im subplot 4
 	iters = 0:numel(snrs)-1;
-	plot(iters, snrs, '-o')
-	axis([0 20 20 55])
-	xlabel 'ADMM iteration'
-	ylabel 'SNR (dB)'
-	ytick([25 53])
+	if im
+		plot(iters, snrs, '-o')
+		axis([0 20 20 55])
+		xlabel 'ADMM iteration'
+		ylabel 'SNR (dB)'
+		ytick([25 53])
+	end
 %	ir_savefig cw ir_denoise_admm1_test
 end
 
