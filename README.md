@@ -93,11 +93,6 @@ Jeff Fessler, http://web.eecs.umich.edu/~fessler/
 	filter-backproject reconstruction, including 2D parallel and fan-beam
 	and 3D Feldkamp (FDK) cone beam reconstruction
 
-* `freemat` (not in github version)
-	work in progress, towards making the code run with freemat
-	(obsolete: use octave instead of freemat)
-	(better yet, just use Julia)
-
 * `general`
 	some algorithms that work for generic image reconstruction problems
 
@@ -180,3 +175,11 @@ Another problem is that apparently windoze is case insensitive.
 I believe I have purged most of the m-files that had capitalized names now.
 Nevertheless, at this point it would be better to just install linux instead.
 Or switch to Julia.
+
+
+Deprecations:
+
+Older versions included a subdirectory `freemat` that was intended
+to try to make the code run with freemat
+[freemat](http://freemat.sourceforge.net).
+This is no longer supported; just use octave or Julia instead.
