@@ -1,5 +1,5 @@
-function [wmap, wconv] = mri_field_map_qm(yik, etime, varargin)
-% This function is a wrapper for fmap_est_qm.m to make it callable in a
+function [wmap, wconv] = mri_field_map_pcg_ls(yik, etime, varargin)
+% This function is a wrapper for fmap_est_pcg_ls.m to make it callable in a
 % similar fashion as mri_field_map_reg.m
 
 %|	yik	[(N) nset ncoil]	complex images at different echo times
@@ -8,7 +8,7 @@ function [wmap, wconv] = mri_field_map_qm(yik, etime, varargin)
 %|	etime	[nset]		vector of echo times [usually in seconds]
 %|
 %| options
-%|	see fmap_est_qm.m for options
+%|	see fmap_est_pcg_ls.m for options
 %|
 %| out
 %|	wmap	[(N)]	regularized estimate of field map [rad/sec]
@@ -21,7 +21,7 @@ arg = vararg_pair(arg, varargin, 'allow_new', 1);
 
 %% call function
 varargin2 = arg2varargin(arg);
-func_name = 'fmap_est_qm';
+func_name = 'fmap_est_pcg_ls';
 [wmap, wconv] = call_fmap(yik, etime, func_name, varargin2{:});
 
 

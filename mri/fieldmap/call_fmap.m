@@ -1,6 +1,6 @@
-function [wmap, wconv] = mri_field_map_convert(yik, etime, func_name, varargin)
-% This function is a wrapper for fmap_est_qm.m to make it callable in a
-% similar fashion as mri_field_map_reg.m
+function [wmap, wconv] = call_fmap(yik, etime, func_name, varargin)
+% This function is a wrapper for fmap_est_qm.m and fmap_est_pcg_ls.m to 
+% make them callable in a similar fashion as mri_field_map_reg.m
 
 %| inputs:
 %|	yik	[(N) nset ncoil]	complex images at different echo times
@@ -21,6 +21,8 @@ function [wmap, wconv] = mri_field_map_convert(yik, etime, func_name, varargin)
 %| out
 %|	wmap	[(N)]	regularized estimate of field map [rad/sec]
 %|	wconv	""	conventional estimate from first two scans
+%|
+%| Written 2021-06-03, Melissa Haskell, University of Michigan
 
 % default optional arguments
 arg.quiet = false;
