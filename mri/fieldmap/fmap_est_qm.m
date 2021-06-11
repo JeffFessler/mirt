@@ -22,7 +22,6 @@
 %|	order			order of the finite diff reg. (def: 2)
 %|	l2b             regularization parameter (2^) (def: -6)
 %|  hess            'diag' (default) or 'chol'
-%|	dim             2 (2d) or 3 (3d) problem (def: 3)
 %|  df              delta f value in water-fat imaging (def: 0)
 %|  relamp          relative amplitude in multipeak water-fat  (def: 1)
 %|
