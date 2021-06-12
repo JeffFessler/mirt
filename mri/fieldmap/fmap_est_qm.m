@@ -40,7 +40,7 @@ if nargin >= 1 && streq(w, 'test')
 return
 end
 
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 arg.niter = 30;
 arg.maskR = [];
@@ -69,6 +69,9 @@ end
 CC = C' * C;
 
 dim = ndims(arg.maskR); % diag curvature for 2d / 3d
+if dim <= 2 || size(arg.maskR,2) == 1
+	warn('1D maskR is unsupported!')
+end
 if strcmp(arg.hess,'diag')
     if arg.order == 1
         dCC = 2^arg.l2b*4*dim;
