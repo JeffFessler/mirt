@@ -32,7 +32,7 @@
 
 if nargin < 1, ir_usage, end
 if ischar(yi)
-	[x mask0] = mri_phase_denoise_test(yi, varargin{:});
+	[x, mask0] = mri_phase_denoise_test(yi, varargin{:});
 	if ~nargout, clear x mask0, end
 return
 end
@@ -117,7 +117,7 @@ R = Reg1(mask1, 'beta', 2^arg.l2b, 'order', arg.order);
 %	'type_denom', 'matlab', ...
 
 if 0 % old way
-	[C wjk] = C2sparse('tight', mask1, 8); % todo: cut?
+	[C, wjk] = C2sparse('tight', mask1, 8); % todo: cut?  do not use!
 	C = spdiag(sqrt(wjk), 'nowarn') * C; % caution: missing prior to 2005-11-28
 	C = sqrt(2^arg.l2b) * C;
 end
