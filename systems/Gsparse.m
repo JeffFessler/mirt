@@ -75,7 +75,7 @@ if ischar(arg1)
 	if ~isempty(arg.idim) || ~isempty(arg.odim)
 		error 'idim / odim should not be given for .wtf'
 	end
-	[arg.G arg.idim(1) arg.idim(2) arg.odim(1) arg.odim(2)] = ...
+	[arg.G, arg.idim(1), arg.idim(2), arg.odim(1), arg.odim(2)] = ...
 		wtf_read(arg.file);
 
 	% default mask from .wtf
@@ -200,7 +200,7 @@ for iblock=1:ob.nblock
 	ii = ii(:);
 	t = ob.arg.G(ii,:); % fix: sparse, but nzmax is too large!
 	if 0 % old matlab version had extra zeros
-		[i j s] = find(t);
+		[i, j, s] = find(t);
 		if iblock == 1 && length(s) ~= nzmax(t)
 %			persistent warned
 			warn 'squeezing matlab''s excess zeros in sparse matrix'
