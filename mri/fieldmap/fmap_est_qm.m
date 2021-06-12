@@ -22,7 +22,6 @@
 %|	order			order of the finite diff reg. (def: 2)
 %|	l2b             regularization parameter (2^) (def: -6)
 %|  hess            'diag' (default) or 'chol'
-%|	dim             2 (2d) or 3 (3d) problem (def: 3)
 %|  df              delta f value in water-fat imaging (def: 0)
 %|  relamp          relative amplitude in multipeak water-fat  (def: 1)
 %|
@@ -41,14 +40,13 @@ if nargin >= 1 && streq(w, 'test')
 return
 end
 
-if nargin < 4, help(mfilename), error(mfilename), end
+if nargin < 4, ir_usage, end
 
 arg.niter = 30;
 arg.maskR = [];
 arg.order = 2;
 arg.l2b = -6;
 arg.hess = 'diag';
-arg.dim = 3; % diag curvature for 2d / 3d
 arg.df = 0;
 arg.relamp = 1;
 arg = vararg_pair(arg, varargin);
@@ -70,11 +68,15 @@ if ~issparse(C)
 end
 CC = C' * C;
 
+dim = ndims(arg.maskR); % diag curvature for 2d / 3d
+if dim <= 2 || size(arg.maskR,2) == 1
+	warn('1D maskR is unsupported!')
+end
 if strcmp(arg.hess,'diag')
     if arg.order == 1
-        dCC = 2^arg.l2b*4*arg.dim;
+        dCC = 2^arg.l2b*4*dim;
     elseif arg.order == 2
-        dCC = 2^arg.l2b*16*arg.dim;
+        dCC = 2^arg.l2b*16*dim;
     else
         error('unknown order for C!')
     end
