@@ -20,9 +20,9 @@ arg = [];
 arg = vararg_pair(arg, varargin, 'allow_new', 1);
 
 %% call function
-varargin2 = arg2varargin(arg);
+% varargin2 = arg2varargin(arg);
 func_name = 'fmap_est_qm';
-[wmap, wconv] = call_fmap(yik, etime, func_name, varargin2{:});
+[wmap, wconv] = call_fmap(yik, etime, func_name, varargin{:});
 
 
 

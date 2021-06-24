@@ -25,7 +25,7 @@ function [wmap, wconv] = call_fmap(yik, etime, func_name, varargin)
 %| Written 2021-06-03, Melissa Haskell, University of Michigan
 
 % default optional arguments
-arg.quiet = false;
+arg.quiet = true;
 arg.winit = [];
 arg.sens = [];
 arg.maskR = [];

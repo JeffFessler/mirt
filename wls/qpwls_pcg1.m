@@ -95,7 +95,7 @@ for iter = 1:arg.niter
 	if arg.chat, ticker(mfilename, iter, arg.niter); end
 
 	% (negative) gradient
-	ngrad = A' * (W * (yi-Ax)) - C' * double(Cx);
+	ngrad = A' * (W * (yi-Ax)) - C' * Cx;
 
 	if arg.stop_grad_tol && norm_grad(ngrad) < arg.stop_grad_tol
 		if arg.chat
@@ -143,7 +143,7 @@ for iter = 1:arg.niter
 
 	% step size in search direction
 	Adir = A * ddir;
-	Cdir = C * double(ddir);
+	Cdir = C * ddir;
 
 	denom = Adir'*(W*Adir) + Cdir'*Cdir;
 	denom = reale(denom, 'error', 'denom');
