@@ -9,14 +9,27 @@ function [wmap, wconv] = call_fmap(yik, etime, func_name, varargin)
 %|	etime	[nset]		vector of echo times [usually in seconds]
 %|  func_name   string specifying which function to call
 %|
-%| options
-%|	maskR	[(N)]		 logical support mask 
-%|  sens    [(N) ncoil]   sensitivity maps
-%|  quiet   supresses all output from function
-%|  winit   initial image
+%| fmap_est_pcg_ls options
+%|	stepper {'qs',# its}	monotonic line search parameters (default: {})
+%|	niter			# of iterations (def: 30)
+%|	maskR	[(np)]	logical reconstruction mask (required!)
+%|	order			order of the finite diff matrix (def: 2)
+%|	l2b             regularization parameter (2^) (def: -6)
+%|	gammaType		CG direction: PR = Polak-Ribiere (default) or FR = Fletcher-Reeves
+%|	precon			Preconditioner: 'diag', 'chol', 'ichol' (def: 'ichol')
+%|	reset			# of iterations before resetting direction (def: inf)
+%|  df              delta f value in water-fat imaging (def: 0)
+%|  relamp          relative amplitude in multipeak water-fat  (def: 1)
+%|  tol             tolerance for ichol (def: 1e-3)
 %|
-%|	the rest of the options passed depend on which function is being 
-%|  called...
+%| fmap_est_qm options
+%|	niter			# of iterations (default: 30)
+%|	maskR	[(np)]	logical support mask (required)
+%|	order			order of the finite diff reg. (def: 2)
+%|	l2b             regularization parameter (2^) (def: -6)
+%|  hess            'diag' (default) or 'chol'
+%|  df              delta f value in water-fat imaging (def: 0)
+%|  relamp          relative amplitude in multipeak water-fat  (def: 1)
 %|
 %| out
 %|	wmap	[(N)]	regularized estimate of field map [rad/sec]
@@ -89,3 +102,25 @@ end
 wmap = reshape(wmap_structure.ws(:,end),size_v);
 end
 
+
+
+function [varargin] = arg2varargin(arg)
+% converts a variable input arguments structure, arg,  into a cell of 
+% fieldnames and inputs to be passed along to another function as a 
+% varargin cell, i.e. [out] = myfunc(in1, in2, varargin{:})
+%
+% IMPORTANT NOTE! when passing the output of this function, varargin, to
+% the next fucntion, the "{:}" at the end is necessary
+%
+% Inputs:
+%   arg     struct of variable inputs
+%
+% Outputs:
+%   vargin  cell of fieldname strings and inputs
+%
+% Written 2021-06-03, Melissa Haskell, University of Michigan
+
+varargin = [fieldnames(arg), struct2cell(arg)]';
+
+
+end

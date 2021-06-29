@@ -13,8 +13,14 @@ This github version is a work-in-progress.
 All the code is here,
 but to keep the repo size small,
 the data and the compiled mex files are not included.
-Currently one must still use the .tgz file to get all of that. 
-I will eventually work on some other way to distribute the data and mex files.
+Currently one must still use the .tgz file to get the complete version of the mex files and data. 
+
+To get some, but not all, of the mex files using this github repo, one 
+can run the script ir\_mex\_build.m from the repo's home directory.
+To get some, but not all, of the data used in the examples, this repo 
+will automatically download data from a data repo at https://github.com/JeffFessler/MIRTdata 
+and store it on your machine. 
+I will eventually work on some other way to distribute the complete data and mex files.
 
 This Matlab code is no longer being very actively maintained
 because I am switching to using Julia instead.  See:
@@ -26,6 +32,9 @@ After installing the toolbox, use matlab's `path` functionality to put
 the top level directory in its path (or launch matlab from that directory).
 Then run the file `setup.m` that will add all the appropriate subdirectories
 to the path.  You may find it convenient to read `setup.m` and customize it.
+
+When using this repo for the first time, run the ir\_mex\_build.m script to 
+create the mex files.
 
 I recommend running and examining some of the files in the `example/` directory
 or any of the many `..._example.m` files around, such as

@@ -5,8 +5,8 @@ Simulating B0 field maps:
  mri_field_map_sim.m
 
 Recommended methods for estimating B0 field maps:
- fmap_est_pcg_ls.m
- fmap_est_qm.m
+ mri_fieldmap_pcg_ls.m  (calls fmap_est_pcg_ls.m)
+ mri_fieldmap_qm.m      (calls fmap_est_qm.m)
 See code/data here:
  https://github.com/ClaireYLin/regularized-field-map-estimation
 
