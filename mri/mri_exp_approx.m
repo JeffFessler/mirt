@@ -152,7 +152,7 @@ elseif streq(atype, 'time,unif') || streq(atype, 'hist,time,unif')
 	pn = jf_protected_names;
 	rms = Inf;
 	while rms > rmsmax && LL < 40
-% 		ticker(mfilename, LL, 0)
+		ticker(mfilename, LL, 0)
 
 		% time sample locations [0 ... end]
 		if LL == 1

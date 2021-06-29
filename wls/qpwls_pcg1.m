@@ -86,13 +86,13 @@ end
 %info = zeros(arg.niter, ?); % trick: do not initialize because size may change
 
 % initialize projections
-if arg.chat, ticker(mfilename, 1, arg.niter); end
+ticker(mfilename, 1, arg.niter)
 Ax = A * x;
 Cx = C * x;
 
 % iterate
 for iter = 1:arg.niter
-	if arg.chat, ticker(mfilename, iter, arg.niter); end
+	ticker(mfilename, iter, arg.niter)
 
 	% (negative) gradient
 	ngrad = A' * (W * (yi-Ax)) - C' * Cx;
