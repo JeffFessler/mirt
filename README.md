@@ -33,7 +33,7 @@ the top level directory in its path (or launch matlab from that directory).
 Then run the file `setup.m` that will add all the appropriate subdirectories
 to the path.  You may find it convenient to read `setup.m` and customize it.
 
-When using this repo for the first time, run the ir\_mex\_build.m script to 
+When using this repo for the first time, run the `ir_mex_build.m` script to 
 create the mex files.
 
 I recommend running and examining some of the files in the `example/` directory
