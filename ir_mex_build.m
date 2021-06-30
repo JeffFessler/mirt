@@ -1,8 +1,8 @@
 % ir_mex_build
 %
-% some of the functions in this toolbox use calls to mex files.
-% the source code for *some*, but not all, of those mex files
-% is included with the toolbox, and can be created by running this script.
+% Some of the functions in this toolbox use calls to mex files.
+% The source code for *some*, but not all, of those mex files
+% is included with the toolbox, and this script generates the corresponding mex files.
 
 % The full MIRT toolbox with complete mex files can be found at:
 % http://web.eecs.umich.edu/~fessler/code/index.html
