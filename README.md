@@ -16,7 +16,7 @@ the data and the compiled mex files are not included.
 Currently one must still use the .tgz file to get the complete version of the mex files and data. 
 
 To get some, but not all, of the mex files using this github repo, one 
-can run the script ir\_mex\_build.m from the repo's home directory.
+can run the script `ir_mex_build.m` from the repo's home directory.
 To get some, but not all, of the data used in the examples, this repo 
 will automatically download data from a data repo at https://github.com/JeffFessler/MIRTdata 
 and store it on your machine. 
