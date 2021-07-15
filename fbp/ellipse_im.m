@@ -27,6 +27,7 @@
 
 if nargin == 1 && streq(ig, 'test'), ellipse_im_test, return, end
 if nargin == 1 && streq(ig, 'profile'), ellipse_im_profile, return, end
+if nargin == 1 && streq(ig, 'rotate'), ellipse_im_rotate, return, end
 if nargin < 1, ir_usage, end
 
 if isnumeric(ig)
@@ -150,8 +151,8 @@ if rot ~= 0
 	th = deg2rad(rot);
 	cx = params(:,1);
 	cy = params(:,2);
-	params(:,1) = cx * cos(th) + cy * sin(th);
-	params(:,2) = -cx * sin(th) + cy * cos(th);
+	params(:,1) = cx * cos(th) - cy * sin(th);
+	params(:,2) = cx * sin(th) + cy * cos(th);
 	params(:,5) = params(:,5) + rot;
 	clear cx cy th
 end
@@ -160,7 +161,7 @@ wx = (nx*over-1)/2 + offset_x * over;
 wy = (ny*over-1)/2 + offset_y * over;
 xx = ((0:nx*over-1) - wx) / over * dx;
 yy = ((0:ny*over-1) - wy) / over * dy;
-[xx yy] = ndgrid(xx, yy); % fine grid, equally spaced
+[xx, yy] = ndgrid(xx, yy); % fine grid, equally spaced
 
 phantom = zeros(nx*over, ny*over, 'single'); % fine array
 
@@ -173,7 +174,7 @@ for ie = 1:ne
 	cx = ell(1);	rx = ell(3);
 	cy = ell(2);	ry = ell(4);
 	theta = deg2rad(ell(5));
-	[xr yr] = rot2(xx-cx, yy-cy, theta);
+	[xr, yr] = rot2(xx-cx, yy-cy, theta);
 	tmp = (xr / rx).^2 + (yr / ry).^2 <= 1;
 
 	if replace
@@ -268,7 +269,7 @@ for ie = 1:ne
 		yi = ys - sign(ys) * hy;
 
 		% voxels that are entirely outside the ellipse:
-		[xr yr] = rot2(xi, yi, theta);
+		[xr, yr] = rot2(xi, yi, theta);
 		vo = (max(abs(xr),0) / rx).^2 + (max(abs(yr),0) / ry).^2 >= 1;
 
 		if 0 % examine "outside" voxels
@@ -285,7 +286,7 @@ for ie = 1:ne
 		x = outer_sum(x, xf);
 		y = outer_sum(y, yf);
 
-		[xr yr] = rot2(x - cx, y - cy, theta);
+		[xr, yr] = rot2(x - cx, y - cy, theta);
 		in = (xr / rx).^2 + (yr / ry).^2 <= 1;
 		tmp = mean(in, 2);
 
@@ -350,6 +351,16 @@ profile on
 x0 = ellipse_im(ig, [], 'oversample', 3, 'type', 'fast');
 profile off
 profile report
+
+
+% ellipse_im_rotate()
+function ellipse_im_rotate()
+ig = image_geom('nx', 2^8, 'ny', 2^8+2', 'fov', 250);
+x1 = ellipse_im(ig, 'shepplogan-emis');
+x2 = ellipse_im(ig, 'shepplogan-emis', 'rot', 40);
+im plc 1 2
+im(ig.x, ig.y, x1, 'Shepp Logan Emission'), cbar
+im(ig.x, ig.y, x2, 'Rotated'), cbar
 
 
 % ellipse_im_test()
