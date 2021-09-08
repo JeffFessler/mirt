@@ -1,31 +1,56 @@
 function [ output_im ] = sewpatches(input_patches, output_sz, patch_stsz)
+% function [ output_im ] = sewpatches(input_patches, output_sz, patch_stsz)
+%   Combine evenly spaced patches into a single image, averaging at voxels
+%   in more than one patch. Allows for the input of patches from multiple
+%   output images, if each image has been divided into similarly sized and
+%   spaced patches.
+%
+% Inputs:
+%   input_patches   [nlin_patch, ncol_patch, npatch]  stack of input patches
+%   output size     2 x 1   dimentions of output 2D image
+%   patch_stsz      1 x 1     step size btwn patches (stride)
+%
+% Outputs:
+%   output_im       [nlin, ncol, nims]   sewed together images
+%
+%  Melissa Haskell, University of Michigan, 2021-09-08
+
+
+%% Find patch size and determine the indices of each patch using createpatches
 
 patch_sz = size(input_patches,1);
+
+% input 2D image to get number of patches for 2d image of that size
 [~, patch_indices] = createpatches(zeros(output_sz), patch_sz, patch_stsz);
 
-npatches_per_image = size(patch_indices,3);
-npatches = size(input_patches,3);
+%% Calculate total number of images and initialize output
+
+npatch_per_image = size(patch_indices,3);
+npatch = size(input_patches,3);
 nrow = output_sz(1);
 ncol = output_sz(2);
-
-nims = npatches / npatches_per_image;
-
+nims = npatch / npatch_per_image;
 output_im = zeros(nrow,ncol,nims);
 
+%% Sew all the patches together
 for ii = 1:nims
-    psf_img = zeros(nrow, ncol);
-    sew_img = zeros(nrow, ncol);
-    for indx = 1:npatches_per_image
-        patch = reshape(input_patches(:,:,(ii-1)*npatches_per_image + indx),[patch_sz, patch_sz]);
+    psf_img = zeros(nrow, ncol);  % for tracking how many patches are at each voxel
+    sum_img = zeros(nrow, ncol);  % for adding all the patch values together
+    for jj = 1:npatch_per_image
         
-        ind = patch_indices(:,:,indx);
-        r1 = ind(1); c1 = ind(2); r2 = ind(3); c2 = ind(4);
+        patch_indx = (ii-1)*npatch_per_image + jj;
+        patch = reshape(input_patches(:,:,patch_indx),[patch_sz, patch_sz]);
+        
+        ind_2dim = patch_indices(:,:,jj);
+        r1 = ind_2dim(1); c1 = ind_2dim(2); 
+        r2 = ind_2dim(3); c2 = ind_2dim(4);
         
         psf_img(r1:r2,c1:c2) = psf_img(r1:r2,c1:c2) + 1;
-        sew_img(r1:r2,c1:c2) = sew_img(r1:r2,c1:c2) + patch;
+        sum_img(r1:r2,c1:c2) = sum_img(r1:r2,c1:c2) + patch;
         
     end
-    output_im(:,:,ii) = sew_img ./ (psf_img + 1e-12);
+    % scale summation image by the psf image
+    output_im(:,:,ii) = sum_img ./ (psf_img + 1e-12);
 end
 
 
