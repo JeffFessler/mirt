@@ -2,13 +2,17 @@ function [ output_im ] = patch_sew(input_patches, output_sz, patch_stsz)
 % function [ output_im ] = patch_sew(input_patches, output_sz, patch_stsz)
 %   Combine evenly spaced patches into a single image, averaging at voxels
 %   in more than one patch. Allows for the input of patches from multiple
-%   output images, if each image has been divided into similarly sized and
-%   spaced patches.
+%   output images (assuming each image has been divided into similarly 
+%   sized and spaced patches.
+% 
+%   Note: patch_create and patch_sew differ from im2col and col2im by 
+%   allowing a custom stride, and were designed to output a stack of 2d 
+%   patches for direct input to a 2d neural network.
 %
 % Inputs:
 %   input_patches   [nlin_patch, ncol_patch, npatch]  stack of input patches
-%   output size     2 x 1   dimentions of output 2D image
-%   patch_stsz      1 x 1     step size btwn patches (stride)
+%   output size     2x1   dimensions of output 2D image (or images)
+%   patch_stsz      1x1   step size btwn patches (stride)
 %
 % Outputs:
 %   output_im       [nlin, ncol, nims]   sewed together images

@@ -1,11 +1,15 @@
 function [patch_ims, patch_indices] = patch_create(full_im, patch_sz, patch_stsz)
 % function [patch_ims, patch_indices] = patch_create(full_im, patch_sz, patch_stsz)
-%   Create smaller image patches from input images, can be 2D image or a
-%   stack of 2D images.
+%   Create smaller image patches from input images, can have a 2D image or 
+%   a stack of 2D images as input.
+% 
+%   Note: patch_create and patch_sew differ from im2col and col2im by 
+%   allowing a custom stride, and were designed to output a stack of 2d 
+%   patches for direct input to a 2d neural network.
 %
 % Inputs:
-%   full_im     [nlin, ncol, nims]  stack of input patches
-%   patch_sz    1x1   dimentions of 2D patch
+%   full_im     [nlin, ncol, nims]  stack of input images
+%   patch_sz    1x1   dimension of 2D patch (assumes square patch)
 %   patch_stsz  1x1   step size btwn patches (stride)
 %
 % Outputs:
@@ -13,6 +17,12 @@ function [patch_ims, patch_indices] = patch_create(full_im, patch_sz, patch_stsz
 %   patch_indices [2x2xnpatch_per_image]            indices of output patches
 %
 %  Melissa Haskell, University of Michigan, 2021-09-08
+
+%% Test routine
+%  this tests both this function (patch_create), which creates patches, and 
+%  also the function patch_sew, which puts them back together
+if streq(full_im, 'test'), test_patch_funcs, return, end
+
 
 %% Get data sizes
 [nrow, ncol, nims] = size(full_im);
