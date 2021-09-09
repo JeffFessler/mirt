@@ -1,5 +1,5 @@
-function [ output_im ] = sewpatches(input_patches, output_sz, patch_stsz)
-% function [ output_im ] = sewpatches(input_patches, output_sz, patch_stsz)
+function [ output_im ] = patch_sew(input_patches, output_sz, patch_stsz)
+% function [ output_im ] = patch_sew(input_patches, output_sz, patch_stsz)
 %   Combine evenly spaced patches into a single image, averaging at voxels
 %   in more than one patch. Allows for the input of patches from multiple
 %   output images, if each image has been divided into similarly sized and
@@ -21,7 +21,7 @@ function [ output_im ] = sewpatches(input_patches, output_sz, patch_stsz)
 patch_sz = size(input_patches,1);
 
 % input 2D image to get number of patches for 2d image of that size
-[~, patch_indices] = createpatches(zeros(output_sz), patch_sz, patch_stsz);
+[~, patch_indices] = patch_create(zeros(output_sz), patch_sz, patch_stsz);
 
 %% Calculate total number of images and initialize output
 
