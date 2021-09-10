@@ -23,6 +23,7 @@ function [patch_ims, patch_indices] = patch_create(full_im, patch_sz, patch_stsz
 %  also the function patch_sew, which puts them back together
 if streq(full_im, 'test'), test_patch_funcs, return, end
 
+if nargin < 3, ir_usage, end
 
 %% Get data sizes
 [nrow, ncol, nims] = size(full_im);
