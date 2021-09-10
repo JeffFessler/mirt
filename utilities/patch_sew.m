@@ -19,6 +19,7 @@ function [ output_im ] = patch_sew(input_patches, output_sz, patch_stsz)
 %
 %  Melissa Haskell, University of Michigan, 2021-09-08
 
+if nargin < 3, ir_usage, end
 
 %% Find patch size and determine the indices of each patch using createpatches
 
