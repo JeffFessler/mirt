@@ -35,7 +35,7 @@ arg.coord_format = 'n'; % default 'native
 arg = vararg_pair(arg, varargin);
 
 if ~isempty(arg.dir)
-	file = [arg.dir filesep file];
+	file = fullfile(arg.dir, file);
 end
 
 fid = fopen(file, 'r');
