@@ -1,5 +1,9 @@
 The functions in this directory are all related to B0 field maps in MRI.
 
+todo: these functions probably should warn the user if the estimated
+field map approaches the wrapping frequency when there is only one pair
+of echo times.
+
 Simulating B0 field maps:
  mri_field_map_cyl.m
  mri_field_map_sim.m
