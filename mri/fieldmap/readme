@@ -4,6 +4,10 @@ todo: these functions probably should warn the user if the estimated
 field map approaches the wrapping frequency when there is only one pair
 of echo times.
 
+todo:
+need to have similar winit for all methods
+and to fix up the scale stuff
+
 Simulating B0 field maps:
  mri_field_map_cyl.m
  mri_field_map_sim.m
