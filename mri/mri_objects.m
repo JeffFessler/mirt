@@ -299,6 +299,10 @@ for ii=1:nrow(params)
 end
 
 
+function spread = fwhm2spread(fwhm)
+    spread = fwhm * sqrt(pi / log(16));
+
+
 % mri_objects_image_gauss2()
 %
 function out = mri_objects_image_gauss2(params, x,y)
@@ -319,9 +323,9 @@ for ii=1:nrow(params)
 	xc = par(1);
 	yc = par(2);
 	zc = par(3);
-	xw = par(4) / sqrt(log(256)) * sqrt(2*pi);
-	yw = par(5) / sqrt(log(256)) * sqrt(2*pi);
-	zw = par(6) / sqrt(log(256)) * sqrt(2*pi);
+	xw = fwhm2spread(par(4));
+	yw = fwhm2spread(par(5));
+	zw = fwhm2spread(par(6));
 	out = out + par(7) ...
 		.* exp(-pi * ((x-xc)/xw).^2) ...
 		.* exp(-pi * ((y-yc)/yw).^2) ...
@@ -334,7 +338,7 @@ end
 function out = mri_objects_kspace_gauss2(params, u,v)
 if ncol(params) ~= 5, fail('gauss2 requires 5 parameters'), end
 z = zeros(nrow(params),1);
-zw = (1+z) * sqrt(log(256)) / sqrt(2*pi); % trick
+zw = (1 + z) / fwhm2spread(1); % trick
 params = [params(:,1:2) z params(:,3:4) zw params(:,5)];
 out = mri_objects_kspace_gauss3(params, u,v,0);
 
@@ -350,9 +354,9 @@ for ii=1:nrow(params)
 	xc = par(1);
 	yc = par(2);
 	zc = par(3);
-	xw = par(4) / sqrt(log(256)) * sqrt(2*pi);
-	yw = par(5) / sqrt(log(256)) * sqrt(2*pi);
-	zw = par(6) / sqrt(log(256)) * sqrt(2*pi);
+	xw = fwhm2spread(par(4));
+	yw = fwhm2spread(par(5));
+	zw = fwhm2spread(par(6));
 	out = out + par(7) * xw*yw*zw ...
 		.* exp(-pi * (u*xw).^2) ...
 		.* exp(-pi * (v*yw).^2) ...
