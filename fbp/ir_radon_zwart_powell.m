@@ -78,4 +78,4 @@ theta = linspace(0,pi,181);
 r = linspace(-1,1,101) * 2;
 [tt rr] = ndgrid(theta, r);
 sino = ir_radon_zwart_powell(tt, rr);
-im('colorneg', r, theta, sino')
+im('colorneg', r, theta, sino'), cbar
