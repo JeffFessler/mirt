@@ -23,7 +23,7 @@ arg.try_poissrnd = false;
 arg = vararg_pair(arg, varargin);
 
 if arg.try_poissrnd % use matlab/octave poissrnd if available
-	if exist('poissrnd') == 2
+	if exist('poissrnd') == 2 % requires statistics toolbox
 		if ~isempty(seed), rng(seed), end
 		data = poissrnd(xm);
 		return
