@@ -117,7 +117,7 @@ if ~isvar('xgr.pipe'), printm 'pipe&menon gridding'
 	xgr.pipe = embed(A' * (w .* yd), mask);
 	if im
 		im(8, x1g{1}, x1g{2}, real(xgr.pipe), 'Pipe+Menon', clim), cbar
-		xlabelf('NRMSE %.1f\%%', 100*nrms(xgr.pipe(:), xtrue(:)))
+		xlabelf('NRMSE %.1f%%', 100*nrms(xgr.pipe(:), xtrue(:)))
 	end
 	pr 'sum(xgr.pipe) / sum(xtrue)'
 end

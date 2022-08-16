@@ -106,8 +106,8 @@ if 1
 	npcg = norm(epcg(:)) / norm(xtrue(:)) * 100;
 	nsqs = norm(esqs(:)) / norm(xtrue(:)) * 100;
 	nsos = norm(esos(:)) / norm(xtrue(:)) * 100;
-	im(7, efbp, elim), cbar horiz, titlef('NRMSE %4.1f\%%', nfbp)
-	im(8, epcg, elim), cbar horiz, titlef('NRMSE %4.1f\%%', npcg)
-	im(9, esqs, elim), cbar horiz, titlef('NRMSE %4.1f\%%', nsqs)
-	im(10, esos, elim), cbar horiz, titlef('NRMSE %4.1f\%%', nsos)
+	im(7, efbp, elim), cbar horiz, titlef('NRMSE %4.1f%%', nfbp)
+	im(8, epcg, elim), cbar horiz, titlef('NRMSE %4.1f%%', npcg)
+	im(9, esqs, elim), cbar horiz, titlef('NRMSE %4.1f%%', nsqs)
+	im(10, esos, elim), cbar horiz, titlef('NRMSE %4.1f%%', nsos)
 end

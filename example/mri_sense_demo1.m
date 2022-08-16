@@ -96,7 +96,7 @@ if ~isvar('xssos'), printm 'sqrt sum-of-squares reconstruction'
 	xssos = sqrt(sum(abs(xcp).^2, 3));
 	xssos = ir_wls_init_scale(1, xtrue, xssos); % cheat trick for scaling
 	im(3, abs(xssos), 'sum-of-squares recon'), cbar
-	xlabelf('NRMSE %.1f\%%', 100*nrms(xssos(:), xtrue(:)))
+	xlabelf('NRMSE %.1f%%', 100*nrms(xssos(:), xtrue(:)))
 prompt
 end
 
@@ -120,5 +120,5 @@ if ~isvar('xpcg'), printm 'PCG with quadratic penalty'
 	xpcg = ig.embed(xpcg(:,end)); % convert last vector to image for display
 
 	im(4, abs(xpcg), '|\x| PCG quad', clim), cbar
-	xlabelf('NRMSE %.1f\%%', 100*nrms(xpcg(:), xtrue(:)))
+	xlabelf('NRMSE %.1f%%', 100*nrms(xpcg(:), xtrue(:)))
 end

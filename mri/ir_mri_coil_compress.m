@@ -105,5 +105,5 @@ if im
 	im(5, 'row', 1, odata)
 	im subplot 6
 	plot(1:nkeep, S(1:nkeep), 'o', nkeep+1:ncoil, S(nkeep+1:ncoil), 'x')
-	titlef('percent kept %.1f\\%%', (norm(S(1:nkeep)) / norm(S))^2*100)
+	titlef('percent kept %.1f%%', (norm(S(1:nkeep)) / norm(S))^2*100)
 end

@@ -16,7 +16,7 @@ if ~isvar('A'), printm 'setup Gdft object'
 
 	im plc 2 3
 	im(samp), cbar
-	titlef('%.1f\%% samples', mean(samp(:))*100)
+	titlef('%.1f%% samples', mean(samp(:))*100)
 end
 
 
