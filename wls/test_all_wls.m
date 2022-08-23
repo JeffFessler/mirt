@@ -14,6 +14,7 @@ list = {
 'wls_grpr_test'
 'wls_pcg_test'
 'pwls_gca_test'
+'pwls_admm2 test'
 'qpwls_pcg2_test'
 %'qpwls_art2_vs_sps' % very slow!
 };

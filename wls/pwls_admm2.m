@@ -22,6 +22,12 @@
 %|				(scalar or vector of size C*x)
 %|	pot			potential function, see potential_fun.m
 %|					default: potential_fun('l1');
+%|
+%|	mu_a			augmented Lagrangian tuning parameters
+%|	mu_c			(tuning these may be a bit of a pain)
+%|	cond_aa_cc		desired condition number (default: 20)
+%|				automating these better is an open problem
+%|
 %|	niter			# total iterations (default: 1)
 %|					(max # if tol used)
 %|	isave	[]		list of iterations to archive (default: 'last')
@@ -55,11 +61,10 @@ arg.niter = 1;
 arg.isave = [];
 arg.userfun = @userfun_default;
 arg.userarg = {};
-%arg.key = 1;
 arg.stop_diff_tol = 1e-6;
 arg.stop_diff_norm = 2;
-arg.mu_a = [];
-arg.mu_c = [];
+arg.mu_a = []; % augmented Lagrangian parameter
+arg.mu_c = []; % ""
 arg.cond_aa_cc = 20; % target condition number for dftAA + factor * dftCC
 arg.arg_pcg = {'niter', 2};
 arg.chat = 0;
@@ -122,9 +127,14 @@ if isempty(arg.precon)
 	if any(precon_filter(:) <= 0), 'fail bug', end
 	printm('cond # = %g', max(abs(precon_filter)) / min(abs(precon_filter)))
 	precon_filter = 1 ./ precon_filter;
-	mask = true(siz); % todo: need actual mask!
-	precon_fun = @(arg,x) ifftn(fftn(embed(x,mask)) .* precon_filter);
-	arg.precon = fatrix2('forw', precon_fun, 'idim', siz, 'odim', siz);
+	if isvar('A.imask')
+		mask = A.imask;
+	else
+		warn('using full mask may not work')
+		mask = true(siz);
+	end
+	precon_fun = @(arg,x) ifftn(fftn(x) .* precon_filter);
+	arg.precon = fatrix2('forw', precon_fun, 'mask', mask, 'omask', mask, 'idim', siz, 'odim', siz);
 
 	if 0
 		tmp = arg.mu_a * AAe + arg.mu_c * CCe;
@@ -165,9 +175,9 @@ if iter > 1
 	% mu_a/2 |u - A x - eta_u|_2^2 + mu_c/2 |v - C x - eta_v|_2^2
 	xold = x;
 	ytmp = [arg.mu_a * col(u - eta_u); arg.mu_c * col(v - eta_v)];
-	x = qpwls_pcg1(xold(:), As, 1, ytmp, 0, 'precon', arg.precon, ...
+	x = qpwls_pcg1(xold(mask), As, 1, ytmp, 0, 'precon', arg.precon, ...
 		'isave', 'last', arg.arg_pcg{:});
-	x = reshape(x, size(xold));
+	x = embed(x, mask);
 end
 
 	Ax = A * x;
@@ -271,14 +281,14 @@ out = [cpu('etoc')];
 function pwls_admm2_test
 
 mask = true([8 7]);
-% mask(1) = false; % todo mask
+mask(1) = false; % stress test mask
 A = Gblur(mask, 'psf', ones(3)/9);
 xtrue = zeros(size(mask), 'single');
 xtrue(end/2, round(end/2)) = 1;
 clim = [-0.1 1];
 
 y = A * xtrue;
-C = Cdiffs(size(mask));
+C = Cdiffs(size(mask), 'mask', mask);
 W = 1;
 reg = 2^-12;
 
@@ -286,12 +296,14 @@ im plc 2 3
 im(1, xtrue, clim)
 im(2, y)
 
-if 1 % analytical solution as reference (because quadratic)
+%% analytical solution as reference (because quadratic)
+% (this test is practical only for small problem sizes)
+if 1
 	tmp1 = A' * (W * A);
 	tmp2 = reg * (C' * C);
 	hess = full(tmp1 + tmp2);
 	pr cond(hess)
-	xhat = hess \ col(A' * (W * y));
+	xhat = hess \ col(A' * (W * y(:)));
 	xhat = embed(xhat, mask);
 	im(3, xhat, clim)
 	%im(4, full(tmp2))
@@ -308,4 +320,4 @@ xadmm = pwls_admm2(xinit, A, W, y, C, 'reg', reg, 'niter', 90, ...
 
 im(5, xadmm, clim)
 im(6, xadmm - xhat, 'xadmm-xhat'), cbar
-equivs(xadmm, xhat, 'thresh', 1e-5)
+equivs(xadmm, xhat, 'thresh', 4e-5)
