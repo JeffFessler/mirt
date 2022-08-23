@@ -17,6 +17,7 @@
 %|	niter			# total iterations (default: 1)
 %|					(max # if tol used)
 %|	isave	[]		list of iterations to archive (default: 'last')
+%|	xreal	0|1		constrain "x" to be real? (default 0)
 %|	userfun	@		user defined function handle (see default below)
 %|					taking arguments (x, iter, userarg{:})
 %|	userarg {}		user arguments to userfun (default {})
@@ -37,12 +38,19 @@
 %|
 %| Copyright 1996-7, Jeff Fessler, University of Michigan
 
-if nargin == 1 && streq(x, 'test'), pwls_pcg1_test, return, end
+if nargin == 1 && streq(x, 'test')
+	pwls_pcg1_test
+	prompt
+	pwls_pcg1_test_real
+return
+end
+
 if nargin < 5, ir_usage, end
 
 % defaults
 arg.precon = 1;
 arg.niter = 1;
+arg.xreal = false;
 arg.isave = [];
 arg.stepper = {'qs', 3}; % quad surr with this # of subiterations
 arg.userfun = @userfun_default;
@@ -52,7 +60,7 @@ arg.stop_diff_tol = 0;
 arg.stop_diff_norm = 2;
 arg.stop_grad_tol = 0;
 arg.stop_grad_norm = 2;
-arg.chat = 0;
+arg.chat = false;
 
 arg = vararg_pair(arg, varargin, 'subs', ...
 {'stop_threshold', 'stop_diff_tol'; 'stop_norm_type', 'stop_diff_norm'});
@@ -69,6 +77,9 @@ end
 cpu etic
 if isempty(x), x = zeros(ncol(A),1, class(yi)); end
 
+if arg.xreal && ~isreal(x)
+	fail('"xreal" option requires initial "x" to be real!')
+end
 x = x(:);
 np = numel(x);
 xs = zeros(np, numel(arg.isave), class(x));
@@ -92,6 +103,9 @@ for iter = 1:arg.niter
 	ngrad = A' * (W * (yi-Ax));
 	pgrad = R.cgrad(R, x);
 	ngrad = ngrad - pgrad;
+	if arg.xreal
+		ngrad = real(ngrad); % constrain x
+	end
 
 	if arg.stop_grad_tol && norm_grad(ngrad) < arg.stop_grad_tol
 		if arg.chat
@@ -108,6 +122,9 @@ for iter = 1:arg.niter
 
 	% preconditioned gradient
 	pregrad = arg.precon * ngrad;
+	if arg.xreal && ~isreal(pregrad)
+		fail('for xreal option, precon must preserve realness')
+	end
 
 	% search direction
 	newinprod = dot_double(conj(ngrad), pregrad);
@@ -267,3 +284,43 @@ im(2, xhat)
 im(3, xpcg)
 im(4, xpcg - xhat)
 equivs(xpcg, xhat)
+
+
+% pwls_pcg1_test_real
+% case where data is complex but x is constrained to be real using `xreal` flag
+function pwls_pcg1_test_real
+
+mask = true([8 7]); mask(1) = false;
+xtrue = zeros(size(mask), 'single');
+xtrue(end/2, round(end/2)) = 1;
+N = sum(mask(:));
+M = 2*N;
+rng(0)
+A = Gdft('mask', mask);
+psf = rand(5,5) + 1i * rand(5,5);
+M1 = M - size(A,1);
+A = [A; Gmatrix(randn(M1,N) + 1i * randn(M1,N), 'imask', mask)];
+%cond(A'*A)
+%im(full(A'*A)); return
+noise = rand(M,1) + 1i * rand(M,1);
+y = A * xtrue(mask) + 0.1*noise;
+beta = 2^5;
+% trick: using 'mat' not 'mex' option because 'mex' version has edge error
+R = Reg1(mask, 'beta', beta, 'type_penal', 'mat');
+hess = full(A' * A + R.C' * R.C);
+%cond(hess)
+%im(full(R.C' * R.C)); return
+xhat = real(hess) \ real(A' * y);
+xhat = embed(xhat, mask);
+im(xhat)
+
+xpcg = pwls_pcg1(0*mask(mask), A, 1, y, R, 'niter', 100, 'xreal', true, ...
+	'stop_grad_tol', 1e-6, 'stop_grad_norm', 2, 'chat', 1);
+xpcg = embed(xpcg, mask);
+
+im plc 2 2
+im(1, xtrue)
+im(2, xhat)
+im(3, xpcg)
+im(4, xpcg - xhat)
+equivs(xpcg, xhat, 'thresh', 4e-6)
