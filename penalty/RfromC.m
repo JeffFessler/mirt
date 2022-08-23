@@ -47,7 +47,11 @@ penal = sum(arg.wt(:) .* pot(:));
 
 % RfromC_cgrad()
 function cgrad = RfromC_cgrad(dummy, arg, x)
-tmp = arg.C1 * x;
+if issparse(arg.C1)
+	tmp = arg.C1 * double(x); % dumb matlab sparse
+else
+	tmp = arg.C1 * x;
+end
 wpot = arg.pot.wpot(tmp);
 if numel(arg.wt) == 1
 	wt = wpot * arg.wt; % scalar wt
@@ -60,7 +64,11 @@ cgrad = arg.C1' * (wt .* tmp);
 % RfromC_denom()
 function denom = RfromC_denom(dummy, arg, x)
 Ca = abs(arg.C1);
-tmp = Ca * x;
+if issparse(Ca)
+	tmp = Ca * double(x); % dumb matlab sparse
+else
+	tmp = Ca * x;
+end
 wpot = arg.pot.wpot(tmp);
 if numel(arg.wt) == 1
 	wt = wpot * arg.wt; % scalar wt
