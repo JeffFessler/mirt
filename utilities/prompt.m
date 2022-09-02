@@ -22,6 +22,8 @@ if ~isvar('Prompt') || isempty(Prompt)
 	Prompt = 'pause';
 end
 
+drawnow
+
 % query mode
 if ~nargin && nargout
 	out = Prompt;
