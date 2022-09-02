@@ -508,7 +508,7 @@ out = mri_objects('rect2', rp, 'gauss2', gp);
 %
 function out = mri_objects_test4(fov, arg)
 
-cp = [0 0 0 fov(1)*0.4 fov(3)*1.0 1]; % cyl3
+cp = [0 0 0 fov(1)*0.4 fov(3)*0.8 1]; % cyl3
 
 rp = [ ... % rect3
 	-50 -50   0	40 40 40	1;
@@ -518,7 +518,7 @@ rp = [ ... % rect3
 rp(:,1:3) = rp(:,1:3)/256 .* repmat(fov, 3, 1);
 rp(:,4:6) = rp(:,4:6)/256 .* repmat(fov, 3, 1);
 
-gp = [ ...	% gauss3 bumps
+gp = [ ... % gauss3 bumps
 	-70 0 0		1 1 1	1;
 	-60 0 0		2 2 2	1;
 	-50 0 0		3 3 3	1;
@@ -614,7 +614,7 @@ prompt
 end
 
 if 1
-	st = mri_objects('fov', ig.fovs, 'test4');
+	st = mri_objects('fov', ig.fovs, 'test4'); % calls mri_objects_test4
 	xt = st.image(ig.xg, ig.yg, ig.zg);
 	im clf, im(xt), cbar
 end
