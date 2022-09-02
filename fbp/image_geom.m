@@ -15,8 +15,10 @@
 %|	'fov'		nx * dx
 %|	'down'		down-sampling factor
 %|	'offsets'	default: ''
-%|			'dsp' for [-n/2:n/2-1] offsets, i.e., offset_* = 0.5
+%|			'dsp' for (-n/2:n/2-1) offsets, i.e., offset_* = 0.5
 %|			in which case offset_* must be zero else error
+%|			(If n is odd, then use -(n-1)/2:(n-1)/2, i.e.,
+%|			offset_? remains 0 for this 'dsp' option.)
 %|	'mask'		logical support mask.  default: true(nx,ny,...)
 %|			use 'all-but-edge' for all ones except outer edge(s)
 %|
@@ -31,9 +33,10 @@
 %|
 %| methods
 %|	st.dim	[nx ny [nz]]
-%|	st.x	1D x coordinates of each pixel (1D)
+%|	st.x	1D x coordinates of each pixel (1D) ((0:nx-1)' - wx) * dx
 %|	st.y	1D y ""
 %|	st.u,v	1D frequency-domain coordinates
+%|	st.kz	1D frequency-domain coordinates in z
 %|	st.fg	{u v w} frequency-domain coordinates for DFT
 %|	st.xg	x coordinates of each pixel, as a grid (2D or 3D)
 %|	st.yg	y ""
@@ -95,13 +98,30 @@ end
 % offsets
 if streq(st.offsets, 'dsp')
 	if st.offset_x ~= 0 || st.offset_y ~= 0, fail('offsets usage'), end
-	st.offset_x = 0.5;
-	st.offset_y = 0.5;
+	st.offset_x = 0.5 * (mod(st.nx,2) == 0);
+	st.offset_y = 0.5 * (mod(st.ny,2) == 0);
 	if st.is3
 		if st.offset_z ~= 0 fail('offsets usage'), end
-		st.offset_z = 0.5;
+		st.offset_z = 0.5 * (mod(st.nz,2) == 0);
 	end
+elseif isnumeric(st.offsets)
+	if st.offset_x ~= 0 || st.offset_y ~= 0, fail('offsets usage'), end
+	if st.is3 && numel(st.offsets) == 3
+		if st.offset_z ~= 0 fail('offsets usage'), end
+		st.offset_x = st.offsets(1);
+		st.offset_y = st.offsets(2);
+		st.offset_z = st.offsets(3);
+	elseif ~st.is3 && numel(st.offsets) == 2
+		st.offset_x = st.offsets(1);
+		st.offset_y = st.offsets(2);
+	else
+		pr st.offsets
+		fail('bad offsets')
+	end
+elseif ~isempty(st.offsets)
+	fail('offsets bug')
 end
+st = rmfield(st, 'offsets'); % remove it so no confusion with offset_x etc.
 
 % distances
 if 1
@@ -198,9 +218,10 @@ meth = { ...
 	'plot', @image_geom_plot, '()'; ...
 	'x', @image_geom_x, '(subs), 1D x coordinates'; ...
 	'y', @image_geom_y, '(subs), 1D y coordinates'; ...
-	'wx', @image_geom_wx, '(), (nx-1/2) * dx + offset_x'; ...
-	'wy', @image_geom_wy, '(), (ny-1/2) * dy + offset_y'; ...
-	'wz', @image_geom_wz, '(), (nz-1/2) * dz + offset_z'; ...
+	'wx', @image_geom_wx, '(), (nx-1)/2 + offset_x'; ...
+	'wy', @image_geom_wy, '(), (ny-1)/2 + offset_y'; ...
+	'wz', @image_geom_wz, '(), (nz-1)/2 + offset_z'; ...
+	'offsets', @image_geom_offsets, '(), [offset_x, ...]'; ...
 	'xg', @image_geom_xg, '(subs), 2D or 3D grid of x coordinates'; ...
 	'yg', @image_geom_yg, '(subs), 2D or 3D grid of y coordinates'; ...
 	'zg', @image_geom_zg, '(subs), 2D or 3D grid of z coordinates'; ...
@@ -218,8 +239,9 @@ meth = { ...
 	};
 
 if st.is3
-	meth(end+[1:2],:) = { ...
+	meth(end+(1:3),:) = { ...
 		'z', @image_geom_z, '()'; ...
+		'kz', @image_geom_kz, '(), kz frequency domain coordinates'; ...
 		'mask_or', @image_geom_mask_or, '()'};
 end
 st = strum(st, meth);
@@ -316,9 +338,18 @@ dd = dd * down; % todo: what if out is rounded?
 function mo = image_geom_mask_or(st)
 mo = sum(st.mask, 3) > 0;
 
+
 % image_geom_np()
 function np = image_geom_np(st)
 np = sum(st.mask(:));
+
+
+% image_geom_offsets()
+function offsets = image_geom_offsets(st)
+offsets = [st.offset_x st.offset_y];
+if st.is3
+	offsets = [offsets st.offset_z];
+end
 
 
 % image_geom_over()
@@ -409,17 +440,17 @@ wz = (st.nz-1)/2 + st.offset_z;
 
 % image_geom_x()
 function x = image_geom_x(st, varargin)
-x = ([0:st.nx-1]' - st.wx) * st.dx;
+x = ((0:st.nx-1)' - st.wx) * st.dx;
 x = x(varargin{:});
 
 % image_geom_y()
 function y = image_geom_y(st, varargin)
-y = ([0:st.ny-1]' - st.wy) * st.dy;
+y = ((0:st.ny-1)' - st.wy) * st.dy;
 y = y(varargin{:});
 
 % image_geom_z()
 function z = image_geom_z(st, varargin)
-z = ([0:st.nz-1]' - st.wz) * st.dz;
+z = ((0:st.nz-1)' - st.wz) * st.dz;
 z = z(varargin{:});
 
 
@@ -463,12 +494,11 @@ function fg = image_geom_fg(st, varargin);
 u = image_geom_u(st);
 v = image_geom_v(st);
 if st.is3
-	n = st.nz; d = st.dz;
-	w = [-n/2:n/2-1] / (n * d);
-	[u v w] = ndgrid(u, v, w);
+	w = image_geom_kz(st);
+	[u, v, w] = ndgrid(u, v, w);
 	fg = {u, v, w};
 else
-	[u v] = ndgrid(u, v);
+	[u, v] = ndgrid(u, v);
 	fg = {u, v};
 end
 if length(varargin),
@@ -507,16 +537,27 @@ if st.is3
 end
 out = out(varargin{:});
 
+% image_geom_k()
+function out = image_geom_k(n, d)
+if mod(n,2) == 0
+	out = (-n/2:n/2-1) / (n * d);
+else
+	out = (-(n-1)/2:(n-1)/2) / (n * d);
+end
+
 % image_geom_u()
 function out = image_geom_u(st, varargin)
-n = st.nx; d = st.dx;
-out = [-n/2:n/2-1] / (n * d);
+out = image_geom_k(st.nx, st.dx);
 out = out(varargin{:});
 
 % image_geom_v()
 function out = image_geom_v(st, varargin)
-n = st.ny; d = st.dy;
-out = [-n/2:n/2-1] / (n * d);
+out = image_geom_k(st.ny, st.dy);
+out = out(varargin{:});
+
+% image_geom_kz()
+function out = image_geom_kz(st, varargin)
+out = image_geom_k(st.nz, st.dz);
 out = out(varargin{:});
 
 % image_geom_zeros()
