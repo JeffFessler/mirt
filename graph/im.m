@@ -95,10 +95,15 @@ if nargin == 1 && ischar(varargin{1})
 		end
 	case 'drawnow'
 		state.drawnow = true;
-	case 'drawnow'
-		state.drawnow = true;
 	case 'drawnot'
 		state.drawnow = false;
+	case 'subplot'
+		if state.sub_m
+			im_subplot(state, state.next_sub);
+			state.next_sub = state.next_sub + 1;
+		else
+			fail('subplot not set')
+		end
 	case 'tickon'
 		state.tick = true;
 	case 'tickoff'
@@ -214,7 +219,7 @@ while length(varargin)
 	arg = varargin{1};
 	if isempty(arg)
 		0; % do nothing
-	elseif max(size(arg)) == 1
+	elseif max(size(arg)) == 1 % scalar
 		if state.display
 			arg1 = varargin{1};
 			if arg1 > 99 % reset
@@ -327,6 +332,7 @@ if any(isinf(zz(:)))
 end
 
 if opt.mid3
+	mip3_size = size(zz);
 	pn = jf_protected_names;
 	zz = pn.mid3(zz);
 end
@@ -530,7 +536,7 @@ if ndims(zz) < 3 % 2d
 				text(n1, 1.04*(n2+0.5), num2str(n1), ...
 					'horizontalalign', 'right', ...
 					'verticalalign', 'top')
-			elseif opt.mip3
+			elseif opt.mip3 || opt.mid3
 				tmp = [1 mip3_size(1)+[0 mip3_size(3)]];
 				setgca('xtick', tmp)
 				tmp = [1 mip3_size(2)+[0 mip3_size(3)]];
