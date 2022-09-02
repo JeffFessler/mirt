@@ -170,7 +170,12 @@ end
 % mri_trajectory_stack()
 % make 3D "stack of ..." trajectory from a 2D trajectory
 function omega = mri_trajectory_stack(omega2, N3)
-o3 = single([0:(N3-1)]/N3 - 0.5)*2*pi;
+if mod(N3,2) == 0 % iseven
+	o3 = ((0:(N3-1))/N3 - 0.5);
+else % isodd
+	o3 = (-(N3-1)/2 : (N3-1)/2) / N3;
+end
+o3 = single(o3 * 2 * pi);
 o3 = repmat(o3, nrow(omega2), 1); % [N12,N3]
 omega = repmat(omega2, N3, 1); % [N12*N3,2]
 omega = [omega o3(:)]; % [N12*N3,3]
