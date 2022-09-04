@@ -66,7 +66,7 @@ flip_y		= arg_num_def(args, 'flip_y', '1');
 Dsd		= arg_num(args, 'dis_src_det');
 Dod		= arg_num(args, 'dis_iso_det');
 Dfs		= arg_num_def(args, 'dis_foc_src', inf); % default flat
-Dso = Dsd - Dod; 	% src to "isocenter" distance
+Dso = Dsd - Dod; % src to "isocenter" distance
 
 if offset_source, error 'only offset_source=0 implemented', end
 

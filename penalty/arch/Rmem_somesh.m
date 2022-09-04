@@ -28,7 +28,7 @@ function R = Rmem(kappa, varargin)
 %				use '0' for C = I (identity matrix)
 %	'beta', [1] | [M]	global regularization parameter(s)
 %				default: 2^0
-%	'pot_arg', {} 		arguments to potential_func()
+%	'pot_arg', {}		arguments to potential_func()
 %				e.g., {'huber', delta}, or cell{M} array
 %				default: {'quad'} for quadratic regularization.
 %	'type_denom', ''	type of "denominator"
@@ -325,28 +325,28 @@ end
 % $$$ function denom_max0 = Rmem_denom_max0(R)
 % $$$ switch R.type_denom
 % $$$ case {'matlab', 'aspire'}
-% $$$ 	error 'not done due to R.wt'
-% $$$ 	t = R.wt .* R.pot.wpot(R.pot, 0);
-% $$$ 	if R.C_is_I
-% $$$ 		denom_max0 = t;
-% $$$ 	else
-% $$$ 		t = reshape(t, [R.dim R.M]);
-% $$$ 		if R.order == 1 % fix: order=2 denom?
-% $$$ 			t = 2 * t; % "2" because (1,-1) differences
-% $$$ 			denom_max0 = penalty_mex('diff1,back2', ...
-% $$$ 					single(t), R.offsets);
-% $$$ 		elseif R.order == 2 % (-1,2,1) so ?
-% $$$ 			t = 4 * t; % 4 = |-1| + |2| + |-1|
-% $$$ 			denom_max0 = penalty_mex('diff2,backA', ...
-% $$$ 					single(t), R.offsets);
-% $$$ 			warning 'todo: order=2 not tested'
-% $$$ 		else
-% $$$ 			error 'order not done for denom'
-% $$$ 		end
-% $$$ 		denom_max0 = R.denom_max0(R.mask);
-% $$$ 	end
+% $$$	error 'not done due to R.wt'
+% $$$	t = R.wt .* R.pot.wpot(R.pot, 0);
+% $$$	if R.C_is_I
+% $$$		denom_max0 = t;
+% $$$	else
+% $$$		t = reshape(t, [R.dim R.M]);
+% $$$		if R.order == 1 % fix: order=2 denom?
+% $$$			t = 2 * t; % "2" because (1,-1) differences
+% $$$			denom_max0 = penalty_mex('diff1,back2', ...
+% $$$					single(t), R.offsets);
+% $$$		elseif R.order == 2 % (-1,2,1) so ?
+% $$$			t = 4 * t; % 4 = |-1| + |2| + |-1|
+% $$$			denom_max0 = penalty_mex('diff2,backA', ...
+% $$$					single(t), R.offsets);
+% $$$			warning 'todo: order=2 not tested'
+% $$$		else
+% $$$			error 'order not done for denom'
+% $$$		end
+% $$$		denom_max0 = R.denom_max0(R.mask);
+% $$$	end
 % $$$ otherwise
-% $$$ 	error('Unknown type_denom: "%s"', R.type_denom)
+% $$$	error('Unknown type_denom: "%s"', R.type_denom)
 % $$$ end
 
 % new Rmem_denom_max0()
@@ -588,7 +588,7 @@ for ii=1:size(temp,2)-1
   pot_params(ii) = temp{ii+1}(1);
 end
 cgrad = penalty_mex(sprintf('cgrad%d',R.order), ...
-  		    single(x), single(R.beta), single(R.kappa),  ...
+		    single(x), single(R.beta), single(R.kappa),  ...
 		    int32(R.offsets), temp{1}, single(pot_params) );
 
 if flag_column
@@ -614,7 +614,7 @@ for ii=1:size(temp,2)-1
   pot_params(ii) = temp{ii+1}(1);
 end
 denom = penalty_mex(sprintf('denom%d',R.order), ...
-  		    single(x), single(R.beta), single(R.kappa),  ...
+		    single(x), single(R.beta), single(R.kappa),  ...
 		    int32(R.offsets), temp{1}, single(pot_params) );
 
 if flag_column
@@ -643,7 +643,7 @@ for ii=1:size(temp,2)-1
   pot_params(ii) = temp{ii+1}(1);
 end
 cgrad_denom = penalty_mex(sprintf('cgrad_denom%d',R.order), ...
-  		    single(x), single(R.beta), single(R.kappa),  ...
+		    single(x), single(R.beta), single(R.kappa),  ...
 		    int32(R.offsets), temp{1}, single(pot_params), numthreads );
 
 if flag_column

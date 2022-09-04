@@ -1,11 +1,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                                                            
+%%
 %% 4-level multiresulution nonrigid image registration with Jacobian penalty
 %% Conjugate gradient with Newton's first step was used 
 %% Cubic B-spline bases are used for both image and deformation models   
-%%                                                                            
+%%
 %% Copyright April 2008, Se Young Chun and Jeff Fessler, University of Michigan
-%%                                                                            
+%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -134,8 +134,8 @@ if ~isvar('alphay'), printm 'registering images'
 		% jacobian determinant
 		xx = Bgx*alphax; yy = Bgy*alphay; 
 		xy = Bgx*alphay; yx = Bgy*alphax;
-        	detJ = (1+xx).*(1+yy) - xy.*yx;
-        	Imap=(detJ-Jt_low).*(detJ<Jt_low)+(detJ-Jt_hgh).*(Jt_hgh<=detJ);
+		detJ = (1+xx).*(1+yy) - xy.*yx;
+		Imap=(detJ-Jt_low).*(detJ<Jt_low)+(detJ-Jt_hgh).*(Jt_hgh<=detJ);
 	
 		% gradients
 		gx=(B'*(gsx.*diff))+betaJ*(Bgx'*((1+yy).*Imap)-Bgy'*(xy.*Imap));
@@ -153,9 +153,9 @@ if ~isvar('alphay'), printm 'registering images'
 		% Newton method first iteration step size
 		gamma_num = gx'*dx + gy'*dy;
 		gamma_den = sum( (gsx.*tx + gsy.*ty).^2 ) ...
-                	+ betaJ*(sum( (Imap~=0).*( xdx.*(1+yy) ...
-                	- ydx.*xy + ydy.*(1+xx) - xdy.*yx ).^2 ) ...
-                	+ 2*Imap'*(xdx.*ydy - ydx.*xdy) );
+			+ betaJ*(sum( (Imap~=0).*( xdx.*(1+yy) ...
+			- ydx.*xy + ydy.*(1+xx) - xdy.*yx ).^2 ) ...
+			+ 2*Imap'*(xdx.*ydy - ydx.*xdy) );
 		gamma = - gamma_num / gamma_den;
 	
 		%deformation update	
@@ -164,8 +164,8 @@ if ~isvar('alphay'), printm 'registering images'
 	
 		% Conjugate gradient iterations (max 100 iterations)
 		flag = 0;
-        	subiter = 0;
-        	while (flag < 0.5)
+		subiter = 0;
+		while (flag < 0.5)
 			iter = iter + 1;
 			subiter = subiter + 1;
 			[W Wgx Wgy] = makeW({B, B}, {alphax, alphay});
@@ -182,8 +182,8 @@ if ~isvar('alphay'), printm 'registering images'
 	
 			xx = Bgx*alphax; yy = Bgy*alphay; 
 			xy = Bgx*alphay; yx = Bgy*alphax;
-        		detJ = (1+xx).*(1+yy) - xy.*yx;
-        		Imap = (detJ-Jt_low).*(detJ<Jt_low) ...
+			detJ = (1+xx).*(1+yy) - xy.*yx;
+			Imap = (detJ-Jt_low).*(detJ<Jt_low) ...
 				+ (detJ-Jt_hgh).*(Jt_hgh<=detJ);
 	
 			gx = (B'*(gsx.*diff)) + betaJ*(Bgx'*((1+yy).*Imap)...
@@ -194,8 +194,8 @@ if ~isvar('alphay'), printm 'registering images'
 			grad = max( sqrt( gx.^2 + gy.^2) );
 	
 			if ( grad < 10^(-5) ) | (subiter > 100)
-                        	flag = 1;
-                	end
+				flag = 1;
+			end
 	
 			beta = (sum(gx.*(gx-gx_old))+sum(gy.*(gy-gy_old)))/...
 				( sum(gx_old.*gx_old) + sum(gy_old.*gy_old) );
@@ -211,9 +211,9 @@ if ~isvar('alphay'), printm 'registering images'
 	
 			gamma_num = gx'*dx + gy'*dy;
 			gamma_den = sum( (gsx.*tx + gsy.*ty).^2 ) ...
-               	 		+ betaJ*(sum( (Imap~=0).*( xdx.*(1+yy) ...
-                		- ydx.*xy + ydy.*(1+xx) - xdy.*yx ).^2 ) ...
-                		+ 2*Imap'*(xdx.*ydy - ydx.*xdy) );
+				+ betaJ*(sum( (Imap~=0).*( xdx.*(1+yy) ...
+				- ydx.*xy + ydy.*(1+xx) - xdy.*yx ).^2 ) ...
+				+ 2*Imap'*(xdx.*ydy - ydx.*xdy) );
 			gamma = - gamma_num / gamma_den;
 	
 			alphax = alphax + gamma * reshape(dx, kg.dim);
@@ -247,16 +247,16 @@ im(5, detJ>0)
 title 'detJ - binary'
 
 if 1 printm 'checking finer jacobian'
-        if ~isvar('detJm')
-                igm = image_geom('nx', 2560, 'dx', 1, 'ny', 2560, 'dy', 1);
-                kgm = knot_geom('nx', 64,  'mx', 40, 'offset_x', 0, ...
-                                'ny', 64, 'my', 40, 'offset_y', 0);
-                [Bm Bmgx Bmgy] = makeB(igm, kgm);
-                xx = 10*(Bmgx*alphax); yy = 10*(Bmgy*alphay);
-                xy = 10*(Bmgx*alphay); yx = 10*(Bmgy*alphax);
-                detJm = reshape((1+xx).*(1+yy) - xy.*yx, igm.dim);
-        end
+	if ~isvar('detJm')
+		igm = image_geom('nx', 2560, 'dx', 1, 'ny', 2560, 'dy', 1);
+		kgm = knot_geom('nx', 64,  'mx', 40, 'offset_x', 0, ...
+				'ny', 64, 'my', 40, 'offset_y', 0);
+		[Bm Bmgx Bmgy] = makeB(igm, kgm);
+		xx = 10*(Bmgx*alphax); yy = 10*(Bmgy*alphay);
+		xy = 10*(Bmgx*alphay); yx = 10*(Bmgy*alphax);
+		detJm = reshape((1+xx).*(1+yy) - xy.*yx, igm.dim);
+	end
 
-        im(6, detJm>0)
-        title 'detJ - binary (finer)'
+	im(6, detJm>0)
+	title 'detJ - binary (finer)'
 end

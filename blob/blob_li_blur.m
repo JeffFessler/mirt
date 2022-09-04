@@ -4,7 +4,7 @@
 %
 %   R:		Radius of blob support [mm] (default = 2*dy)
 %   dR:		Sample spacing [mm] in radial direction
-%   		of precomputed blob line integrals (default = dy/10)
+%		of precomputed blob line integrals (default = dy/10)
 %   alpha:	Blob shape parameter (default = 10.4)
 %   kb_m:	Order parameter (smoothness of blob,
 %		controls rate of decay of FT, default = 2)

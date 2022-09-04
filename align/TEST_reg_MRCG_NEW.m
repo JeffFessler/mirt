@@ -1,11 +1,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                                                            
+%%
 %% 4-level multiresulution nonrigid image registration with New penalty
 %% Conjugate gradient with Newton's first step was used 
 %% Cubic B-spline bases are used for both image and deformation models   
-%%                                                                            
+%%
 %% Copyright April 2008, Se Young Chun and Jeff Fessler, University of Michigan
-%%                                                                            
+%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -55,8 +55,8 @@ if ~isvar('alphay'), printm 'registering images'
 				'ny', 64/rate, 'my', 4, 'offset_y', 0);
 
 		% Difference matrices for New penalty
-        	Px = CsparsePx(kg.dim);
-        	Py = CsparsePy(kg.dim);
+		Px = CsparsePx(kg.dim);
+		Py = CsparsePy(kg.dim);
 
 		% generating deformation matrices B using image and knot info
 		B = makeB(ig, kg);
@@ -142,7 +142,7 @@ if ~isvar('alphay'), printm 'registering images'
 		gsx = Wgx*Csrc; gsy = Wgy*Csrc;
 
 		pxx = Px*double(alphax(:)); pyx = Py*double(alphax(:));
-        	pxy = Px*double(alphay(:)); pyy = Py*double(alphay(:));
+		pxy = Px*double(alphay(:)); pyy = Py*double(alphay(:));
 
 		% gradients
 		gx = (B'*(gsx.*diff)) + betaJ*single(Px'*pM1(pxx)+Py'*pm1(pyx));
@@ -153,14 +153,14 @@ if ~isvar('alphay'), printm 'registering images'
 
 		tx = B*dx; ty = B*dy;
 
-        	pxdx = Px*double(dx(:)); pydx = Py*double(dx(:));
-        	pxdy = Px*double(dy(:)); pydy = Py*double(dy(:));
+		pxdx = Px*double(dx(:)); pydx = Py*double(dx(:));
+		pxdy = Px*double(dy(:)); pydy = Py*double(dy(:));
 
 		% Newton method first iteration step size
 		gamma_num = gx'*dx + gy'*dy;
 		gamma_den = sum( (gsx.*tx + gsy.*ty).^2 ) + betaJ*( ...
 			(pxdx.^2)'*(pM2(pxx)) + (pydx.^2)'*(pm2(pyx)) ...
-                	+ (pxdy.^2)'*(pm2(pxy)) + (pydy.^2)'*(pM2(pyy)) );
+			+ (pxdy.^2)'*(pm2(pxy)) + (pydy.^2)'*(pM2(pyy)) );
 		gamma = - gamma_num / gamma_den;
 
 		%deformation update	
@@ -169,8 +169,8 @@ if ~isvar('alphay'), printm 'registering images'
 
 		% Conjugate gradient iterations (max 100 iterations)
 		flag = 0;
-        	subiter = 0;
-        	while (flag < 0.5)
+		subiter = 0;
+		while (flag < 0.5)
 			iter = iter + 1;
 			subiter = subiter + 1;
 			[W Wgx Wgy] = makeW({B, B}, {alphax, alphay});
@@ -184,7 +184,7 @@ if ~isvar('alphay'), printm 'registering images'
 			gsx = Wgx*Csrc; gsy = Wgy*Csrc; 
 
 			pxx = Px*double(alphax(:)); pyx = Py*double(alphax(:));
-        		pxy = Px*double(alphay(:)); pyy = Py*double(alphay(:));
+			pxy = Px*double(alphay(:)); pyy = Py*double(alphay(:));
 
 			% gradients
 			gx = (B'*(gsx.*diff)) + betaJ*single(...
@@ -195,8 +195,8 @@ if ~isvar('alphay'), printm 'registering images'
 			grad = max( sqrt( gx.^2 + gy.^2) );
 
 			if ( grad < 10^(-5) ) | (subiter > 100)
-                        	flag = 1;
-                	end
+				flag = 1;
+			end
 
 			beta = (sum(gx.*(gx-gx_old))+sum(gy.*(gy-gy_old)))/...
 				(sum(gx_old.*gx_old)+sum(gy_old.*gy_old));
@@ -208,13 +208,13 @@ if ~isvar('alphay'), printm 'registering images'
 			tx = B*dx;
 			ty = B*dy;
 
-        		pxdx = Px*double(dx(:)); pydx = Py*double(dx(:));
-        		pxdy = Px*double(dy(:)); pydy = Py*double(dy(:));
+			pxdx = Px*double(dx(:)); pydx = Py*double(dx(:));
+			pxdy = Px*double(dy(:)); pydy = Py*double(dy(:));
 
 			gamma_num = gx'*dx + gy'*dy;
 			gamma_den = sum( (gsx.*tx + gsy.*ty).^2 ) + betaJ*( ...
 				(pxdx.^2)'*(pM2(pxx)) + (pydx.^2)'*(pm2(pyx))...
-                		+ (pxdy.^2)'*(pm2(pxy))+(pydy.^2)'*(pM2(pyy)));
+				+ (pxdy.^2)'*(pm2(pxy))+(pydy.^2)'*(pM2(pyy)));
 			gamma = - gamma_num / gamma_den;
 
 			alphax = alphax + gamma * reshape(dx, kg.dim);
@@ -248,10 +248,10 @@ im(5, detJ>0)
 title 'detJ - binary'
 
 if 1 printm 'checking finer jacobian'
-        if ~isvar('detJm')
+	if ~isvar('detJm')
 		igm = image_geom('nx', 2560, 'dx', 1, 'ny', 2560, 'dy', 1);
 		kgm = knot_geom('nx', 64,  'mx', 40, 'offset_x', 0, ...
-       	         		'ny', 64, 'my', 40, 'offset_y', 0);
+				'ny', 64, 'my', 40, 'offset_y', 0);
 		[Bm Bmgx Bmgy] = makeB(igm, kgm);
 		xx = 10*(Bmgx*alphax); yy = 10*(Bmgy*alphay);
 		xy = 10*(Bmgx*alphay); yx = 10*(Bmgy*alphax);

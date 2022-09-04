@@ -21,7 +21,7 @@
 %|				caution: probably should not be used
 %|	'ia_skip' [int]		downsample in angle to save time for tests
 %|	'use_mex' 0|1		backprojector: 0 for matlab, 1 for mex (default)
-%|	'nthread' 		default: jf('ncore')
+%|	'nthread'		default: jf('ncore')
 %|
 %| out:
 %|	img	[nx,ny,nz]	reconstructed image
@@ -143,7 +143,7 @@ if isempty(arg.dy), arg.dy = -arg.dx; end
 if isempty(arg.dz), arg.dz = arg.dx; end
 if isempty(arg.dt), arg.dt = arg.ds; end
 
-arg.dso = arg.dsd - arg.dod; 	% src to "isocenter" distance
+arg.dso = arg.dsd - arg.dod; % src to "isocenter" distance
 
 if ~isempty(arg.zshifts), error 'todo: helical feldkamp not done', end
 
@@ -314,7 +314,7 @@ if use_mex
 		proj = permute(proj, [2 1 3]); % ts
 		tmp = jf_mex('fdk,ts,back', int32([nx ny nz]), [dx dy dz], ...
 				offset_xyz, uint8(mask), ...
-                		dso, dsd, dfs, [ds dt], [offset_s offset_t], ...
+				dso, dsd, dfs, [ds dt], [offset_s offset_t], ...
 				proj, betas, nthread);
 		img = double6(tmp);
 		img = permute(img, [2 3 1]); % zxy -> xyz
@@ -328,7 +328,7 @@ if use_mex
 			tmp = jf_mex('fdk,ts,back', ...
 				int32([nx ny nz]), [dx dy dz], ...
 				offset_xyz, uint8(mask), ...
-                		dso, dsd, dfs, [ds dt], [offset_s offset_t], ...
+				dso, dsd, dfs, [ds dt], [offset_s offset_t], ...
 				proj(:,:,ia), betas(ia), nthread);
 			tmp = double6(tmp);
 			img = img + tmp;
@@ -338,7 +338,7 @@ if use_mex
 	elseif use_mex == 3 % fdk,st (for testing only - slower!)
 		tmp = jf_mex('fdk,st,back', int32([nx ny nz]), [dx dy dz], ...
 				offset_xyz, uint8(mask), ...
-                		dso, dsd, dfs, [ds dt], [offset_s offset_t], ...
+				dso, dsd, dfs, [ds dt], [offset_s offset_t], ...
 				proj, betas, nthread);
 		img = double6(tmp);
 

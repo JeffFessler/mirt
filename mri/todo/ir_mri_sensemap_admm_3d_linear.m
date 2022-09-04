@@ -193,12 +193,12 @@ for i = 1:ncoil % it is better to do this in parallel as they are independent.
 	for j = 1:arg.niter
 
 		% update sk
-% 		sk = ifftn(GinvS .* fftn(reshape(C' * (u0 - eta0) + v1ov0 * ...
-% 			(u1 - eta1), [nx ny nz])));
-        	rou = 1./49;
-        	%sk = sk-rou.*(sk+v1ov0*(C'*C)*sk-C' * (u0 - eta0) - v1ov0 * (u1 - eta1));
-        	temp = v1ov0*sk+(C'*C)*sk-v1ov0*(u1-eta1)-C'*(u0-eta0);
-        	sk = sk-rou*temp;
+%		sk = ifftn(GinvS .* fftn(reshape(C' * (u0 - eta0) + v1ov0 * ...
+%			(u1 - eta1), [nx ny nz])));
+		rou = 1./49;
+		%sk = sk-rou.*(sk+v1ov0*(C'*C)*sk-C' * (u0 - eta0) - v1ov0 * (u1 - eta1));
+		temp = v1ov0*sk+(C'*C)*sk-v1ov0*(u1-eta1)-C'*(u0-eta0);
+		sk = sk-rou*temp;
         
 		sk = sk(:);
 

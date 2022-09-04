@@ -8,10 +8,10 @@
 %|	'mask'	logical [nx ny]	image-domain mask, often: true(nx,ny)
 %|	'wname'		wavelet name (default: 'haar')
 %|				(anything else requires wavelet toolbox) 
-%|	'nlevel' 	integer specifying decomposition level (default 2)
-%|	'scale_filters' 	factor for scaling wavelet filters
+%|	'nlevel'	integer specifying decomposition level (default 2)
+%|	'scale_filters'		factor for scaling wavelet filters
 %|				(default: 1/sqrt(2))
-%|	'redundancy' 	char	default: 'undecimated' (only option for now)
+%|	'redundancy'	char	default: 'undecimated' (only option for now)
 %|
 %| out:
 %|	ob	[np]	fatrix2 object, where np = sum(mask(:))

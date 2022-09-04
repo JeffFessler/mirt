@@ -5,7 +5,7 @@
 %   file_psfs:	Output file the PSF's are to be written to ([] for no file)
 %   radius:	Object-to-detector distance (mm)
 %   dim:	Dimension of generated PSF's, either 1 or 2 (default is 2)
-%   ny: 	Number of slices in y direction (default is 64)
+%   ny:		Number of slices in y direction (default is 64)
 %   sxz:	Pixel size (mm) in directions x-z parallel to detector (default is 7.196)
 %   sy:		Pixel size (mm) in direction y perpendicular to detector (default is equal to sxz)
 

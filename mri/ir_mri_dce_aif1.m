@@ -19,10 +19,10 @@
 %|	'chat'		0|1		verbose? (default: 0)
 %|
 %| out
-%| 	Ct		[Nc Nt]		[mMol] tissue concentration curves
+%|	Ct		[Nc Nt]		[mMol] tissue concentration curves
 %|	Cp		[Nc Nt]		[mMol] local plasma input conc. (AIF)
-%| 	Ca 		[1 Nt]		[mMol] aorta (rarely needed)
-%| 	ht 		[Nc Nt]		[?] dispersion function (rarely needed)
+%|	Ca		[1 Nt]		[mMol] aorta (rarely needed)
+%|	ht		[Nc Nt]		[?] dispersion function (rarely needed)
 %|
 %| For more, see p.82 of Khalsa thesis.
 %|

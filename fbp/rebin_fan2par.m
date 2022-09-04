@@ -90,11 +90,11 @@ switch arg.class
 case 'Fatrix'
 	dim = [prod(arg.dimo) prod(arg.dimi)];
 	ob = Fatrix(dim, arg, 'caller', 'rebin_fan2par', ...
-        	'forw', @rebin_fan2par_arg_Fatrix, 'back', @error);
+		'forw', @rebin_fan2par_arg_Fatrix, 'back', @error);
 case 'fatrix2'
 	ob = fatrix2('arg', arg, 'does_many', 1, ...
 		'odim', arg.dimo, 'idim', arg.dimi, ...
-        	'forw', @rebin_fan2par_arg, 'back', @error);
+		'forw', @rebin_fan2par_arg, 'back', @error);
 otherwise
 	fail 'bad class'
 end

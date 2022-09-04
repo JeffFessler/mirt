@@ -69,8 +69,8 @@ arg = sr.cgrad_denom_arg;
 
 if ei.column
         if LL == 1
-        	cgrad = cgrad(sr.mask); % [np]
-        	denom = denom(sr.mask); % [np]
+		cgrad = cgrad(sr.mask); % [np]
+		denom = denom(sr.mask); % [np]
 	else
 		fail 'not done' % codo: would need to generalize mex file
         end
@@ -93,7 +93,7 @@ cgrad = penalty_mex('cgrad,zxy', single(x), arg{:});
 
 if ei.column
         if LL == 1
-        	cgrad = cgrad(sr.mask); % [np]
+		cgrad = cgrad(sr.mask); % [np]
 	else
 		fail 'not done' % codo: would need to generalize mex file
         end

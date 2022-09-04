@@ -84,7 +84,7 @@ end
 if ~isvar('Gn'), printm 'Gn'
 	f.nufft = {N, [6 6], 2*N, N/2, 'table', 2^12, 'minmax:kb'};
 	Gn = Gmri(kspace, ig.mask, 'fov', ig.fov, 'nufft', f.nufft, ...
- 		'basis', {Ge_ft.arg.basis.type});
+		'basis', {Ge_ft.arg.basis.type});
 
 	if 0 % check Gn vs exact
 		% todo: does not match for J = 2 or J = 1 !?

@@ -19,7 +19,7 @@ x = [-20:20];   %cm
 y = [-10:10]; 
 z = [2];
 [xx,yy,zz] = ndgrid(x,y,z); 
-freq = linspace(-100,100,length(xx(:))); 	% Hz
+freq = linspace(-100,100,length(xx(:))); % Hz
 
 t = [Tpad Trf Tpad];
 dt = Trf;

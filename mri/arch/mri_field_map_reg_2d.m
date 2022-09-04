@@ -23,7 +23,7 @@
 %	order		regularization order (default: 2)
 %	niter		# of iterations
 %	fmax		percent of median used in calculating scale factor
-% 	thresh		percent of median used in masking out for RMSerror
+%	thresh		percent of median used in masking out for RMSerror
 %	winit	[nx,ny]		initial field map for iterating
 %				(default is to estimate from first two scans)
 %	mask	[nx,ny]		logical support mask (only estimate within this)

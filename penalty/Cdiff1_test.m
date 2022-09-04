@@ -58,7 +58,7 @@ if 1
 		if 1 && order > 0 % trick: Cc,Cf,Cp require Rweights to match
 			wt = Rweights(ig.mask, Cc.arg.offset, ...
 				'type_wt', 'array', ...
-               			'order', order, 'distance_power', 0);
+				'order', order, 'distance_power', 0);
 
 			Ci_f_wt = diag(wt) * Ci_f;
 

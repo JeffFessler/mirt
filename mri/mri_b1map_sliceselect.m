@@ -138,7 +138,7 @@ else
 
 			[da_F2R db_F2R da_F2I db_F2I] = ...
 				F_2RI_prime2(alpha(im,:) * real(z1pass)', ...
-       			        alpha(im,:) * imag(z1pass)', h_deriv, h);
+			        alpha(im,:) * imag(z1pass)', h_deriv, h);
 
 			da_F2R = reshape(da_F2R,[nx ny]);
 			db_F2R = reshape(db_F2R,[nx ny]);
@@ -718,7 +718,7 @@ H = interp1(r,real(h),a,'spline','extrap') ...
 
 if(sum(isnan(H(:)))>0)
 %	save error.mat a h
-       	fail('Out of Range h_bloch %d or %d',max(a(:)),min(a(:)))
+	fail('Out of Range h_bloch %d or %d',max(a(:)),min(a(:)))
 end
 
 

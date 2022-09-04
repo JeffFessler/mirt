@@ -61,7 +61,7 @@ rl_ideal = lloyd_max_hist(f, rl_compand, 10^3);
 im subplot 2
 plot(	l1, rl_high, '-+', ...
 	l1, rl_compand, '-o', ...
- 	l1, rl_ideal, '-*')
+	l1, rl_ideal, '-*')
 legend('high rate', 'companding', 'lloyd-max', 'location', 'northwest')
 axis([1 L 1 2])
 xlabelf '$l$', ylabelf '$r_l$'

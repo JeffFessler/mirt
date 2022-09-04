@@ -182,12 +182,11 @@ for ic = 1:ncoil % it is better to do this in parallel as they are independent.
 	%	sk = ifftn(GinvS .* fftn(reshape(sk, sdim)));
 		sk = sk(:);
 
-        	%sk = sk-arg.rho.*(sk+v1ov0*(C'*C)*sk-C' * (u0 - eta0) - v1ov0 * (u1 - eta1));
+		%sk = sk-arg.rho.*(sk+v1ov0*(C'*C)*sk-C' * (u0 - eta0) - v1ov0 * (u1 - eta1));
 % todo: C' * (C * sk)
-        	temp = v1ov0 * sk + (C'*C) * sk - v1ov0 * (u1-eta1) - C' * (u0-eta0);
-        	sk = sk - arg.rho * temp;
+		temp = v1ov0 * sk + (C'*C) * sk - v1ov0 * (u1-eta1) - C' * (u0-eta0);
+		sk = sk - arg.rho * temp;
         
-
 		Cs = C * sk; % used often
 
 		if arg.etabtw

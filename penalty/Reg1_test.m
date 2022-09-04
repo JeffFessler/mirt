@@ -136,7 +136,7 @@ if 1 || ~isvar('Rt'), printm 'Rt'
 		if 1 && ig.is3 && has_mex_jf
 			zxy = @(x) permute(x, [3 1 2]);
 			xyz = @(x) permute(x, [2 3 1]);
- 			% convert offsets to zxy!
+			% convert offsets to zxy!
 			f.offsets_zxy = reg_offset_xyz_to_zxy(f.offsets, size(kappa));
 			Rz = Reg1(zxy(kappa), f.arg{2:end}, ...
 				'user_wt', [], ...

@@ -113,14 +113,14 @@ if im
 	im plc 2 1
 	im subplot 1
 	plot(xx, real(fx), ':', x0, real(f0), 'o', ...
-        	x1, real(gn), 'x', x1, real(hn), '+')
+		x1, real(gn), 'x', x1, real(hn), '+')
 	xtick([0:N])
 	legend('Re f(x)', 'Re f(n)', 'Re g[n]', 'Re h[n]', ...
 		'location', 'northeast')
 
 	im subplot 2
 	plot(xx, imag(fx), ':', x0, imag(f0), 'o', ...
-        	x1, imag(gn), 'x', x1, imag(hn), '+')
+		x1, imag(gn), 'x', x1, imag(hn), '+')
 	xtick([0:N])
 	xlabelf('x')
 	legend('Im f(x)', 'Im f(n)', 'Im g[n]', 'Im h[n]', ...

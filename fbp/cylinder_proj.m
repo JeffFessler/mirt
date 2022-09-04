@@ -201,7 +201,7 @@ end % ip
 		t0(tmp) = l_down(tmp);
 		t1(tmp) = l1(tmp);
 
- 		% ray entering and leaving cylinder at opposite ends:
+		% ray entering and leaving cylinder at opposite ends:
 		tmp = (z0 < -zh) & (zh < z1); % "index_both"
 		t0(tmp) = l_down(tmp);
 		t1(tmp) = l_up(tmp);

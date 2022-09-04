@@ -19,7 +19,7 @@
 %| out
 %|	inv2	strum
 %|	methods:
-%|		inv2.fun(hf) 		map log values into corrected values
+%|		inv2.fun(hf)		map log values into corrected values
 %|		inv2.plot(fit, sl)	show fits
 %|
 %| Copyright 2008-09-28, Jeff Fessler, University of Michigan

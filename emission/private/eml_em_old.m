@@ -3,7 +3,7 @@
 %| E-ML-EM algorithm for image reconstruction from Poisson emission data
 %| in
 %|	x	[np 1]		initial image guess (column - see examples)
-%|	Asum 			A'1 = G' * c	(optional) column sums
+%|	Asum			A'1 = G' * c	(optional) column sums
 %|	see em_fbp.m for model, G, yi, ci, ri
 %| out
 %|	xs	[np niter]	image iterates

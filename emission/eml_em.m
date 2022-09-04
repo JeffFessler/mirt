@@ -11,7 +11,7 @@
 %|	'niter'	int		# iterations (default: 1+1)
 %|	'isave'	[]		list of iterations to archive
 %|				(default: 'last')
-%|	'Asum' 	[np 1]		A'1 = G' * c	(optional) column sums
+%|	'Asum'	[np 1]		A'1 = G' * c	(optional) column sums
 %|	userfun	@		user-defined function handle
 %|
 %| out

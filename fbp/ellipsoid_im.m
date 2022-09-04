@@ -9,7 +9,7 @@
 %|				xy_angle_degrees z_angle_degrees  amplitude]
 %| option
 %|	'oversample'	int	over-sampling factor (default: 1)
-%|	'checkfov'	0|1 	warn if any ellipsoid is out of fov
+%|	'checkfov'	0|1	warn if any ellipsoid is out of fov
 %|	hu_scale	double	use 1000 to scale shepp-logan to HU (default: 1)
 %|	'type'		char	'' (default); 'fast' new 'fast' (?) version
 %|			'lowmem' uses less memory than 'fast' but a bit slower

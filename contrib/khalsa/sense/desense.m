@@ -4,7 +4,7 @@
 % paper)
 % Example usage:
 %     xsense = desense(xalias, smap, 'phi', phi, 'sos', sosmap);
-% 
+%
 % This is the Oct 2010 update to mri_cartesian_sense_recon_new2.m
 % In this version:
 %   auto finding of px with high sensitivity for regularization
@@ -13,26 +13,26 @@
 %   - alg can deal with either correctly
 %
 % in:
-%   xalias 	[(Nr) nc]   	aliased coil images (2D or 3D)
-%   smap 	[(N) nc]        complex sensemaps
+%   xalias	[(Nr) nc]	aliased coil images (2D or 3D)
+%   smap	[(N) nc]        complex sensemaps
 %
 % options
-%   'phi' 	[nc nc]         receiver noise matrix
-%   'sos'   [(N)]           sum of squares of smaps 
+%   'phi'	[nc nc]         receiver noise matrix
+%   'sos'   [(N)]           sum of squares of smaps
 %                           including it as an input saves time
 %                           computed within this fn if not provided
 % out:
-%   xsense   	[(N)]      	reconstructed image
+%   xsense	[(N)]	reconstructed image
 %
 % K. Khalsa, Oct 2010
 
 
 % establish defaults and pair optional inputs
-arg.phi = 1;    
+arg.phi = 1;
 arg.sos = [];
 arg = vararg_pair(arg, varargin);
 
-if (size(arg.phi,1) ~= size(arg.phi,2)), 
+if (size(arg.phi,1) ~= size(arg.phi,2)),
     error 'receiver noise matrix must be square! nc x nc'
 else
     nc1 = size(arg.phi,1);
@@ -40,10 +40,10 @@ end
 
 % extract sizes of aliased and full images
 [nya, nza, nc2] = size(xalias);
- 
+
 sdim = size(smap);
 nc3 = sdim(end);
-sdim = sdim(1:end-1);  	% [nx (ny) (nz)]
+sdim = sdim(1:end-1); % [nx (ny) (nz)]
 ny = sdim(1);       % 1st dim for smap2D (slice in x) ONLY
 nz = sdim(2);       % 2nd dim for smap2D (slice in x) ONLY
 
@@ -87,7 +87,7 @@ for iz = 1:nz
 %         iyatmp = iy + ny/4 + [0 ny/2];    % maybe this?
         iyatmp = iy + y_offset;
         iya = mod(iyatmp - 1, ny) + 1;
-        
+
         a = squeeze(xalias(iy, iz, :));
         S = squeeze(smap(iya, iz, :)).';
         SP = S' * invphi;
@@ -95,8 +95,8 @@ for iz = 1:nz
 %         U = SPS \ SP;
 %         v = U * a;
         v = SPS \ (SP * a);
-        xsense(iya, iz) = v;        
-        
+        xsense(iya, iz) = v;
+
 	if (iy == 1 && iz == nz/2+1)
 	         disp('desense: check iya pairs and smap, xalias');
 	         keyboard
@@ -116,7 +116,7 @@ end     % end function
 function old_desense_parts()
 % \begin{oldWay}, was very very slow....
 if 0
-for ip = 1:Nr   
+for ip = 1:Nr
     ticker(mfilename, ip, Nr);
 %     zoffset = floor( (ip - 1)/nyr);
 %     yoffset = mod( (ip-1), nyr) + 1;
@@ -124,13 +124,13 @@ for ip = 1:Nr
     % index pixel locations on aliased images
     [yoffset, zoffset] = ind2sub([nyr nz], ip);  % same as above, but cleaner
 %     zoffset = zoffset - 1;  % old: not needed with sub2ind
-    
+
     % translate into locations of full-sized image
     %  assume same center of FOV as aliased, hence the ny/4 factor
 %     ips = zoffset*ny + yoffset + floor(ny/4);     % old, less clean
     ips = sub2ind([ny nz], yoffset + floor(ny/4), zoffset);       % new: cleaner
     ips1 = ips;
-    if ( (yoffset + floor(ny/4) + ny/2) <= ny) 
+    if ( (yoffset + floor(ny/4) + ny/2) <= ny)
         ips2 = ips + ny/2;
     else
         ips2 = ips - ny/2;
@@ -153,13 +153,8 @@ end
 
 % keyboard
 % reshape xsense
-xsense = reshape(xsense, sdim);  
+xsense = reshape(xsense, sdim);
 % \end{oldWay}
 end
 
-end     % end old_parts function
-
-
-
-    
-    
+end % end old_parts function

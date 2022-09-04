@@ -20,7 +20,7 @@
 %|				of negative log-likeihood via the call:
 %|		[deriv curv] = dercurv(data, Ab{m}*x, curvtype, iblock, nblock)
 %|				or choose 'trl' or 'wls' (default)
-%|	niter 	#		# total iterations (default: 1+0, pure OS!)
+%|	niter	#		# total iterations (default: 1+0, pure OS!)
 %|	os	#		how many "warmup" OS iterations (default: 1)
 %|	riter	#		# of penalty subiterations (default: 3).
 %|	curvtype ''		curvature type:

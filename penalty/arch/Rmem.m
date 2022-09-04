@@ -27,7 +27,7 @@
 %				use '0' for C = I (identity matrix)
 %	'beta', [1] | [M]	global regularization parameter(s)
 %				default: 2^0
-%	'pot_arg', {} 		arguments to potential_func()
+%	'pot_arg', {}		arguments to potential_func()
 %				e.g., {'huber', delta}, or cell{M} array
 %				default: {'quad'} for quadratic regularization.
 %	'type_denom', ''	type of "denominator"

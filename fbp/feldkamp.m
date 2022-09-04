@@ -18,7 +18,7 @@
 %|				caution: probably should not be used
 %|	'ia_skip' [int]		downsample in angle to save time for tests
 %|	'use_mex'	0|1|?	mex backprojector? see cbct_back.m
-%|	'nthread' 		default: jf('ncore')
+%|	'nthread'		default: jf('ncore')
 %|	'extrapolate_t'	0|?	if 0, no detector row replication;
 %|				if >0, repeat top and bottom detector rows
 %|				by this many extra rows.

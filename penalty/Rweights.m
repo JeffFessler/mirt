@@ -346,7 +346,7 @@ mask = kappa ~= 0;
 			if ~mask(ix+dx, iy+dy)
 				kappa(ix+dx, iy+dy) = kappa(ix,iy);
 			end
- 		 end
+		 end
 		end
 	 end
 	end

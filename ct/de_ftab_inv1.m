@@ -17,7 +17,7 @@
 %| out
 %|	inv1	strum
 %|	methods:
-%|		inv1.fun(hf1) 	map log values into corrected values
+%|		inv1.fun(hf1)	map log values into corrected values
 %|			(corresponding to line-integral of material density)
 %|		inv1.plot(fit)	show fit
 %|

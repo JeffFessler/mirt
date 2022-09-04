@@ -44,18 +44,18 @@ if ~isvar('n_shift') || isempty(n_shift), n_shift = zeros(size(Nd)); end
 if ~isvar('usearrayfun') || isempty(usearrayfun), usearrayfun = 0; end
 
 % if length(Nd) == 1
-% 	nn{1} = [0:(Nd(1)-1)] - n_shift(1);
+%	nn{1} = [0:(Nd(1)-1)] - n_shift(1);
 % elseif length(Nd) == 2
-% 	nn{1} = [0:(Nd(1)-1)] - n_shift(1);
-% 	nn{2} = [0:(Nd(2)-1)] - n_shift(2);
-% 	[nn{1} nn{2}] = ndgrid(nn{1}, nn{2});
+%	nn{1} = [0:(Nd(1)-1)] - n_shift(1);
+%	nn{2} = [0:(Nd(2)-1)] - n_shift(2);
+%	[nn{1} nn{2}] = ndgrid(nn{1}, nn{2});
 % elseif length(Nd) == 3
-% 	nn{1} = [0:(Nd(1)-1)] - n_shift(1);
-% 	nn{2} = [0:(Nd(2)-1)] - n_shift(2);
-% 	nn{3} = [0:(Nd(3)-1)] - n_shift(3);
-% 	[nn{1} nn{2} nn{3}] = ndgrid(nn{1}, nn{2}, nn{3});
+%	nn{1} = [0:(Nd(1)-1)] - n_shift(1);
+%	nn{2} = [0:(Nd(2)-1)] - n_shift(2);
+%	nn{3} = [0:(Nd(3)-1)] - n_shift(3);
+%	[nn{1} nn{2} nn{3}] = ndgrid(nn{1}, nn{2}, nn{3});
 % else
-% 	'only 1D-3D done'
+%	'only 1D-3D done'
 % end
 dd = size(omega,2);
 Nd(end+1:dd) = 1;

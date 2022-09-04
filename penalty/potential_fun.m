@@ -32,7 +32,7 @@
 %|		pot.potk(C*x)	potential function value
 %|		pot.wpot(C*x)	potential 'weights' (aka half-quad. curvatures)
 %|		pot.dpot(C*x)	potential derivative
-%| 		pot.shrink(b, reg)	proximal (shrinkage) operation:
+%|		pot.shrink(b, reg)	proximal (shrinkage) operation:
 %|					argmin_z 1/2 |z - b|^2 + reg * pot(z)
 %|		pot.plot()	plot all of the above functions
 %|

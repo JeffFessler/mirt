@@ -260,7 +260,7 @@ winit = angle(stackpick(yik_sos,2) .* conj(stackpick(yik_sos,1))) ...
 
 printm 'estimate field map'
 [out,cost,time] = fmap_est_qm(winit(mask),yik_c(mask,:,:),etime, ...
-   	smap_c(mask,:),'maskR', mask,'l2b',-3,'niter',100,'order',1);
+	smap_c(mask,:),'maskR', mask,'l2b',-3,'niter',100,'order',1);
 wmap = embed(out.ws(:,end),mask);
 
 	finit = winit(mask) / (2*pi);

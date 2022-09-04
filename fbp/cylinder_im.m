@@ -9,7 +9,7 @@
 %|				xy_angle_degrees  amplitude]
 %| option
 %|	'oversample'	int	over-sampling factor (default: 1)
-%|	'checkfov'	0|1 	warn if any cylinder is out of fov
+%|	'checkfov'	0|1	warn if any cylinder is out of fov
 %|	'type'		char	'' (default); 'fast' new 'fast' (?) version
 %|			'lowmem' uses less memory than 'fast' but a bit slower
 %|
