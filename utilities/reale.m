@@ -3,7 +3,7 @@
 %function y = reale(x, arg2, arg3)
 %|
 %| y = reale(x)
-%| y = reale(x, tol)
+%| y = reale(x, tol) [default tol is 1e-13 for double, else 1e-6]
 %| y = reale(x, 'warn', 'message')
 %| y = reale(x, 'error')
 %| y = reale(x, 'report')

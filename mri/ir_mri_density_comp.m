@@ -3,22 +3,22 @@
 %|
 %| todo: THIS NEEDS A LOT OF WORK!
 %|
-%| Compute density compensation factors for the conjugate phase
-%| method for image reconstruction from Fourier samples.
+%| Compute density compensation factors for the conjugate phase method
+%| for image reconstruction from Fourier samples.
 %|
 %| in
-%|	kspace	[M 1]	kspace sample locations, e.g., spiral
+%|	kspace	[M d]	kspace sample locations in ℝ^d, e.g., spiral.
 %|	dtype	char	which density compensation method (see below)
 %|			'voronoi', 'jackson', 'pipe', 'qian'
 %| options
-%|	G	?
+%|	G	?	Gnufft object for 'pipe'
 %|	fix_edge 0|1|2	for voronoi, (default: 2 - 2nd-order poly extrapolation)
-%|	arg_pipe {}	options for Pipe&Menon method
+%|	arg_pipe {}	options for Pipe&Menon method (e.g., 'fov')
 %|
 %| out
 %|	wi	[M 1]	density compensation factors
 %|
-%| If voronoi, then "redundant" sampling at DC is corrected.
+%| If 'voronoi', then "redundant" sampling at DC is corrected.
 %| (But not if there are redundant samples at other locations in k-space.)
 %|
 %| Copyright 2003-7-29, Jeff Fessler, The University of Michigan
@@ -89,7 +89,7 @@ M = size(kspace, 1);
 wi = zeros(M,1);
 [v, c] = voronoin(double(kspace));
 nbad = 0;
-for mm=1:M
+for mm = 1:M
 	ticker([mfilename ' (voronoi)'], mm, M)
 	x = v(c{mm},:);
 	if ~any(isinf(x))
@@ -151,7 +151,7 @@ case 1
 	wi(wi==0) = max(wi);
 
 otherwise
-	if ~isequal(fix_edge, 0), error('bad fix_edge argument'), end
+	if ~isequal(fix_edge, 0), fail('bad fix_edge argument'), end
 end
 
 
@@ -188,31 +188,47 @@ function wi = ir_mri_dcf_pipe(kspace, G, varargin)
 arg.isave = [];
 arg.niter = 20;
 arg.thresh = 0.02;
+arg.reale_tol = 2e-5;
 arg.fov = 1;
 arg.unitv = [];
 arg.wi = []; % see below
 arg = vararg_pair(arg, varargin);
 
+wi = ir_mri_dcf_pipe_do(kspace, G, ...
+	arg.isave, arg.niter, arg.thresh, arg.reale_tol, ...
+	arg.fov, arg.unitv, arg.wi);
+
+
+% ir_mri_dcf_pipe_do()
+function wi = ir_mri_dcf_pipe_do(kspace, G, ...
+	isave, niter, thresh, reale_tol, fov, unitv, wi_init)
+
+if length(fov) == 1
+	fov = fov * ones(size(kspace,2),1);
+elseif length(fov) ~= size(kspace,2)
+	pr fov
+	fail('bad fov')
+end
+
 P = G.arg.st.p;
 goal = inf;
 iter = 0;
-%saver = zeros(arg.niter,1);
+%saver = zeros(niter,1);
 
 %{
 removed 2017-04-11 in favor
-scale = G.arg.st.sn(end/2,end/2)^(-2) / arg.fov^2 ...
+scale = G.arg.st.sn(end/2,end/2)^(-2) / prod(fov) ...
 	/ prod(G.arg.st.Kd) * prod(G.arg.st.Nd);
 scale = reale(scale);
 %}
-if isempty(arg.wi)
+if isempty(wi_init)
+%	wi = ones(size(kspace,1), 1) / prod(fov); % default initial
 	wi = ones(size(kspace,1), 1); % default initial
 else
-%	minmax(arg.wi)
-%	wi = arg.wi / scale; % todo: why?
-	wi = arg.wi;
+	wi = wi_init;
 end
 wi_save = wi;
-while(max(abs(goal-1)) > arg.thresh)
+while(max(abs(goal-1)) > thresh)
 	iter = iter + 1;
 	if isfield(G.arg.st,'interp_table')
 		goal = G.arg.st.interp_table(G.arg.st, ...
@@ -220,14 +236,18 @@ while(max(abs(goal-1)) > arg.thresh)
 	else
 		goal = P * (P' * wi); % warn: complex results!?
 	end
-	wi = wi ./ real(goal);
-	%wi = wi ./ abs(goal);
-	if iter > arg.niter
+%	goal = abs(goal);
+	goal = real(goal);
+	if any(goal <= 0)
+		fail('pipe bug')
+	end
+	wi = wi ./ goal;
+	if iter > niter
 		warn 'iteration stuck?'
 		break
 	end
 %	saver(iter) = max(abs(goal-1));
-	if ~isempty(arg.isave)
+	if ~isempty(isave)
 		wi_save = [wi_save, wi];
 	end
 end
@@ -235,21 +255,28 @@ printm('pipe ended at iteration %d with %g', iter, max(abs(goal-1)))
 %plot(saver(2:end))
 
 % scale
-if isempty(arg.unitv)
-	warn 'no unitv so no scaling - user must fix scaling'
+if isempty(unitv) % recommended!
+	psf_raw = G' * wi;
+	scale = prod(G.arg.st.Nd ./ fov) / sum(real(psf_raw)); % want sum(psf)=1/(dx*dy)
+	wi = scale * wi;
 else
 	warn 'todo: this needs tested!'
-	last = wi_save(:,1);
-	psf_raw = G' * last;
-%	im(reshape(psf_raw, size(arg.unitv))), prompt
-	e0 = arg.unitv; % todo
+	psf_raw = G' * wi;
+%	im(reshape(psf_raw, size(unitv))), prompt
+	e0 = unitv;
 	scale = dot(e0(:), psf_raw(:)) / norm(psf_raw(:))^2;
-	scale = reale(scale);
+	scale = reale(scale, reale_tol) * (2*pi)^2;
 	wi_save = scale * wi_save;
 	wi = scale * wi;
+
+	if 0
+		psf_new = G' * wi;
+		psf_new = embed(psf_new, G.mask);
+		im(psf_new), xlabelf('sum(real(psf)) = %g', sum(real(psf_new(:))))
+	end
 end
 
-if ~isempty(arg.isave)
+if ~isempty(isave)
 	wi = wi_save;
 end
 
@@ -258,41 +285,40 @@ end
 % self-test routine
 function ir_mri_density_comp_test(dtype)
 
-ig = image_geom_mri('nx', 2^5, 'fov', 256); % typical brain FOV
-fov = ig.fov(1);
-N0 = ig.nx;
+% stress test with non-square size
+ig = image_geom_mri('nx', 2^6, 'ny', 2^5, 'dx', 3, 'dy', 4);
 
 if 0
 	t = linspace(0, N0/2*2*pi, N0^2+3)'; % crude spiral:
 	kspace = N0/2*(1/fov)*[cos(t) sin(t)] .* (t(:,[1 1]) / max(t));
 else
-	ktype = 'cartesian';
+%	ktype = 'cartesian';
 	ktype = 'radial';
-	[kspace, om, wi_r] = mri_trajectory(ktype, {}, ig.dim, ig.fov);
+	[kspace, om, wi_r] = mri_trajectory(ktype, {'na', []}, ig.dim, ig.fovs);
 end
 
 im plc 2 3
 if im
-	im subplot 1
+	im subplot
 	plot(kspace(:,1), kspace(:,2), '.')
-	axis(1.1*[-1 1 -1 1]*N0/2/fov), axis square
+	axis(1.1 * [[-1 1]/ig.dx [-1 1]/ig.dy] / 2), axis equal
 	xlabel 'k_1 [mm^{-1}]', ylabel 'k_2 [mm^{-1}]'
 	titlef('%d k-space samples', size(kspace,1))
 end
 
 % create Gnufft object
-omega = 2*pi*kspace*fov/N0;
+omega = 2*pi * (kspace .* [ig.dx ig.dy]);
 if streq(dtype, 'pipe')
 	N = ig.dim;
-	G = Gnufft(ig.mask, {om, N, [6 6], 2*N, N/2, 'table', 2^10, 'minmax:kb'});
+	G = Gnufft(ig.mask, {om, N, [1 1]*6, 2*N, N/2, 'table', 2^10, 'minmax:kb'});
 else
 	%G = Gnufft({omega, ig.dim, [6 6], 2*ig.dim, 1*ig.dim/2, 'kaiser'});
-	G = Gdsft(omega, ig.dim, 'n_shift', 1*ig.dim/2, 'mask', ig.mask);
+	G = Gdsft(omega, ig.dim, 'n_shift', ig.dim/2, 'mask', ig.mask);
 end
 
 % true object and analytical k-space data
-obj = mri_objects('fov', ig.fov, 'rect2half');
-xtrue = obj.image(ig.xg, ig.yg);
+obj = mri_objects('fov', ig.fovs, 'rect2half');
+xtrue = obj.image(ig.xg, ig.yg, 'dx', ig.dx, 'dy', ig.dy);
 ytrue = obj.kspace(kspace(:,1), kspace(:,2));
 
 if 0 % check forward direction (works, after fixing offsets with image_geom_mri)
@@ -300,9 +326,10 @@ if 0 % check forward direction (works, after fixing offsets with image_geom_mri)
 	tmp = tmp * abs(ig.dx * ig.dy);
 	im plc 2 1
 	im subplot 1
-	plot([real(tmp) real(ytrue)]), axis tight
+	plot([real(tmp) real(ytrue)]), axis tight, xlabel('real')
+	titlef('complex error: %g', norm(ytrue - tmp) / norm(ytrue))
 	im subplot 2
-	plot([imag(tmp) imag(ytrue)]), axis tight
+	plot([imag(tmp) imag(ytrue)]), axis tight, xlabel('imag')
 return
 end
 
@@ -323,8 +350,8 @@ switch dtype
 case 'jackson'
 	wi = ir_mri_density_comp(kspace, dtype, 'G', G);
 case 'pipe'
-	wi = ir_mri_density_comp(kspace, dtype, 'G', G, 'arg_pipe', ...
-		{'unitv', ig.unitv, 'fov', ig.fov});
+	wi = ir_mri_density_comp(kspace, dtype, 'G', G, ...
+		'arg_pipe', {'fov', ig.fovs, 'niter', 30});
 otherwise
 	wi = ir_mri_density_comp(kspace, dtype, 'fix_edge', 2);
 end
@@ -338,26 +365,33 @@ if 0 % compare voronoi vs analytical for radial trajectory
 return
 end
 
-% CP recon
-%wi = wi_r;
-if im
-	im subplot 2
-	semilogy(rho, wi, '.'), titlef('DCF %s', dtype), axis tight
-	xlabel '|k|', ylabel 'wi'
+wi_max = 1 / prod(ig.fovs); % this should be max for reasonable sampling
+
+if im % DCF
+	im subplot
+	semilogy( [0 max(rho)], wi_max * [1 1], 'm-', rho, wi, 'b.', rho, wi_r, 'r.')
+	legend(sprintf('max=1/prod(fov)=%.2e', wi_max), dtype, ktype, 'location', 'southeast')
+	titlef('DCF'), xlabel '|k|', ylabel 'wi'
 end
 
-clim = [0 2];
-im(4, ig.x, ig.y, xtrue, 'x true', clim), cbar
+%clim = [0 1.3];
+im(ig.x, ig.y, xtrue, 'x true'), cbar
+xlabelf('x [mm]'), ylabelf('y [mm]')
 
+% CP recon
 xcp = ig.embed(G' * (wi .* ytrue));
-im(5, ig.x, ig.y, real(xcp), 'conj. phase'), cbar
+im(ig.x, ig.y, real(xcp), ['conj. phase ' dtype]), cbar
+xlabelf('nrms %3.1f%%', 100*nrms(xcp(:), xtrue(:)))
 
-%sum(xcp(:)) / sum(xtrue(:))
-xlabelf('nrms %g%%', 100*nrms(xcp(:), xtrue(:)))
+xcp_r = ig.embed(G' * (wi_r .* ytrue));
+im(ig.x, ig.y, real(xcp_r), ['conj. phase: ' ktype]), cbar
+xlabelf('nrms %3.1f%%', 100*nrms(xcp_r(:), xtrue(:)))
 
-if im
-	subplot(133)
-	plot(ig.x, xtrue(:,end/2), 'r-', ig.y, real(xcp(:,end/2)), 'b.-')
-	axis tight
-	legend('true', 'CP', 'location', 'east')
+if im % profiles
+	im subplot
+	plot(	ig.x, xtrue(:,end/2), 'k-', ...
+		ig.x, real(xcp(:,end/2)), 'b.-', ...
+		ig.x, real(xcp_r(:,end/2)), 'r.-')
+	titlef('profiles')
+	legend('true', ['CP ' dtype], ['CP ' ktype], 'location', 'east')
 end

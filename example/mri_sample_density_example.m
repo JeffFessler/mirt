@@ -25,10 +25,10 @@ if ~isvar('kspace'), printm 'setup kspace'
 		t = linspace(0, N0/2*2*pi, N0^2)';	% crude spiral:
 		kspace = N0/2*(1/fov)*[cos(t) sin(t)] .* (t(:,[1 1]) / max(t));
 	case 'cartesian'
-		k1 = [-N0/2:N0/2-1]/fov;		% cartesian
+		k1 = (-N0/2:N0/2-1)/fov;		% cartesian
 		[kk1, kk2] = ndgrid(k1, k1);
 		kspace = [kk1(:), kk2(:)];
-		1/diff(kspace(1:2,1))
+	%	1/diff(kspace(1:2,1))
 	end, clear t k1 kk1 kk2
 
 	if im
@@ -46,7 +46,7 @@ end
 %% true object and analytical k-space data
 if ~isvar('xtrue'), printm 'setup object'
 	% display images with many pixels...
-	x1d = [-N0/2:N0/2-1] / N0 * fov;
+	x1d = (-N0/2:N0/2-1) / N0 * fov;
 	[x1dd, x2dd] = ndgrid(x1d, x1d);
 
 	% parameter units all in [mm]
@@ -55,8 +55,9 @@ if ~isvar('xtrue'), printm 'setup object'
 	ytrue = obj.kspace(kspace(:,1), kspace(:,2));
 	clear x1dd x2dd obj
 
-	clim = [0 2];
+	clim = [0 2.2];
 	im(2, x1d, x1d, xtrue, 'x true', clim), cbar
+	xlabel('x [mm]'), ylabel('y [mm]')
 
 	% add noise
 	rng(0)
@@ -67,6 +68,7 @@ if ~isvar('xtrue'), printm 'setup object'
 
 	pr 'imax(yd_g,2)'
 	im(3, k1g{1}, k1g{2}, abs(yd_g), '$|y_i|$'), cbar
+	xlabelf '\kx [1/mm]', ylabelf '\ky [1/mm]'
 	im(4, x1g{1}, x1g{2}, abs(xg), '|\x| "gridding"', clim), cbar
 
 	mask = true(N0);
@@ -84,7 +86,7 @@ prompt
 end
 
 
-%% gridding (without DCF)
+%% gridding (without DCF, so it is blurry and improperly scaled)
 if ~isvar('xgr.unif')
 	xgr.unif = embed(A' * yd, mask);
 	im(5, x1g{1}, x1g{2}, abs(xgr.unif), 'no comp'), cbar
@@ -92,11 +94,11 @@ prompt
 end
 
 
-%% Pipe and Menon style DCF
+%% Pipe and Menon DCF
 if ~isvar('wt.pipe'), printm 'pipe and menon'
 	w = ones(size(yd));
 	P = A.arg.st.p;
-	for ii=1:20
+	for ii = 1:20
 		tmp = P * (P' * w);
 		w = w ./ real(tmp);
 	end
@@ -112,7 +114,7 @@ end
 
 %% gridding with Pipe&Menon DCF
 if ~isvar('xgr.pipe'), printm 'pipe&menon gridding'
-	scale = A.arg.st.sn(end/2,end/2)^(-2) / fov^2 / prod(A.arg.st.Kd) * N0^2;
+	scale = A.arg.st.sn(end/2,end/2)^(-2) / fov^2 / prod(A.arg.st.Kd) * N0^2; % !?
 	w = wt.pipe * scale;
 	xgr.pipe = embed(A' * (w .* yd), mask);
 	if im
@@ -133,7 +135,8 @@ if ~isvar('xpcg'), printm 'PCG with quadratic penalty'
 	ytmp = yd(:) * (1/fov)^2 * N0^2; % scaling! todo: why?
 	xiter = qpwls_pcg(xg(:), A, 1, ytmp(:), 0, R.C, 1, niter);
 	xpcg = embed(xiter(:,end), mask);
-	im(3, x1g{1}, x1g{2}, abs(xpcg), '|\x| pcg quad'), cbar
+	im(6, x1g{1}, x1g{2}, abs(xpcg), '|\x| pcg quad', clim), cbar
+	xlabelf('NRMSE %.1f%%', 100*nrms(xpcg(:), xtrue(:)))
 %prompt
 end
 
