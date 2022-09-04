@@ -47,13 +47,13 @@ end
 switch ktype
 case 'cartesian'
 	if any(rem(N, 2)), warn 'odd', end % todo: antonis will fix
-	o1 = ([0:(N(1)-1)]/N(1) - 0.5)*2*pi;
-	o2 = ([0:(N(2)-1)]/N(2) - 0.5)*2*pi;
+	o1 = ((0:(N(1)-1))/N(1) - 0.5)*2*pi;
+	o2 = ((0:(N(2)-1))/N(2) - 0.5)*2*pi;
 	if length(N) == 2
-		[o1 o2] = ndgrid(o1, o2);
+		[o1, o2] = ndgrid(o1, o2);
 		omega = [o1(:) o2(:)];
 	elseif length(N) == 3
-		o3 = ([0:(N(3)-1)]/N(3) - 0.5)*2*pi;
+		o3 = ((0:(N(3)-1))/N(3) - 0.5)*2*pi;
 		[o1, o2, o3] = ndgrid(o1, o2, o3);
 		omega = [o1(:) o2(:) o3(:)];
 	else
@@ -85,8 +85,8 @@ case 'rosette3'
 
 % half cartesian + 8 rows
 case 'half+8'
-	o1 = ([0:(N(1)-1)]/N(1) - 0.5)*2*pi;
-	o2 = [-N(2)/2:8]/N(2) * 2*pi;
+	o1 = ((0:(N(1)-1))/N(1) - 0.5)*2*pi;
+	o2 = (-N(2)/2:8)/N(2) * 2*pi;
 	[oo1 oo2] = ndgrid(o1, o2);
 	omega = [oo1(:), oo2(:)];
 
@@ -100,7 +100,7 @@ case 'epi-sin'
 		fail 'bad trajectory argument'
 	end
 	Npt = oversample*prod(N);
-	t = [0:(Npt-1)]'/Npt;
+	t = (0:(Npt-1))'/Npt;
 	omega = [pi*sin(2*pi*t*N(2)/2) t*2*pi-pi];
 
 % bad spiral:
@@ -133,7 +133,7 @@ case 'spiral3'
 
 	if isempty(arg_wi)
 		wi = abs(omega(:,1) + 1i * omega(:,2)); % simple |r| weighting
-		wi = wi / (fov(1)*fov(2)); % approximate scaling
+		wi = wi / (fov(1) * fov(2)); % approximate scaling
 		if length(N) == 3
 			wi = wi / fov(3); % cartesian-style weighting in z
 		end
@@ -146,8 +146,8 @@ case 'random'
 
 % 2D FT, undersampled in "y" (phase encode) direction
 case 'cart:y/2'
-	o1 = ([0:(N(1)/1-1)]/(N(1)/1) - 0.5)*2*pi;
-	o2 = ([0:(N(2)/2-1)]/(N(2)/2) - 0.5)*2*pi;
+	o1 = ((0:(N(1)/1-1))/(N(1)/1) - 0.5)*2*pi;
+	o2 = ((0:(N(2)/2-1))/(N(2)/2) - 0.5)*2*pi;
 	[oo1 oo2] = ndgrid(o1, o2);
 	omega = [oo1(:), oo2(:)];
 
@@ -157,7 +157,7 @@ end
 
 % convert to physical units
 kspace = zeros(size(omega), 'single');
-for id=1:length(N)
+for id = 1:length(N)
 	dx = fov(id) / N(id);
 	kspace(:,id) = omega(:,id) / (2*pi) / dx;
 end
@@ -183,14 +183,14 @@ omega = [omega o3(:)]; % [N12*N3,3]
 
 % mri_trajectory_epi_under()
 % EPI, with optional under-sampling
-function [omega wi] = mri_trajectory_epi_under(N, fov, varargin)
+function [omega, wi] = mri_trajectory_epi_under(N, fov, varargin)
 arg.samp = true(N(2),1); % default keeps all phase-encode samples
 arg = vararg_pair(arg, varargin);
 nx = N(1);
 ny = N(2);
 omx = single([-nx/2:nx/2-1]') / nx * 2*pi; % [-pi,pi) in x
 omega = [];
-for iy=1:ny % # of possible phase encodes
+for iy = 1:ny % # of possible phase encodes
 	if arg.samp(iy)
 		omy = (iy-1-ny/2) / ny * 2 * pi;
 		omega = [omega; [omx omy*ones(nx,1)]];
@@ -223,7 +223,7 @@ arg = vararg_pair(arg, varargin);
 nring = numel(arg.nspoke);
 omega = [];
 kmax_frac = [0 arg.kmax_frac];
-for ir=1:nring
+for ir = 1:nring
 	kspace = ir_mri_kspace_ga_radial(arg.nspoke(ir), arg.Nro, ...
 		'delta_ro', arg.delta_ro, 'shift', arg.shift, ...
 		'start', arg.start(ir));
@@ -238,32 +238,38 @@ wi = []; % no default DCF
 
 % mri_trajectory_radial()
 % todo: generalize to 3D using barger:02:trc
-function [omega wi] = mri_trajectory_radial(N, fov, varargin)
+function [omega, wi] = mri_trajectory_radial(N, fov, varargin)
 arg.na_nr = 2*pi;	% default ensures proper sampling at edge of k-space
 arg.na = [];		% angular spokes (default: na_nr * nr)
-arg.nr = max(N)/2;	% radial samples per spoke
+arg.nr = max(N)/2;	% radial samples per (outward) spoke
 arg.ir = [];		% default: 0:nr
 arg.omax = pi;		% maximum omega
 arg = vararg_pair(arg, varargin);
-if isempty(arg.ir), arg.ir = [0:arg.nr]; end
+if isempty(arg.ir), arg.ir = 0:arg.nr; end
 if isempty(arg.na), arg.na = 4*ceil(arg.na_nr * arg.nr/4); end % mult of 4
 om = arg.ir/arg.nr * pi;
-ang = [0:arg.na-1]/arg.na * 2*pi;
-[om ang] = ndgrid(om, ang); % [nr+1, na]
+ang = (0:arg.na-1)/arg.na * 2*pi;
+[om, ang] = ndgrid(om, ang); % [nr+1, na]
 omega = [col(om.*cos(ang)) col(om.*sin(ang))];
 
 % density compensation factors based on "analytical" voronoi
-if any(fov ~= fov(1)), fail('only square FOV implemented for radial'), end
-du = 1/fov(1); % assume this radial sample spacing
-wi = pi * du^2 / arg.na * 2 * arg.ir(:); % see lauzon:96:eop, joseph:98:sei
-wi(arg.ir == 0) = pi * (du/2)^2 / arg.na; % area of center disk
-wi = repmat(wi, [1 arg.na]);
+if length(fov) == 1
+	duv = 1/fov^2; % radial sample spacing akin to 1/fov
+elseif length(fov) == 2
+	duv = 1/prod(fov);
+else
+	fail('bad fov')
+end
+wi = pi * duv / arg.na * 2 * arg.ir(:); % see lauzon:96:eop, joseph:98:sei
+wi(arg.ir == 0) = pi * duv/4 / arg.na; % area of center disk
+scale = min(N) / max(N); % hack for nx \neq ny
+wi = repmat(scale * wi, [1 arg.na]);
 wi = wi(:);
 
 
 % mri_trajectory_rosette3()
 % 3d rosette, with default parameters from bucholz:08:miw
-function [omega wi] = mri_trajectory_rosette3(N, fov, varargin)
+function [omega, wi] = mri_trajectory_rosette3(N, fov, varargin)
 arg.f1 = 211;
 arg.f2 = 117.13;
 arg.f3 = 73.65;
@@ -274,7 +280,7 @@ arg.dt = 4e-6; % # time sample spacing (4 usec)
 arg.ti = []; % # time samples
 arg = vararg_pair(arg, varargin);
 if isempty(arg.ti)
-	arg.ti = [0:arg.nt-1]' * arg.dt;
+	arg.ti = (0:arg.nt-1)' * arg.dt;
 end
 tmp = 2 * pi * arg.ti;
 p1 = f1 * tmp;
@@ -284,7 +290,7 @@ kx = arg.omax * sin(p1) .* cos(p2) .* cos(p3);
 ky = arg.omax * sin(p1) .* sin(p2) .* cos(p3); 
 kz = arg.omax * sin(a1) .* sin(a3);
 omega = [kx ky kz];
-for is=1:(arg.nshot-1) % n-shot, rotate kx,ky by 2 pi / N
+for is = 1:(arg.nshot-1) % n-shot, rotate kx,ky by 2 pi / N
 	ang = is * 2 * pi / arg.nshot;
 	c = cos(ang);
 	s = sin(ang);
@@ -316,7 +322,7 @@ ktype = 'gads'; arg_wi = {'voronoi'};
 
 im pl 2 2
 if im
-	im subplot 1, plot(omega(:,1), omega(:,2), ptype)
+	im subplot, plot(omega(:,1), omega(:,2), ptype)
 	titlef('"%s" with %d k-space samples', ktype, size(omega,1))
 	axis_pipi, axis square
 end
@@ -328,21 +334,21 @@ A = Gnufft(ig.mask, ...
 printm 'setup data'
 obj = mri_objects('fov', ig.fov, 'rect2half');
 xt = obj.image(ig.xg, ig.yg);
-xt(end/2, end/2) = 0;
 yi = obj.kspace(kspace(:,1), kspace(:,2));
 
 printm 'conj. phase reconstruction'
 xcp = A' * (wi .* yi); % apply DCF for CP
 xcp = ig.embed(xcp);
 
-im(2, ig.x, ig.y, xt, 'f true'), cbar
-im(3, ig.x, ig.y, abs(xcp), 'Conj. Phase Recon.'), cbar
+im(ig.x, ig.y, xt, 'f true'), cbar
+im(ig.x, ig.y, abs(xcp), 'Conj. Phase Recon.'), cbar
 
-im subplot 4
-ix = 1:ig.nx; iy = ig.ny/2+1;
 if im
-	plot(	ig.x, xt(ix,iy), '-', ...
+	im subplot
+	ix = 1:ig.nx; iy = ig.ny/2+1;
+	plot(	ig.x, xt(ix,iy), '.-', ...
 		ig.x, real(xcp(ix,iy)), 'g.-', ...
-		ig.x, imag(xcp(ix,iy)), 'y.-')
-	axis tight
+		ig.x, imag(xcp(ix,iy)), 'r.-')
+	axis tight, title('Profiles')
+	legend('true', 'real', 'imag')
 end
