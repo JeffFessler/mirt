@@ -208,6 +208,7 @@ end
 
 meth = { ...
 	'circ', @image_geom_circ, '(rx, ry, cx, cy) [real units]'; ...
+	'deltas', @image_geom_deltas, '[dx dy (dz)]'; ...
 	'downsample', @image_geom_downsample, '()'; ...
 	'embed', @image_geom_embed, '()'; ...
 	'expand_nz', @image_geom_expand_nz, '(nz_pad)'; ...
@@ -271,6 +272,15 @@ if ~isvar('cy') || isempty(cy), cy = 0; end
 circ = ellipse_im(st, [cx cy rad1 rad2 0 1]);
 if st.is3
 	circ = repmat(circ, [1 1 st.nz]); % cylinder
+end
+
+
+% image_geom_deltas()
+function deltas = image_geom_deltas(st)
+if st.is3
+	deltas = [st.dx st.dy st.dz];
+else
+	deltas = [st.dx st.dy];
 end
 
 
@@ -641,6 +651,7 @@ st.xg + st.yg + st.zg;
 st.y';
 st.mask;
 st.circ;
+st.deltas;
 st.mask(3,4:6,1);
 size(st.maskit(repmat(st.ones, [1 1 1 3])));
 st.over(2);
