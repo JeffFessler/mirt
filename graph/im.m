@@ -273,10 +273,9 @@ end
 if length(varargin) < 1, ir_usage, end
 
 if ~isempty(state.sub_m) % possibly redundant but ok
-	if state.next_sub <= state.sub_m * state.sub_n
-		im_subplot(state, state.next_sub);
-		state.next_sub = state.next_sub + 1;
-	end
+	nplot = state.sub_m * state.sub_n;
+	im_subplot(state, 1 + mod(state.next_sub-1, nplot));
+	state.next_sub = state.next_sub + 1;
 end
 
 % plotting vector(s)
@@ -722,6 +721,11 @@ function state = im_subplot(state, num)
 			ny = state.sub_m - ny - 1;
 			subplot('position', [nx*x ny*y x y])
 		else
+			if num > state.sub_m * state.sub_n
+				warn('num=%d > nsubplot=%d; resetting', ...
+					num, state.sub_m * state.sub_n)
+				num = 1;
+			end
 			subplot(state.sub_m, state.sub_n, num)
 		end
 		state.next_sub = num;
