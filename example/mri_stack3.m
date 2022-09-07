@@ -24,6 +24,9 @@ if ~isvar('xtrue'), printm 'setup object'
 	ig = image_geom('nx', 64, 'nz', 17, ...
 		'offsets', 'dsp', ... % (-n/2:n/2-1) for mri
 		'fov', [20 20 5.1]); % 20 cm transaxial FOV, 3mm slices
+	mask3 = ig.ones > 0; mask3(1,1,:) = false; % stress test
+	ig.mask = mask3;
+	mask2 = ig.mask_or;
 	fov2 = ig.fovs(1:2);
 	iy = ceil((ig.ny+1)/2);
 	iz = ceil((ig.nz+1)/2);
@@ -90,17 +93,15 @@ if ~isvar('yi_fftz')
 end
 
 
-%% create Gmri object
-if ~isvar('A3'), printm 'system model'
+%% create 2D Gmri object (sufficient because no slice-dependent B0 modeling)
+if ~isvar('A2'), printm '2D system model'
 	N = ig.dim(1:2);
 	nufft_args = {N, 6*ones(size(N)), 2*N, N/2, 'table', 2^10, 'minmax:kb'};
-	mask2 = true(N);
 	clear N
-	f.basis = {'rect'};
-%	f.basis = {'dirac*dx'};
+%	f.basis = {'rect'};
+	f.basis = {'dirac*dx'};
 	A2 = Gmri(kspace2, mask2, ...
 		'fov', fov2, 'basis', f.basis, 'nufft', nufft_args);
-	A3 = kronI(ig.nz, A2); % system model for stack!
 end
 
 
@@ -133,11 +134,11 @@ if ~isvar('wi_traj2'), printm 'DCF'
 	if im % check 2D PSF
 		psf_voro2 = embed(A2' * (basis_correction .* wi_voro2), mask2);
 		cri = @(x) cat(3, real(x), imag(x));
-		im(cri(psf_voro2))
+		im(cri(psf_voro2), 'PSF voronoi'), cbar
 		xlabelf('Re(sum) is %.2f', real(sum(psf_voro2(:))))
 
 		psf_pipe2 = embed(A2' * (basis_correction .* wi_pipe2), mask2);
-		im(cri(psf_pipe2))
+		im(cri(psf_pipe2), 'PSF Pipe&Menon'), cbar
 		xlabelf('Re(sum) is %.2f', real(sum(psf_pipe2(:))))
 
 		im subplot
@@ -149,6 +150,34 @@ if ~isvar('wi_traj2'), printm 'DCF'
 	% use Pipe&Menon because it has better-scaled sum
 	wi_traj2 = wi_pipe2; clear wi_pipe2 wi_voro2
 prompt
+end
+
+
+%% Conjugate phase reconstruction
+if ~isvar('xcp'), printm 'conj. phase reconstruction'
+	minmax(A2.arg.basis.transform)
+	wi_basis2 = wi_traj2 ./ A2.arg.basis.transform; % trick! undo basis effect
+	minmax(wi_basis2)
+
+	xcp = A2' * (wi_basis2 .* yi_fftz); % slice-wise broadcast
+	xcp = embed(xcp, mask2);
+	im(abs(xcp), '|Conj. Phase| Recon'), cbar
+	xlabelf('NRMSE = %.1f%%', 100*nrms(xcp, xtrue))
+
+	if im
+		im subplot
+		plot(	ig.x, squeeze(xtrue(:,iy,iz)), '.-', ...
+			ig.x, squeeze(real(xcp(:,iy,iz))), '-o')
+		ir_legend({'\x true', 'Re(CP)'}), titlef('Profiles')
+		xlabelf('x [cm]')
+	end
+prompt
+end
+
+
+%% Below here is iterative reconstruction
+if ~isvar('A3'), printm '3D system model'
+	A3 = kronI(ig.nz, A2); % system model for stack!
 end
 
 
@@ -165,29 +194,7 @@ if ~isvar('psf3')
 	if im
 		im subplot
 		plot(ig.x, real(psf3(:,iy,iz)), 'b.-', ig.x, imag(psf3(:,iy,iz)), 'r.-')
-		legend('real', 'imag')
-	end
-prompt
-end
-
-
-%% Conjugate phase reconstruction
-if ~isvar('xcp'), printm 'conj. phase reconstruction'
-	minmax(A2.arg.basis.transform)
-	wi_basis2 = wi_traj2 ./ A2.arg.basis.transform; % trick! undo basis effect
-	minmax(wi_basis2)
-
-	xcp = A3' * (wi_basis2 .* yi_fftz); % slice-wise broadcast
-%	xcp = embed(xcp, mask);
-	im(abs(xcp), '|Conj. Phase| Recon'), cbar
-	xlabelf('NRMSE = %.1f%%', 100*nrms(xcp, xtrue))
-
-	if im
-		im subplot
-		plot(	ig.x, squeeze(xtrue(:,iy,iz)), '.-', ...
-			ig.x, squeeze(real(xcp(:,iy,iz))), '-o')
-		ir_legend({'\x true', 'Re(CP)'}), titlef('Profiles')
-		xlabelf('x [cm]')
+		legend('real', 'imag'), title('3D PSF profile')
 	end
 prompt
 end
@@ -197,7 +204,7 @@ end
 if ~isvar('R'), printm 'regularizer'
 %	beta = 2^-7 * size(kspace,1); % good for quadratic 'dirac'
 	beta = 2^-21 * size(kspace,1); % good for quadratic 'rect'
-	R = Reg1(ig.mask, 'beta', beta * [1 1 0]); % trick: none in z!
+	R = Reg1(ig.mask, 'beta', beta * [1 1 0]); % trick: no regularization in z!
 	if 1 % check resolution: [1.14 1.14 1] for 'rect'
 		qpwls_psf(A3, R, 1, ig.mask, 1, 'fwhmtype', 'profile');
 %	return
@@ -210,7 +217,7 @@ if ~isvar('xpcg'), printm 'PCG with quadratic regularizer'
 	niter = 10;
 	xpcg = qpwls_pcg1(xcp(ig.mask), A3, 1, yi_fftz(:), R.C, 'niter', niter);
 	xpcg = ig.embed(xpcg);
-	im(abs(xpcg), '|PCG quad|', clim), cbar
+	im(abs(xpcg), '|PCG 2D quad reg|', clim), cbar
 	xlabelf('NRMSE = %.1f%%', 100*nrms(xpcg, xtrue))
 
 	if im
