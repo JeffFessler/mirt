@@ -92,8 +92,19 @@ dx = 2.0; sw = 0.5;
 proj = square_strip_int(rr, aa, 'dx', dx, 'sw', sw);
 
 if im
-	clf, plot(r, proj, '-')
-	title(sprintf('dx=%g sw=%g', dx, sw))
+	im plc 1 2
+	im subplot
+	plot(r, proj, '-')
+	titlef('dx=%g sw=%g', dx, sw), xlabelf('r')
 	axis([minmax(r)' 0 2.9])
 	legend(cellstr(num2str(rad2deg(a'))))
+
+	im subplot
+	r = linspace(-2, 2, 51);
+	a = linspace(0, pi, 201);
+	[rr aa] = ndgrid(r, a);
+	dx = 2.0; sw = dx;
+	proj = square_strip_int(rr, aa, 'dx', dx, 'sw', sw);
+	plot(a, proj', '-')
+	titlef('dx=%g sw=%g', dx, sw), xlabelf('$\phi$')
 end
