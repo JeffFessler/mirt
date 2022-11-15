@@ -128,6 +128,7 @@ if ~isvar('xssrb'), printm 'fbp from ssrb'
 	[xssrb, tmp] = fbp_helix_stack(cg, ig, sino, orbits, ...
 		'short', f.short, 'window', 'hanning,1.0');
 	xssrb = xssrb .* (ig.circ(cg.rmax) > 0); % mask
+
 %	im(2, xssrb, 'SSRB recon', clim), cbar
 	im(2, 'mid3', xssrb, 'SSRB recon', clim), cbar
 	im(6, tmp, 'after weighting'), cbar, axis normal
