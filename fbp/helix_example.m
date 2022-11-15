@@ -1,6 +1,8 @@
-% helix_example.m
-% Example of how to use rebin_helix.m for helical cone-beam CT reconstruction.
-% Copyright 2010-7-21, Gregory Handy and Jeff Fessler, University of Michigan
+%{
+helix_example.m
+Example of how to use rebin_helix.m for helical cone-beam CT reconstruction.
+Copyright 2010-7-21, Gregory Handy and Jeff Fessler, University of Michigan
+%}
 
 if 0 % test a particular geometry (case 2795)
 	f.down = 4; % down sample a lot to save time
@@ -55,12 +57,10 @@ if ~isvar('xtrue'), printm 'xtrue: true image volume'
 	xtrue = ellipsoid_im(ig, ell, 'oversample', 2);
 
 	clim = [0 2000];
-	if im
-		figure(1), im plc 2 3
-%		im(1, ig.x, ig.y, xtrue, clim), cbar
-		im(1, 'mid3', xtrue, clim), cbar
-		titlef('x true, z=%g to %g', ig.z(1), ig.z(end))
-	end
+	im plc 2 3
+%	im(1, ig.x, ig.y, xtrue, clim), cbar
+	im(1, 'mid3', xtrue, clim), cbar
+	titlef('x true, z=%g to %g', ig.z(1), ig.z(end))
 prompt
 end
 
@@ -74,14 +74,16 @@ end
 
 
 if ~isvar('sino'), printm 'sino: rebin helix to fan-beam'
-	f.short = 1;
+%	f.short = 1;
+	f.short = 0; % for rebinned projection views below
 	f.itype = 'linear';
 %	f.itype = 'nearest';
 	[sino, orbits, used] = rebin_helix(cg, ig, proj, ...
 		'type', f.itype, 'short', f.short, 'collapse', 0);
 
 	if exist('helix_rebin_mex') == 3 % matlab vs mex
-		[sino0, orbits0, used] = rebin_helix(cg, ig, proj, 'use_mex', 0, ...
+		[sino0, orbits0, used] = rebin_helix(cg, ig, proj, ...
+			'use_mex', 0, ...
 			'type', f.itype, 'short', f.short, 'collapse', 0);
 
 		equivs(orbits, orbits0)
@@ -92,6 +94,32 @@ if ~isvar('sino'), printm 'sino: rebin helix to fan-beam'
 	im(5, sino, 'SSRB sinos'), cbar, axis normal
 	im(6, used), cbar, axis normal
 prompt
+end
+
+
+%% examine the projection views
+if false && ~f.short % not possible for short scans!
+%	pview = permute(sino, [1 3 2]); % projection views
+%	jf_slicer(pview) % awful, understandably because orbits vary!
+
+	% rebin each fan-beam sinogram onto a common orbit_start parallel-beam
+	sf = sino_geom('fan', 'dsd', cg.dsd, 'dso', cg.dso, ...
+		'ns', cg.ns, 'ds', cg.ds, 'offset_s', cg.offset_s, ...
+		'orbit', orbits(1,1), ...
+		'na', size(sino, 2)); % # views in fan-beam sinogram, not helix cg.na
+	sp = sino_geom('par', 'nb', cg.ns, 'dr', cg.ds/2, ...
+		'orbit', 360, 'na', size(sino, 2)); % parallel-beam
+
+	sino2 = zeros(size(sino));
+	for iz = 1:ig.nz % each slice
+		sf.orbit_start = orbits(iz,2); % sino_geom for this slice!
+		sino2(:,:,iz) = rebin_sino(sino(:,:,iz), sf, sp);
+	end
+%	jf_slicer(sino2)
+
+	pview = permute(sino2, [1 3 2]); % projection views
+	jf_slicer(pview) % animate views
+return
 end
 
 
