@@ -67,6 +67,7 @@ end
 
 if ~isvar('proj'), printm 'proj: analytical ellipsoid projection views'
 	proj = ellipsoid_proj(cg, ell);
+
 	im(4, 'row', 1, permute(proj, [1 3 2]), 'true helix sinograms'), cbar
 prompt
 end
@@ -127,12 +128,12 @@ if ~isvar('xssrb'), printm 'fbp from ssrb'
 	[xssrb, tmp] = fbp_helix_stack(cg, ig, sino, orbits, ...
 		'short', f.short, 'window', 'hanning,1.0');
 	xssrb = xssrb .* (ig.circ(cg.rmax) > 0); % mask
-end
-%im(2, xssrb, 'SSRB recon', clim), cbar
-im(2, 'mid3', xssrb, 'SSRB recon', clim), cbar
-im(6, tmp, 'after weighting'), cbar, axis normal
-im(3, xssrb - xtrue, 'error', [-500 500]), cbar
+%	im(2, xssrb, 'SSRB recon', clim), cbar
+	im(2, 'mid3', xssrb, 'SSRB recon', clim), cbar
+	im(6, tmp, 'after weighting'), cbar, axis normal
+	im(3, xssrb - xtrue, 'error', [-500 500]), cbar
 prompt
+end
 
 
 if im % profile, for checking HU accuracy
