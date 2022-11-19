@@ -1,21 +1,21 @@
  function [odata, sing, Vr] = ir_mri_coil_compress(idata, varargin)
 %| MRI coil compression via PCA
-%function [odata, S] = ir_mri_coil_compress(idata, varargin)
+%function [odata, sing, Vr] = ir_mri_coil_compress(idata, varargin)
 %|
-%| Given multiple MRI surface coil images (idata), use SVD/PCA
-%| to find a smaller number of virtual coil images (odata).
+%| Given data (idata) from multiple MRI surface coils, use SVD/PCA
+%| to find data (odata) for a smaller number of virtual coils.
 %|
 %| todo: currently ignores noise correlations
 %|
 %| in
-%|	idata	[(N) n_in]	noisy complex images (2D or 3D) for each coil
+%|	idata	[(N) n_in]	noisy complex data for each coil
 %|
 %| options
 %|	'ncoil'		desired # of virtual coils (default: 1)
 %|  'thresh'    minimum compression threshold, 0-1 (default: unused)
 %|
 %| out
-%|	odata	[(N) ncoil]	virtual coil images
+%|	odata	[(N) ncoil]	virtual coil data
 %|	sing	[n_in]		singular values
 %|	Vr	[n_in, ncoil]	compression matrix for reducing other data
 %|
@@ -45,6 +45,8 @@ odata = idata * Vr; % [*N ncoil] compressed data
 odata = reshape(odata, [idim(1:end-1), arg.ncoil]); % [(N) ncoil]
 
 
+% This test case uses *image* data but in practice coil compression
+% is applied to k-space data *prior* to image reconstruction!
 function ir_mri_coil_compress_test
 
 f.dir = [path_find_dir('mri') '/../data/mri/'];
@@ -69,7 +71,7 @@ snr2sigma = @(db, yb) 10^(-db/20) * norm(yb(:)) ...
 
 nkeep = 4;
 [odata, S] = ir_mri_coil_compress(idata, 'ncoil', nkeep);
-for iz=1:nkeep
+for iz = 1:nkeep
 	odata(:,:,iz) = odata(:,:,iz) / max(col(abs(odata(:,:,iz))));
 end
 
