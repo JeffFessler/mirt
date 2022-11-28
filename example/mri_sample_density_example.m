@@ -57,7 +57,7 @@ if ~isvar('xtrue'), printm 'setup object'
 
 	clim = [0 2.2];
 	im(2, x1d, x1d, xtrue, 'x true', clim), cbar
-	xlabel('x [mm]'), ylabel('y [mm]')
+	xlabelf('x [mm]'), ylabelf('y [mm]')
 
 	% add noise
 	rng(0)
