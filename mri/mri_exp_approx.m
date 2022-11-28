@@ -4,6 +4,7 @@
 %| Build approximations to exponentials for iterative MR image reconstruction,
 %| generalizing "time segmentation" and "frequency segmentation" methods.
 %| This is a key part of the Gmri object for field-corrected MR reconstruction.
+%|
 %| in
 %|	ti	[M 1]	sample times
 %|	zmap	[N 1]	rate map: relax_map + 2i*pi*field_map
@@ -23,10 +24,12 @@
 %|
 %| out
 %|	B	[M L]	basis functions
-%|	C	[L N]	coefficients, such that B * C \approx exp(-ti * zmap.')
+%|	C	[L N]	coefficients, such that B * C ≈ exp(-ti * zmap.')
 %|	hk,zk	[Ko Kr]	histogram values and 'frequencies', if used
 %|
 %| type of approximation choices:
+%|
+%| todo: give user more control of histogram bins, especially for unwrapped field maps!
 %|
 %|	{'hist,time,unif', nhist}
 %|		This recommended (and default) approach uses time segmentation
@@ -50,7 +53,7 @@
 %|		with different choices for the nominal frequency components.
 %|		in all cases the coefficients are chosen by LS (Man, MRM, 1997).
 %|
-%|	for relaxation cases, nhist should be [Ko=#omap Kr=#rmap]
+%|	For relaxation cases, nhist should be [Ko=#omap Kr=#rmap].
 %|
 %| Copyright 2004-7-1, Jeff Fessler, University of Michigan
 
@@ -99,7 +102,7 @@ if streq(atype, 'hist,', 5) || o.ctest
 	if length(nhist) == 1 % fmap only
 
 		if any(rmap(:)), error 'rmap requires length(nhist)=2', end
-		[hk zc] = hist(imag(zmap(:)), nhist);
+		[hk, zc] = hist(imag(zmap(:)), nhist);
 		zk = 0 + 1i * zc(:); % [K 1]
 		if o.chat
 			bar(imag(zk)/(2*pi), hk)
@@ -117,7 +120,7 @@ if streq(atype, 'hist,', 5) || o.ctest
 
 	else
 
-		[hk zc] = hist_equal([imag(zmap(:)) real(zmap(:))], nhist); % 2d histogram
+		[hk, zc] = hist_equal([imag(zmap(:)) real(zmap(:))], nhist); % 2d histogram
 		zk = outer_sum(1i*zc{1}, zc{2}); % [K1 K2]
 
 		if o.acorr % code by valur olafsson (for A'A)
@@ -140,7 +143,7 @@ end
 %
 if streq(atype, 'hist,svd')
 	Ew = Eh * spdiag(sqrt(hk));
-	[U S V] = svd(Ew, 0);
+	[U, S, V] = svd(Ew, 0);
 
 	B = U(:,1:LL);	% [M L] keep desired components
 
@@ -258,14 +261,14 @@ elseif streq(atype, 'hist,fs,', 8)
 		end
 
 	else
-		error(sprintf('fs type "%s" unknown', atype))
+		fail('fs type "%s" unknown', atype)
 	end
 
 	zl = rl + (2i*pi) * fl;
 	B = exp(-ti * zl(:).'); % [M L] bases
 
 else
-	error(sprintf('type "%s" unknown', atype))
+	fail('type "%s" unknown', atype)
 end
 
 
@@ -333,7 +336,7 @@ if 1
 	ti = dsingle(ti);
 	zmap = dsingle(zmap);
 end
-[B C hk zk] = mri_exp_approx(ti, zmap, {1, 5e-2}, ...
+[B, C, hk, zk] = mri_exp_approx(ti, zmap, {1, 5e-2}, ...
 ...%		'tol', {'fro'}, ...
 		acorr_arg{:}, ...
 		'ctest', 1, 'chat', 1, 'type', {'hist,time,unif', nhist});
