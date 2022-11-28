@@ -15,7 +15,7 @@
 %|
 %| out
 %|	yik	[N nset]	scaled scan images
-%|	scalefactor		sqrt(median(rj))
+%|	scalefactor		sqrt(median(rj)) * effect_of_fmax
 %|
 %| MJ Allison
 %| 2015-06-27 JF cosmetic changes
@@ -30,7 +30,7 @@ arg = vararg_pair(arg, varargin);
 dim_yik = size(yik);
 yik = reshapee(yik, [], dim_yik(end)); % [*N nset]
 
-[nn nset] = size(yik);
+[nn, nset] = size(yik);
 
 % Scale by median of first set of data to get rid of large mag_j
 % effects (not actually needed, but left in for consistency)
@@ -49,8 +49,8 @@ end
 % Try to compensate for R2 effects on effective regularization.
 
 d = zeros(nn,1);
-for j=1:nset
-	for k=1:nset
+for j = 1:nset
+	for k = 1:nset
 		tmp = abs(yik(:,j) .* yik(:,k)).^2 * (etime(k)-etime(j)).^2;
 		d = d + tmp;
 	end
@@ -65,11 +65,10 @@ end
 
 % compute dtyp
 dtyp = median(d(d(:) > arg.dmax * max(d(:))));
+% pr dtyp
 
 % now uniformly scale by the square root of dtyp
-for j = 1:nset
-	yik(:,j) = div0(yik(:,j),sqrt(dtyp));
-end
+yik = yik / sqrt(dtyp);
 
-scalefactor = sqrt(dtyp);
+scalefactor = scalefactor * sqrt(dtyp); % 2022-11-27 fix
 yik = reshape(yik, dim_yik); % [(N) nset]
