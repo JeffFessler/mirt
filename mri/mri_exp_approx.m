@@ -162,7 +162,7 @@ elseif streq(atype, 'time,unif') || streq(atype, 'hist,time,unif')
 			tl = mean(ti);
 		else
 			p = 100*[0:1:(LL-1)]/(LL-1);
-			tl = col(pn.prctile(ti, p));
+			tl = col(pn.prctile(ti, p)); % L of the time points
 		end
 
 		if rmsmax < 1 || o.ctest || streq(atype, 'hist,time,unif')
