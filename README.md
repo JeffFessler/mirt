@@ -191,10 +191,12 @@ Or switch to Julia.
 
 Apparently recent versions of MacOS are very protective
 and may delete `.mex` files in the interest of security.
-The following command line instructions may help:
+The following command line instructions
+(where `irt` refers to the name of the directory where you installed MIRT)
+may help:
 - `sudo xattr -r -d com.apple.quarantine irt`
 - `sudo find irt -name \*.mexmaci64 -exec spctl --add {} \;`
-Above `irt` refers to the name of the directory where you installed MIRT.
+
 
 ### Deprecations:
 
