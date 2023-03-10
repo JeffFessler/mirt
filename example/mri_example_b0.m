@@ -43,10 +43,10 @@ if ~isvar('xtrue'), printm 'xtrue'
 
 	f.clim = [0 2.5];
 	if 1 && im
-		t = (conv2(single(ig.mask), ones(3), 'same') >= 1) - ig.mask;
-		im clf, im(xtrue + 2.0*t, f.clim), cbar
+		mask_outline = (conv2(single(ig.mask), ones(3), 'same') >= 1) - ig.mask;
+		im clf, im(xtrue + 2.0*mask_outline, f.clim), cbar
 		title('True image and support outline')
-	prompt, clear t
+	prompt
 	end
 end
 
@@ -183,13 +183,15 @@ end
 
 
 %% system model for b0-corrected reconstruction
-if ~isvar('Gm'), printm 'Gmri'
-	f.L = 6;
-	Gm = feval(Gn.arg.new_zmap, Gn, ti, zmap, f.L);
+if ~isvar('Gm2'), printm 'Gmri'
+	f.L1 = 6; % suffices for the non-Gram version
+	f.L2 = 10; % works better for Gram version (xcg2)
+	Gm1 = feval(Gn.arg.new_zmap, Gn, ti, zmap, f.L1);
+	Gm2 = feval(Gn.arg.new_zmap, Gn, ti, zmap, f.L2);
 end
 
 if 0 % check approximation accuracy
-	max_percent_diff 'Ge_zmap * xtrue(ig.mask)' 'Gm * xtrue(ig.mask)'
+	max_percent_diff 'Ge_zmap * xtrue(ig.mask)' 'Gm2 * xtrue(ig.mask)'
 return
 end
 
@@ -199,7 +201,7 @@ if ~isvar('xcg1'), printm 'xcg1 iterative'
 	f.niter = 15;
 
 	xinit = xcp0;
-	xcg1 = qpwls_pcg1(xinit(ig.mask), Gm, 1, yi(:), R.C, 'niter', f.niter);
+	xcg1 = qpwls_pcg1(xinit(ig.mask), Gm1, 1, yi(:), R.C, 'niter', f.niter);
 	xcg1 = embed(xcg1(:,end), ig.mask);
 %	im clf, im([xtrue; xcg1], 'xcg1'), cbar
 	im plc 1 3
@@ -212,15 +214,15 @@ end
 
 
 %% Toeplitz-based CG
-if 0
+if 1
 	if ~isvar('bb'), printm 'bb'
-		bb = Gm' * yi(:);
+		bb = Gm2' * yi(:);
 		im clf, im(ig.embed(bb), 'bb'), cbar
 		prompt
 	end
 
 	if ~isvar('Tm'), printm 'Tm: Gmri gram'
-		Tm = build_gram(Gm, 1);
+		Tm = build_gram(Gm2, 1);
 	end
 
 	if ~isvar('xcg2'), printm 'xcg2'
@@ -235,7 +237,7 @@ end
 %% images
 if im
 	clf
-	tmp = [ [xtrue, xcp0]; [xup0, xcg1] ];
+	tmp = [ [xtrue, xcp0]; [xup0, xcg1]; [xtrue+mask_outline, xcg2] ];
 	im('notick', abs(tmp), f.clim)
 	axis off, title ''
 	cbar
@@ -246,5 +248,7 @@ if im
 	tt(nx/2, 2.1*ny, sprintf('Conj. Phase'));
 %	tt(nx/2, 2.23*ny, sprintf('L=%d', f.L));
 	tt(3*nx/2, 2.1*ny, sprintf('CG-NUFFT'));
-	tt(3*nx/2, 2.23*ny, sprintf('L=%d', f.L));
+	tt(3*nx/2, 2.23*ny, sprintf('L=%d', f.L1));
+	tt(5*nx/2, 2.1*ny, sprintf('Gram-NUFFT'));
+	tt(5*nx/2, 2.23*ny, sprintf('L=%d', f.L2));
 end
