@@ -249,6 +249,7 @@ end
 
 %% compare compute time of 3D Gmri vs "stack of 2D" version
 if false
+%	parpool()
 	% todo: think more about fftshift here!
 	fftz = @(x) fftshift(fft(fftshift(x,3), [], 3), 3) * ig.dz; % FT along z
         xtrue_fftz = fftz(xtrue);
@@ -257,7 +258,7 @@ if false
 	y1 = A31 * xtrue;
 	y6 = A36 * xtrue;
 	cpu etic
-		yp = A3p * xtrue_fftz;
+		yp = A3p * xtrue_fftz; % slower!?
 	cpu etoc
 	cpu etic
 		yk = A3k * xtrue_fftz;
