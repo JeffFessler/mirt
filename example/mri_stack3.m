@@ -21,6 +21,7 @@
 % reconstructions are all discrete-space.  So no "inverse crime" here.
 if ~isvar('xtrue'), printm 'setup object'
 
+%	ig = image_geom('nx', 64, 'nz', 18, ... % todo: examine even vs odd
 	ig = image_geom('nx', 64, 'nz', 17, ...
 		'offsets', 'dsp', ... % (-n/2:n/2-1) for mri
 		'fov', [20 20 5.1]); % 20 cm transaxial FOV, 3mm slices
@@ -86,22 +87,22 @@ end
 
 
 %% Take IFFT in kz once and for all
-if ~isvar('yi_fftz')
+if ~isvar('yi_ifftz')
 	% note: "2" is kz! and we need 1/dz for proper scaling
-	fftz = @(y) fftshift(ifft(ifftshift(y,2), [], 2), 2) / ig.dz;
-	yi_fftz = fftz(yi_stack);
+	ifftz = @(y) fftshift(ifft(ifftshift(y,2), [], 2), 2) / ig.dz;
+	yi_ifftz = ifftz(yi_stack);
 end
 
 
 %% create 2D Gmri object (sufficient because no slice-dependent B0 modeling)
 if ~isvar('A2'), printm '2D system model'
 	N = ig.dim(1:2);
-	nufft_args = {N, 6*ones(size(N)), 2*N, N/2, 'table', 2^10, 'minmax:kb'};
+	nufft2_args = {N, 6*ones(size(N)), 2*N, N/2, 'table', 2^10, 'minmax:kb'};
 	clear N
 %	f.basis = {'rect'};
 	f.basis = {'dirac*dx'};
 	A2 = Gmri(kspace2, mask2, ...
-		'fov', fov2, 'basis', f.basis, 'nufft', nufft_args);
+		'fov', fov2, 'basis', f.basis, 'nufft', nufft2_args);
 end
 
 
@@ -159,7 +160,7 @@ if ~isvar('xcp'), printm 'conj. phase reconstruction'
 	wi_basis2 = wi_traj2 ./ A2.arg.basis.transform; % trick! undo basis effect
 	minmax(wi_basis2)
 
-	xcp = A2' * (wi_basis2 .* yi_fftz); % slice-wise broadcast
+	xcp = A2' * (wi_basis2 .* yi_ifftz); % slice-wise broadcast
 	xcp = embed(xcp, mask2);
 	im(abs(xcp), '|Conj. Phase| Recon'), cbar
 	xlabelf('NRMSE = %.1f%%', 100*nrms(xcp, xtrue))
@@ -176,18 +177,19 @@ end
 
 
 %% Below here is iterative reconstruction
-if ~isvar('A3'), printm '3D system model'
-	A3 = kronI(ig.nz, A2); % system model for stack!
+if ~isvar('A3k'), printm '3D system model based on Kronecker product'
+	A3k = kronI(ig.nz, A2); % system model for stack!
 end
+	A3p = kronI(ig.nz, A2, 'parfor', true);
 
 
 %% Examine PSF of conjugate-phase reconstruction using DCF
 if ~isvar('psf3')
 	wi_basis2 = wi_traj2 ./ A2.arg.basis.transform; % trick! undo basis effect
-	fake_data = wi_basis2 .* ones(size(yi_fftz)); % broadcast!
+	fake_data = wi_basis2 .* ones(size(yi_ifftz)); % broadcast!
 	fake_data = fake_data * ig.dx * ig.dy * ig.dz; % trick from FT of sinc3(x/d)
-	fake_data = fftz(fake_data);
-	psf3 = A3' * fake_data; % broadcast!
+	fake_data = ifftz(fake_data);
+	psf3 = A3k' * fake_data; % broadcast!
 %	psf3 = embed(psf3, ig.mask);
 	im('mid3', abs(psf3), '3D PSF slices'), cbar
 
@@ -206,7 +208,7 @@ if ~isvar('R'), printm 'regularizer'
 	beta = 2^-21 * size(kspace,1); % good for quadratic 'rect'
 	R = Reg1(ig.mask, 'beta', beta * [1 1 0]); % trick: no regularization in z!
 	if 1 % check resolution: [1.14 1.14 1] for 'rect'
-		qpwls_psf(A3, R, 1, ig.mask, 1, 'fwhmtype', 'profile');
+		qpwls_psf(A3k, R, 1, ig.mask, 1, 'fwhmtype', 'profile');
 %	return
 	end
 end
@@ -215,7 +217,7 @@ end
 %% PCG
 if ~isvar('xpcg'), printm 'PCG with quadratic regularizer'
 	niter = 10;
-	xpcg = qpwls_pcg1(xcp(ig.mask), A3, 1, yi_fftz(:), R.C, 'niter', niter);
+	xpcg = qpwls_pcg1(xcp(ig.mask), A3k, 1, yi_ifftz(:), R.C, 'niter', niter);
 	xpcg = ig.embed(xpcg);
 	im(abs(xpcg), '|PCG 2D quad reg|', clim), cbar
 	xlabelf('NRMSE = %.1f%%', 100*nrms(xpcg, xtrue))
@@ -227,4 +229,49 @@ if ~isvar('xpcg'), printm 'PCG with quadratic regularizer'
 		ir_legend({'\x true', 'Re(PCG)'}), titlef('Profiles')
 		xlabelf('x [cm]')
 	end
+end
+
+
+%% create 3D Gmri object (based on 3D NUFFT) for timing comparisons
+if ~isvar('A31'), printm '3D system model based on 3D NUFFT'
+	N3 = ig.dim;
+	nufft36_args = {N3, 6*ones(size(N3)), 2*N3, N3/2, 'table', 2^10, 'minmax:kb'};
+        nufft31_args = {N3, [6 6 1],          2*N3, N3/2, 'table', 2^10, 'minmax:kb'};
+	clear N3
+
+	A36 = Gmri(kspace, mask3, ...
+		'fov', ig.fovs, 'basis', f.basis, 'nufft', nufft36_args); % 3D interpolator
+
+	A31 = Gmri(kspace, mask3, ...
+		'fov', ig.fovs, 'basis', f.basis, 'nufft', nufft31_args); % 2D interpolator!
+end
+
+
+%% compare compute time of 3D Gmri vs "stack of 2D" version
+if false
+	% todo: think more about fftshift here!
+	fftz = @(x) fftshift(fft(fftshift(x,3), [], 3), 3) * ig.dz; % FT along z
+        xtrue_fftz = fftz(xtrue);
+	yk = A3k * xtrue_fftz; % warm-up
+	yp = A3p * xtrue_fftz; % warm-up
+	y1 = A31 * xtrue;
+	y6 = A36 * xtrue;
+	cpu etic
+		yp = A3p * xtrue_fftz;
+	cpu etoc
+	cpu etic
+		yk = A3k * xtrue_fftz;
+	cpu etoc
+	cpu etic
+		y6 = A36 * xtrue;
+	cpu etoc
+	cpu etic
+		y1 = A31 * xtrue;
+	cpu etoc
+	y6 = reshape(y6, size(yk));
+	y1 = reshape(y1, size(yk));
+	assert(all(yk == yp, 'all'))
+	max_percent_diff(yk, y1) % verify consistency
+	max_percent_diff(yk, y6) % verify consistency
+	max_percent_diff(y1, y6)
 end

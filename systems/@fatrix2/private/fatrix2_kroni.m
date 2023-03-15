@@ -1,5 +1,5 @@
- function ob = fatrix2_kroni(Mkron, ob)
-%function ob = fatrix2_kroni(Mkron, ob)
+ function ob = fatrix2_kroni(Mkron, ob, arg)
+%function ob = fatrix2_kroni(Mkron, ob, arg)
 %|
 %| Construct fatrix2_block object of form kron(eye(Mkron), ob)
 %| i.e., a kronecker product of identity matrix with object.
@@ -7,6 +7,7 @@
 %| in
 %|	Mkron		natural number
 %|	ob		fatrix2
+%|	arg		'parfor'
 %|
 %| out
 %|	ob		fatrix2 equivalent to kron(eye(Mkron), ob)
@@ -55,9 +56,16 @@ ob = fatrix2('arg', arg, 'caller', tmp, ...
 function y = fatrix2_kroni_forw(arg, x)
 
 y = cell(arg.Mkron, 1);
-for ii=1:arg.Mkron
-	tmp = stackpick(x,ii);
-	y{ii} = arg.ob * tmp;
+
+if arg.parfor
+	parfor ii = 1:arg.Mkron
+		y{ii} = arg.ob * stackpick(x,ii);
+	end
+else
+	for ii = 1:arg.Mkron
+		tmp = stackpick(x,ii);
+		y{ii} = arg.ob * tmp;
+	end
 end
 y = cat(numel(arg.odim), y{:});
 
@@ -67,11 +75,16 @@ function x = fatrix2_kroni_back(arg, y)
 
 o1 = arg.ob;
 x = cell(arg.Mkron, 1);
-for ii=1:arg.Mkron
-	tmp = stackpick(y,ii);
-	x{ii} = o1' * tmp;
-	if numel(o1.odim) == 1 % trick for 1D odim cases
-		x{ii} = fatrix2_embed(o1.imask, o1.idim, x{ii});
+
+if arg.parfor
+	fail 'todo'
+else
+	for ii = 1:arg.Mkron
+		tmp = stackpick(y,ii);
+		x{ii} = o1' * tmp;
+		if numel(o1.odim) == 1 % trick for 1D odim cases
+			x{ii} = fatrix2_embed(o1.imask, o1.idim, x{ii});
+		end
 	end
 end
 x = cat(numel(arg.idim), x{:});
