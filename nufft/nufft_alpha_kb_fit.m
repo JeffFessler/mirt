@@ -34,7 +34,7 @@ if 0 % old way
 else
 	% kaiser-bessel with previously numerically-optimized shape
 	[~, kb_a, kb_m] = kaiser_bessel('string', J, 'best', 0, K/N);
-	kernel_ft = kaiser_bessel_ft('inline', J, kb_a, kb_m, 1);
+	kernel_ft = kaiser_bessel_ft('handle', J, kb_a, kb_m, 1);
 	sn_kaiser = 1 ./ kernel_ft(nlist/K); % [N]
 end
 
