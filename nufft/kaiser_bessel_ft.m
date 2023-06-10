@@ -33,7 +33,7 @@ if ~isvar('d'), d = 1; end
 
 % trick to return functions
 if ischar(u)
-	kernel_ft = sprintf('kaiser_bessel_ft(t, %d, %g, %g, 1)', ...
+	kernel_ft = sprintf('kaiser_bessel_ft(x, %d, %g, %g, 1)', ...
 		J, alpha, kb_m);
 
 	switch u
@@ -42,7 +42,7 @@ if ischar(u)
 	case 'string'
 		y = kernel_ft;
 	case 'inline'
-		y = inline(kernel_ft, 't'); % todo: obsolete
+		y = inline(kernel_ft, 'x'); % todo: obsolete
 	otherwise
 		fail('bad argument "%s"', u)
 	end
