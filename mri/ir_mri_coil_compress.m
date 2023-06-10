@@ -77,25 +77,35 @@ end
 
 if 0 % figures for 551 LR example
 	im clf
+	ir_fontsize tick 12
 	im('row', 1, idata, '')
 %	cbar
 	titlef('MR images from %d coils', 8)
 %	ir_savefig cw ir_mri_coil_compress_1a
+%	title(''); exportgraphics(gca, 'ir_mri_coil_compress_1a.pdf')
+	prompt
 	im('row', 1, odata, '')
 	titlef('First %d singular vectors (virtual coil images)', nkeep)
 %	ir_savefig cw ir_mri_coil_compress_1b
+%	title(''); exportgraphics(gca, 'ir_mri_coil_compress_1b.pdf')
+	prompt
 	subplot(211)
 	style1
 	ir_fontsize label 24
 	ir_fontsize tick 20
 	ir_fontsize title 24
-	plot(1:nkeep, S(1:nkeep)/S(1), 'bo', ...
-		nkeep+1:ncoil, S(nkeep+1:ncoil)/S(1), 'rx')
+	S = diag(S);
+	plot(1:ncoil, S/S(1), 'k')
+	hold on
+	scatter(1:nkeep, S(1:nkeep)/S(1), 100, 'bo', 'filled')
+	scatter(nkeep+1:ncoil, S(nkeep+1:ncoil)/S(1), 100, 'rs', 'filled')
+	hold off
 	ytick([0 0.2 0.5 1])
 	xlabelf('$k$'), ylabelf('$\sigma_k$')
 	titlef('Singular values for MRI coil compression example')
 	xlim([1-0.2 ncoil+0.2]), ylim([0 1.1]), grid
 %	ir_savefig cw ir_mri_coil_compress_1c
+%	exportgraphics(gca, 'ir_mri_coil_compress_1c.pdf')
 return
 end
 

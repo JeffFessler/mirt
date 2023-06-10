@@ -197,7 +197,7 @@ elseif streq(atype, 'time,unif') || streq(atype, 'hist,time,unif')
 			end
 			% B = exp(-ti*zk.') * P.'; % [M K] * [K L] = [M L]
 			P = complexify(P);
-			B = mri_exp_mult_mex(P', complexify(zk(:)), ti).';
+			B = mri_exp_mult_mex(P', complexify(zk(:)), ti).'; % [M L]
 
 		else
 			error 'bug'
