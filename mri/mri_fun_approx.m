@@ -83,7 +83,7 @@ o = vararg_pair(o, varargin);
 	o.type, o.nhist, o.L, o.Lmax, ...
 	o.nrms, o.tol, o.jskip, o.ctest, o.chat);
 
-% 
+%
 % mri_fun_approx()
 %
 function [B, C, hk, wk] = mri_fun_approx_do(ti, uj, vj, f1, f2, ...

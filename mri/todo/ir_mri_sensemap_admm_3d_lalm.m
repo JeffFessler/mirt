@@ -186,7 +186,7 @@ for ic = 1:ncoil % it is better to do this in parallel as they are independent.
 % todo: C' * (C * sk)
 		temp = v1ov0 * sk + (C'*C) * sk - v1ov0 * (u1-eta1) - C' * (u0-eta0);
 		sk = sk - arg.rho * temp;
-        
+
 		Cs = C * sk; % used often
 
 		if arg.etabtw

@@ -86,7 +86,7 @@ for ii=1:ncoil
 		im plc 1 2
 		im(1, x, y, xr), xlabel x, ylabel y
 		im(2, x, y, zr)
-		keyboard 
+		keyboard
 	end
 
 	[sx sy sz] = mri_smap1(xr, 0, zr, rlist(ii)); % in coil coordinates

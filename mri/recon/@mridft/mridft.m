@@ -40,9 +40,9 @@ end
 	ob.xval = xval;
 	ob.yval = yval;
         ob.fov = fov;
-        ob.n = N;        
+        ob.n = N;
 
-	ob.is.empty	= false;
+	ob.is.empty = false;
 
 %	ob.m = size(we);	% image size
 %	ob.n = size(we);

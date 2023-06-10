@@ -54,7 +54,7 @@ f.xtrue = [f.dir 'brainweb_t1.jpg'];
 xtrue = single(imread(f.xtrue)');
 xtrue = xtrue(2:end-1,2:end-1); % make it 256^2
 [nx, ny] = size(xtrue);
-%{ 
+%{
 atrue = 2*pi * (-0.5+([1:nx]'/nx * [1:ny]/ny).^0.5); % smooth phase
 xtrue = xtrue .* exp(1i * atrue); % phase
 %}

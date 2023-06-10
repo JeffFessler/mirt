@@ -1,5 +1,5 @@
 function [wmap, wconv] = call_fmap(yik, etime, func_name, varargin)
-% This function is a wrapper for fmap_est_qm.m and fmap_est_pcg_ls.m to 
+% This function is a wrapper for fmap_est_qm.m and fmap_est_pcg_ls.m to
 % make them callable in a similar fashion as mri_field_map_reg.m
 
 %| inputs:
@@ -46,7 +46,7 @@ arg = vararg_pair(arg, varargin, 'allow_new', 1);
 
 
 % determine data size & reshape as needed
-if numel(size(yik)) == 3 
+if numel(size(yik)) == 3
     % 2d single coil
     [nlin, ncol, necho] = size(yik); size_v = [nlin, ncol];
     y = reshape(yik,[nlin*ncol,1,necho]);
@@ -105,8 +105,8 @@ end
 
 
 function [varargin] = arg2varargin(arg)
-% converts a variable input arguments structure, arg,  into a cell of 
-% fieldnames and inputs to be passed along to another function as a 
+% converts a variable input arguments structure, arg,  into a cell of
+% fieldnames and inputs to be passed along to another function as a
 % varargin cell, i.e. [out] = myfunc(in1, in2, varargin{:})
 %
 % IMPORTANT NOTE! when passing the output of this function, varargin, to

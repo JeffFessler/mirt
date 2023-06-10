@@ -29,7 +29,7 @@
 %| Copyright 2005-6-20, Jeff Fessler and Amanda Funai, University of Michigan
 %| 2014-08-19 JF more testing, verifying phase is correct
 %| 2014-09-09 modified for 3D by Mai Le
-%| 2016-05-03 JF fixes 
+%| 2016-05-03 JF fixes
 
 if nargin < 1, ir_usage, end
 
@@ -237,7 +237,7 @@ plot3(x,y,z)
 
 % ir_mri_sensemap_sim_show2()
 function ir_mri_sensemap_sim_show2(smap, x, y, dx, dy, nlist, plist, rlist)
-switch ndims(smap) 
+switch ndims(smap)
 case 3
 	[nx ny ncoil] = size(smap);
 case 4
@@ -437,7 +437,7 @@ end
 
 
 % ir_mri_sensemap_sim_test3
-% illustrate 3D sense maps with el 
+% illustrate 3D sense maps with el
 function ir_mri_sensemap_sim_test3
 nring = 3;
 ncoil = 4 * nring;

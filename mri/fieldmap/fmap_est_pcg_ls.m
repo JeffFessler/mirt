@@ -34,7 +34,7 @@
 %|	time   [niter+1 1]	time for each iteration
 %|
 %| This algorithm is based on the paper:
-%| C Y Lin, J A Fessler, 
+%| C Y Lin, J A Fessler,
 %| "Efficient Regularized Field Map Estimation in 3D MRI", TCI 2020
 
 if nargin >= 1 && streq(w, 'test')
@@ -97,7 +97,7 @@ angs = angle(smap);
 if arg.df
     Gamma = phiInv(arg.relamp, arg.df, delta); %[L,L]
 end
-set = 1; 
+set = 1;
 nset = cumsum(1:n-1);nset = nset(end);
 wj_mag = zeros(np,nset,nc,nc);
 d2 = zeros(1,nset);
@@ -110,7 +110,7 @@ for j=1:n % for each pair of scans
             for c = 1:nc
                 for d = 1:nc
                     wj_mag(:,set,c,d) = smap(:,c) .* conj(smap(:,d)) .*...
-                        conj(y(:,c,i)) .* y(:,d,j); 
+                        conj(y(:,c,i)) .* y(:,d,j);
                     wj_mag(:,set,c,d) = abs(wj_mag(:,set,c,d));
                     % difference of the echo times and angles
                     ang2(:,set,c,d) = angs(:,c) - angs(:,d) + ...
@@ -118,7 +118,7 @@ for j=1:n % for each pair of scans
                     if arg.df
                         wj_mag(:,set,c,d) = wj_mag(:,set,c,d)*abs(Gamma(i,j));
                         ang2(:,set,c,d) = ang2(:,set,c,d) + angle(Gamma(i,j));
-                    end 
+                    end
                 end
             end
             set = set+1;
@@ -126,14 +126,14 @@ for j=1:n % for each pair of scans
     end
 end
 % compute |s_c s_d' y_dj' y_ci| /L/s * (tj - ti)^2
-sjtotal(sjtotal==0) = 1; %avoid outside mask = 0 
+sjtotal(sjtotal==0) = 1; %avoid outside mask = 0
 wj_mag = wj_mag./sjtotal;
 if ~arg.df
     wj_mag = wj_mag/n;
 end
 wm_deltaD = wj_mag .* d2;
 wm_deltaD2 = wj_mag .* (d2.^2);
-ang2(isnan(ang2))=0; %avoid atan causing nan 
+ang2(isnan(ang2))=0; %avoid atan causing nan
 
 % prepare outpute variables
 out.ws = zeros(length(w(:)), arg.niter+1);
@@ -156,12 +156,12 @@ fprintf('\n ********** ite_solve: NCG-MLS **********\n')
 for iter=1:arg.niter
 	% compute the gradient of the cost function and curvatures
     [hderiv,hcurv,sm] = Adercurv(d2,ang2,wm_deltaD,wm_deltaD2,w);
-    
+
 	grad = hderiv + CCw;
 	ngrad = -grad;
     cost(iter) = sum(wj_mag.*(1-cos(sm)),'all') + norm(C*w,'fro');
 
-    fprintf(' ite: %d , cost: %f3\n', iter-1, cost(iter)) 
+    fprintf(' ite: %d , cost: %f3\n', iter-1, cost(iter))
 
 	% apply preconditioner
 	switch arg.precon
@@ -234,7 +234,7 @@ for iter=1:arg.niter
 	CdCw = ddir'*CCw;
 	step = 0;
     for is=1:arg.stepper{2}
-        
+
         % compute the curvature and derivative for subsequent steps
         if step ~= 0
             [hderiv,hcurv] = Adercurv(d2,ang2,wm_deltaD,wm_deltaD2,w + step * ddir);
@@ -242,7 +242,7 @@ for iter=1:arg.niter
 
         % compute numer and denom of the Huber's algorithm based line search
         denom = (ddir.^2)' * hcurv + CdCd;
-        numer = ddir' * hderiv + (CdCw + step * CdCd); 
+        numer = ddir' * hderiv + (CdCw + step * CdCd);
 
         if denom == 0
             warn 'found exact solution??? step=0 now!?'
@@ -270,7 +270,7 @@ end
 sm = w * d2 + ang2;
 cost(iter+1) = sum(wj_mag.*(1-cos(sm)),'all') + norm(C*w,'fro');
 
-fprintf(' ite: %d , cost: %f3\n', iter, cost(iter+1)) 
+fprintf(' ite: %d , cost: %f3\n', iter, cost(iter+1))
 
 %output water & fat images
 if arg.df
@@ -341,7 +341,7 @@ yik = zeros(nx,ny,nz,nc,ne);
 for kk=1:ne
     yik(:,:,:,:,kk) = mag ...
         .* exp(1i * wtrue * (etime(kk) - etime(1))) ...
-        .* smap; 
+        .* smap;
 end
 rng(0)
 yik = yik + noise_std * (randn(size(yik)) + 1i * randn(size(yik)));

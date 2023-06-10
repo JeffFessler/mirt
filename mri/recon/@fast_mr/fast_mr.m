@@ -7,10 +7,10 @@ function ob = fast_mr(kx,ky,fov,N,K,J,tt,we,flag_swt,L,int_opt,we_histo)
 %	Construct MRI object, which can do Ax and A'y operations
 % typical input params:
 %   kx goes form -N/2 to N/2:  unitless version
-%   ky goes from -N/2 to N/2:  unitless version   
+%   ky goes from -N/2 to N/2:  unitless version
 %   fov is the fov (cm)
 %    N = 64,128, MTX size
-%    K oversampling   = 2*N, 3*N, 1.5*N  
+%    K oversampling   = 2*N, 3*N, 1.5*N
 %    J = number of neighbors, typ. 5,6,7,8,...
 %    flag_swt = 1 for sinc-weighting for rect basis functions
 %    L number of time segments.   L=5,6,7,...
@@ -19,11 +19,11 @@ function ob = fast_mr(kx,ky,fov,N,K,J,tt,we,flag_swt,L,int_opt,we_histo)
 %                    column 1:  bin centers for histogram
 %                    column 2:  histogram values at those bin centers
 %    int_opt = 1 for using input field map to find min-max int.
-%    int_opt = 2 for histogram and include we_histo for histogram of field map 
+%    int_opt = 2 for histogram and include we_histo for histogram of field map
 % Note:  if we = zeros, then L=0 is used.
-%  Brad Sutton   Jeff Fessler 
+%  Brad Sutton   Jeff Fessler
 %  University of Michigan
-%  June 17, 2002 
+%  June 17, 2002
 
 % This is an attempt to make MRI object valid for sensitivity
 %   encoded runs also
@@ -49,7 +49,7 @@ if isa(kx, 'fast_mr')
         if nargin == 1
            return
         elseif ischar(ky)
-           eval(sprintf('ob.%s = fov;',ky)) 
+           eval(sprintf('ob.%s = fov;',ky))
         end
 	return
 end
@@ -65,7 +65,7 @@ end
         N2 = N;
         Jm1 = J;
         Jm2 = J;
-        K1 = K; 
+        K1 = K;
         K2 = K;
         %ob.st =
         %nufft2_init([2*pi/N1*ky,2*pi/N2*kx],N1,N2,Jm1,Jm2,K1,K2,[N/2-1/2,N/2-1/2]*(1),[],'kb');
@@ -74,7 +74,7 @@ end
         ob.G = Gnufft(args);
 
 	if (sum(abs(we(:))) == 0)
-             sprintf('Setting L=0') 
+             sprintf('Setting L=0')
              L=0;
          end
 
@@ -101,7 +101,7 @@ end
         else
            ob.flgswt = 0;
         end
-  
+
         ob.we = we;
         ob.tt = tt;
 	ob.is.empty	= false;

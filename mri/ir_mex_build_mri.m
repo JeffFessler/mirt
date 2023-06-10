@@ -14,7 +14,7 @@ fun('mri_exp_mult_mex.c')
 cd(dir_current)
 
 % "test" mex files by running them (each should display usage)
-try 
+try
 	exp_xform_mex
 	mri_exp_mult_mex
 catch

@@ -84,7 +84,7 @@ for ii = 1:2 % forward and backward passes
 	zero_less_fill = reshape(nonzero_elms(:,ii),Nx,Ny,Nf,Nc);
 	curr_full_data = reshape(zero_less_fill(full_interp_ind_pos),Nx,Ny,Nf,Nc);
 
-	if ii == 2 
+	if ii == 2
 		curr_full_data = flipdim(curr_full_data, 3);
 	end
 
@@ -107,7 +107,7 @@ c3 = col(reshape(kron((1:Nf),ones(Nx*Ny,1)),Nx,Ny,Nf));
 
 choose_flip = repmat(reshape(abs(c2 - c3) < abs(c1 - c3),Nx,Ny,Nf),[1 1 1 Nc]);
 
-tie = repmat(reshape((abs(c2 - c3) == abs(c1 - c3)) & (c1 ~= c2), Nx,Ny,Nf), [1 1 1 Nc]); 
+tie = repmat(reshape((abs(c2 - c3) == abs(c1 - c3)) & (c1 ~= c2), Nx,Ny,Nf), [1 1 1 Nc]);
 
 flip_weights = choose_flip + 0.5*tie;
 full_data = sfull_data(:,:,:,:,1) .* (1-flip_weights) ...

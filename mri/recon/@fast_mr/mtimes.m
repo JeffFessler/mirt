@@ -39,16 +39,16 @@ if ~a.is.transpose
             aa = Int(ll,:).';
             if ll == 1
                %vo = aa.*[nufft2(Wo.*vi, a.st)];
-               vo = aa.*(G*(Wo.*vi(:))); 
+               vo = aa.*(G*(Wo.*vi(:)));
             else
                %vo = vo + aa.*[nufft2(Wo.*vi, a.st)];
-               vo = vo + aa.*(G*(Wo.*vi(:))); 
-            end            
+               vo = vo + aa.*(G*(Wo.*vi(:)));
+            end
         end
         if a.flgswt
 	    vo = vo.*a.swt;
         end
-	    
+
 else
         if a.flgswt
 	    vi = vi.*a.swt;  % Transpose of real sinc-weighting
@@ -57,10 +57,10 @@ else
             Wo = exp(i*conj(we)*((ll-1)*tau));
             aa = Int(ll,:)';
             if ll == 1
-                vo = Wo(:).*(G'*(aa.*vi(:)));  
+                vo = Wo(:).*(G'*(aa.*vi(:)));
             else
-                vo = vo + Wo(:).*(G'*(aa.*vi(:)));  
-            end  
+                vo = vo + Wo(:).*(G'*(aa.*vi(:)));
+            end
 	end
             vo = exp(i*conj(we(:))*TE).*vo;
 	    %vo = vo(:);

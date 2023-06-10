@@ -45,7 +45,7 @@
 
 if nargin == 1 && streq(x, 'test'), mri_field_map_sim_test, return, end
 if nargin < 2, help(mfilename), error args, end
- 
+
 % defaults
 arg.type = 'sphere';
 arg.B0 = 3; % Telsa

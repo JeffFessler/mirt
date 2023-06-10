@@ -165,7 +165,7 @@ im(4, mag, 'mag'), cbar
 image_power = 10*log10(sum(sum(mag.^2))/(nx*ny));
 noise_power = image_power - SNR;
 noise_std = sqrt(10^(noise_power/10));
-noise_std = noise_std / 2; % because complex 
+noise_std = noise_std / 2; % because complex
 
 yik = zeros(nx,ny,nsets);
 for kk=1:nsets

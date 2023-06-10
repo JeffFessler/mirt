@@ -185,7 +185,7 @@ for i = 1:ncoil % it is better to do this in parallel as they are independent.
 	if any(arg.isave == 0)
 		smap(:,i,arg.isave == 0) = sinit(:,i);
 	end
-    
+
 	printm('pre computation:');
 	%toc
 
@@ -199,7 +199,7 @@ for i = 1:ncoil % it is better to do this in parallel as they are independent.
 		%sk = sk-rou.*(sk+v1ov0*(C'*C)*sk-C' * (u0 - eta0) - v1ov0 * (u1 - eta1));
 		temp = v1ov0*sk+(C'*C)*sk-v1ov0*(u1-eta1)-C'*(u0-eta0);
 		sk = sk-rou*temp;
-        
+
 		sk = sk(:);
 
 		% this is used often

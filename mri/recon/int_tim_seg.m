@@ -26,7 +26,7 @@ tau = (rangt+eps)/(L);
 AA = zeros(L+1,ndat);
 
 if L==0
-  AA = ones(1,ndat); 
+  AA = ones(1,ndat);
   return
 end
 
@@ -49,23 +49,23 @@ if (type == 1) % Exact LS interpolator
        else
            iGTGGT = pinv(GTG)*G';
            sprintf('used pinv instead')
-      end 
+      end
  %  for yy = 1:ndat
-           cc = exp(i*we(:)*(tt(:))');    
-          % cc = exp(i*we(:)*tt(yy));    
+           cc = exp(i*we(:)*(tt(:))');
+          % cc = exp(i*we(:)*tt(yy));
           % AA(:,yy) = (iGTGGT*cc)'.';
            AA = (iGTGGT*cc)'.';
  %   end
-end   
+end
 if (type == 2) % Approx Histogram Interpolator using we_histo
      %find bin size to give an integer value for KK
-     rangwe = max(we_histo(:,1))-min(we_histo(:,1)); 
+     rangwe = max(we_histo(:,1))-min(we_histo(:,1));
      minwe = min(we_histo(:,1));
      num_bins = length(we_histo(:,1));
      KK = floor(2*pi/((rangwe/num_bins)*tau));
      % bin size
      dwn = 2*pi/(KK*tau);
-     bin_centers = we_histo(:,1); 
+     bin_centers = we_histo(:,1);
      N_ap = we_histo(:,2).';
      %keyboard
      ftwe_ap = fft(N_ap.*(exp(i*dwn*[0:(num_bins-1)]*tau*(L))),KK);
@@ -79,7 +79,7 @@ if (type == 2) % Approx Histogram Interpolator using we_histo
        else
            iGTGap_ap = pinv(GTGap_ap.');
            sprintf('used pinv instead')
-      end 
+      end
      for yy = 1:ndat
         ftc_ap= fft(N_ap.*(exp(i*[0:(num_bins-1)]*dwn*tt(yy))),KK);
         ftc_ap = exp(i*(minwe+dwn/2)*(tt(yy)-tau*[0:KK-1])).*(ftc_ap);

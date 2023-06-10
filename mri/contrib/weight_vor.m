@@ -8,7 +8,7 @@ function area=weight_vor(kx,ky,nl)
 %
 % Updated for Matlab R14 9/13/05 BPS
 
-  
+
 [V,C]=voronoin([kx,ky],{'Qbb','QJ'});
 
 %offset = 20;
