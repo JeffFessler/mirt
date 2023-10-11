@@ -75,19 +75,25 @@ for iz = 1:nkeep
 	odata(:,:,iz) = odata(:,:,iz) / max(col(abs(odata(:,:,iz))));
 end
 
-if 0 % figures for 551 LR example
+if false % figures for 551 LR example
 	im clf
 	ir_fontsize tick 12
 	im('row', 1, idata, '')
 %	cbar
 	titlef('MR images from %d coils', 8)
-%	ir_savefig cw ir_mri_coil_compress_1a
-%	title(''); exportgraphics(gca, 'ir_mri_coil_compress_1a.pdf')
+	if false % for book
+		% ir_savefig cw ir_mri_coil_compress_1a
+		xticks([]), yticks([]), title('')
+		exportgraphics(gca, 'ir_mri_coil_compress_1a.pdf')
+	end
 	prompt
 	im('row', 1, odata, '')
 	titlef('First %d singular vectors (virtual coil images)', nkeep)
-%	ir_savefig cw ir_mri_coil_compress_1b
-%	title(''); exportgraphics(gca, 'ir_mri_coil_compress_1b.pdf')
+	if false % for book
+		% ir_savefig cw ir_mri_coil_compress_1b
+		xticks([]), yticks([]), title('')
+		exportgraphics(gca, 'ir_mri_coil_compress_1b.pdf')
+	end
 	prompt
 	subplot(211)
 	style1
