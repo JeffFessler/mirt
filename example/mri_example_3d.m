@@ -15,7 +15,8 @@
 % reconstructions are all discrete-space.  So no "inverse crime" here.
 if ~isvar('xtrue'), printm 'setup object'
 
-	ig = image_geom('nx', 64, 'nz', 32, ...
+	nx = 64; nz = 32; % original
+	ig = image_geom('nx', nx, 'nz', nz, ...
 		'offsets', 'dsp', ... % (-n/2:n/2-1) for mri
 		'fov', [20 20 6]); % 20 cm transaxial FOV
 	iy = ceil((ig.ny+1)/2);
@@ -34,8 +35,8 @@ end
 
 %% k-space trajectory
 if ~isvar('kspace'), printm 'trajectory'
-% todo: 3d radial
-%	f.traj = 'radial';
+% todo: 3d radial (kushball)
+%	f.traj = 'radial'; % stack-of-stars
 %	f.traj = 'cartesian';
 	f.traj = 'spiral3'; % stack-of-spirals
 	[kspace, ~, wi_simple] = mri_trajectory(f.traj, {}, ig.dim, ig.fovs, {});
@@ -187,7 +188,15 @@ if ~isvar('R'), printm 'regularizer'
 	beta = 2^-21 * size(kspace,1); % good for quadratic 'rect'
 	R = Reg1(ig.mask, 'beta', beta);
 	if 0 % check resolution: [1.17 1.17 1.01] for 'dirac'
-		qpwls_psf(A3, R, 1, ig.mask, 1, 'fwhmtype', 'profile');
+		psfq = qpwls_psf(A3, R, 1, ig.mask, 1, 'fwhmtype', 'profile');
+		if 0 % for haowei
+			ii = 1 + (-7:7);
+			im clf; jim(psfq(end/2+ii, end/2+ii, end/2+ii))
+			psf2 = embed(A3' * (A3 * ig.unitv), ig.mask);
+			im clf; jim(psf2(end/2+ii, end/2+ii, end/2+ii))
+			Psf2 = fftshift(fftn(fftshift(psf2)));
+			plot(log10(abs(Psf2(:,end/2+1,end/2+1))))
+		end
 	return
 	end
 end
