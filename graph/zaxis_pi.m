@@ -52,7 +52,7 @@ else
 end
 
 % here is the main part
-axisz(min(ticks), max(ticks))
+zlim([min(ticks), max(ticks)])
 ztick(ticks)
 
 %arg.do_tex = streq(version('-release'), '2014b'); % supports TeX in ticks
