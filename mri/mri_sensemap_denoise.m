@@ -131,17 +131,20 @@ end
 
 % initial maps
 if isempty(arg.init)
-	arg.init = zeros([prod(NN) ncoil]);
+	init = zeros([prod(NN) ncoil]);
 	good = abs(arg.bodycoil) > arg.thresh * max(abs(arg.bodycoil(:))); % 2010-06-24
-	for ic = 1:ncoil
+  
+	bodycoil = arg.bodycoil; % extract from struct and cache to accelerate loop
+	parfor ic = 1:ncoil
 		zj = stackpick(ykj,ic);
-		tmp = zj ./ arg.bodycoil; % usual ratio
+		tmp = zj ./ bodycoil; % usual ratio
 		if 1 % set all uncertain map values to median of good ones
 %			good = abs(zj) > arg.thresh * max(abs(zj(:))); % prior to 2010-06-24
 			tmp(~good) = median(abs(tmp(good)));
 		end
-		arg.init(:,ic) = tmp(:);
+		init(:,ic) = tmp(:);
 	end
+	arg.init = init;
 	sinit = reshape(arg.init, [NN ncoil]); % return to caller if wanted
 end
 
@@ -197,6 +200,7 @@ if arg.chol || streq(arg.precon, 'ichol')
 		L = ichol(H, struct('michol', 'on', 'diagcomp', alpha));
 	end
 else
+	H = []; % any variable presents in a parfor-loop is required to be init'ed
 	A = Gdiag(arg.bodycoil(mask(:)), 'mask', mask);
 end
 
@@ -233,7 +237,9 @@ otherwise
 	fail('bad arg.precon "%s"', arg.precon)
 end
 
-for ic = 1:ncoil
+C = R.C;
+nargo = nargout; % cache nargout for parfor
+parfor ic = 1:ncoil
 	ytmp = stackpick(ykj,ic);
 	if arg.chol % numerical inverse via backslash for small problems
 		ytmp = double(ytmp);
@@ -243,10 +249,10 @@ for ic = 1:ncoil
 	else % run qpwls algorithm for regularized fitting
 		init = stackpick(arg.init,ic);
 		tmp = qpwls_pcg1(init(mask), A, 1, ...
-			ytmp(mask), R.C, ...
+			ytmp(mask), C, ...
 			'precon', arg.precon, ...
 			'niter', arg.niter, 'isave', arg.isave);
-		if nargout > 2 % cost
+		if nargo > 2 % cost
 			cost(:,ic) = pwls_cost(tmp, A, 1, ytmp(mask(:)), R);
 		end
 	end
