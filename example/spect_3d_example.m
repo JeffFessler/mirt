@@ -254,6 +254,21 @@ if 1
 end
 
 
+if 0 % Test repeated allocate / free
+	pr "testing free"
+	free(G)
+	for i = 1:30
+		pr 1
+		G = Gtomo3(f.sys_type, ig.mask, ig.nx, ig.ny, ig.nz, ...
+			'nthread', jf('ncore'), 'chat', 0);
+		free(G)
+		clear G Gb
+		pause(0.1)
+	end
+return
+end
+
+
 % penalized-likelihood case
 if 1
 	if ~isvar('R'), printm 'R'
@@ -366,9 +381,19 @@ if 1
 %		axisy(6.1e5, 6.3e5)
 		axisx(0, f.niter)
 	end
+	max_differences = ...
 	[max(col(xinc3(:,:,:,end) - xemdp1(:,:,:,end))) ...
 	max(col(xinc3(:,:,:,end) - xinc1(:,:,:,end))) ...
 	max(col(xinc1(:,:,:,end) - xemdp1(:,:,:,end))) ...
 	max(col(xinc3(:,:,:,end) - xosdp1(:,:,:,end))) ...
-	max(col(xinc3(:,:,:,end) - xtrue))]
+	max(col(xinc3(:,:,:,end) - xtrue))];
+	pr max_differences
 end
+
+
+% The following line frees the Gtomo3 internal memory.
+% Without this line, the memory could grow every time because
+% Matlab's "clear" command does not free mex-allocated memory.
+free(G)
+pause(0.5) % just in case
+clear G Gb % also clear variables for safety!
