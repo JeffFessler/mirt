@@ -19,6 +19,11 @@
 %|	sing	[n_in]		singular values
 %|	Vr	[n_in, ncoil]	compression matrix for reducing other data
 %|
+%| The method is similar to that of huang:08:asc
+%| "A software channel compression technique for faster reconstruction with many channels"
+%| MRI Jan. 2008, doi 10.1016/j.mri.2007.04.010
+%| But this code does not subtract the data mean.  (Perhaps it should.)
+%|
 %| Copyright 2016-12-09, Jeff Fessler, University of Michigan
 
 if nargin < 1, ir_usage, end
