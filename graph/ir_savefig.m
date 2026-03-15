@@ -3,6 +3,8 @@
 %|
 %| save current figure to eps file rootdir/base.eps with prompting.
 %|
+%| matlab's newer 'exportgraphics' is perhaps more useful
+%|
 %| options:
 %|	'eps_c'	save to color .eps file without inverting!
 %|	'cw'	color .eps file for use in white paper

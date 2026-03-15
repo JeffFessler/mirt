@@ -363,7 +363,7 @@ while length(varargin)
 		end
 %		pr scale
 	else
-		fail 'unknown arg'
+		fail('unknown argument with class "%s"', class(arg))
 	end
 	varargin = {varargin{2:end}};
 end
