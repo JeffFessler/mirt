@@ -47,6 +47,7 @@ arg.wthresh = 0.4;
 arg.fmax = 0.05; % fraction of max threshold for trimmed median for wi_ml
 arg.init = [];
 arg.clim = []; % limits for phase display
+arg.cmap = hsv; % colormap
 arg.pl = false; % PL
 arg.wi_ml = false; % use wi based on ML instead of threshold
 
@@ -66,7 +67,7 @@ yi = angle(yi);
 if arg.chat
 	im plc 2 3
 	im(1, mag, 'magnitude'), cbar
-	im(2, yi, 'raw phase map', arg.clim), cbar
+	im(2, yi, 'raw phase map', arg.clim), colormap(gca, arg.cmap), cbar
 end
 
 dim_yi = size(yi);
@@ -76,8 +77,8 @@ dim_yi = size(yi);
 %
 mask0 = mag > arg.wthresh * max(mag(:)); % ignore pixels with "too small" magnitude
 if arg.chat
-	im(3, mask0, 'weights'), cbar
-	im(4, mask0 .* yi, 'masked phase', arg.clim), cbar
+	im(3, mask0, sprintf('weights for wthresh=%g', arg.wthresh)), cbar
+	im(4, mask0 .* yi, 'masked phase', arg.clim), colormap(gca, arg.cmap), cbar
 end
 
 %mean(mag(:))
@@ -101,7 +102,8 @@ if isempty(arg.init)
 	arg.init(mask0 == 0) = mean(yi(mask0 == 0));
 end
 if arg.chat
-	im(5, arg.init, 'Initial phase', arg.clim), cbar
+	im(5, arg.init, 'Initial phase', arg.clim), colormap(gca, arg.cmap), cbar
+	drawnow
 end
 
 %G = diag_sp(ones(prod(dim_yi),1));
@@ -159,10 +161,10 @@ if arg.chat
 	else % 3d
 		im(6, x(:,:,:,end), 'QPWLS-CG phase', arg.clim), cbar
 	end
+	colormap(gca, arg.cmap)
 end
 
 
-%
 % mri_phase_wi_ml()
 % wi based on ML estimation
 % trick: normalize by median of non-background so that beta is "universal"
@@ -189,7 +191,7 @@ curv = wi;
 function [xq, mask0] = mri_phase_denoise_test(type, varargin)
 
 % read data
-yi = ir_get_data(fullfile('mri','2001-phase-data','phfit.mat'));
+yi = ir_get_data(fullfile('mri', '2001-phase-data', 'phfit.mat'));
 clim = [-0.5 1.5];
 
 %if nargout
@@ -197,8 +199,8 @@ clim = [-0.5 1.5];
 %else
 %	order = 2;
 %end
-[xq mask0] = mri_phase_denoise(yi, ...
-	'clim', clim, 'init', [], 'chat', 1, varargin{:});
+[xq, mask0] = mri_phase_denoise(yi, ...
+	'cmap', parula, 'clim', clim, 'init', [], 'chat', 1, varargin{:});
 %	'init', 5*randn(size(yi)));
 %	'init', 5*ones(size(yi)));
 xq = xq(:,:,end);
@@ -209,12 +211,13 @@ end
 cpu etic
 xpl = mri_phase_denoise(yi, 'pl', 1, varargin{:});
 cpu etoc 'PL time'
-im(4, xpl, 'PL-CG phase', clim), cbar
+im(4, xpl, 'PL-CG phase', clim), colormap(gca, parula), cbar
 
 cpu etic
 xml_qpwls = mri_phase_denoise(yi, 'wi_ml', 1, varargin{:});
 cpu etoc 'PWLS time'
-im(5, xml_qpwls, 'QPWLS-CG (ML wj)', clim), cbar
+im(5, xml_qpwls, 'QPWLS-CG (ML wj)', clim), colormap(gca, parula), cbar
+
 
 max_percent_diff(xpl, xml_qpwls)
 %max_percent_diff(xpl, xq)
