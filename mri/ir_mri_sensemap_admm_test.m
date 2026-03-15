@@ -138,7 +138,7 @@ if 1
 	elim = [0, 0.05]; % error limits
 	im(9, abs(schof), slim, '$\hat{s}$ cholesky full'), cbar
 	im(10, abs(schof - smap) .* maskS, elim, '|err| cholesky full'), cbar
-	colormap(gca, parula)
+	if im, colormap(gca, parula), end
 	xlabelf('RMSE %.4f', srms(schof))
 drawnow
 end
@@ -160,7 +160,7 @@ end
 if 1
 	im(11, abs(schos), slim, '$\hat{s}$ cholesky mask'), cbar
 	im(12, abs(schos - smap) .* maskS, elim, '|err| cholesky mask'), cbar
-	colormap(gca, parula)
+	if im, colormap(gca, parula), end
 	xlabelf('RMSE %.4f', srms(schos))
 drawnow
 end
@@ -190,17 +190,17 @@ end
 if 1
 	im(7, abs(sinit(:,:,end)) .* maskS, slim, '$\hat{s}$ init'), cbar
 	im(8, abs(sinit(:,:,end) - smap) .* maskS, elim, '|err| init'), cbar
-	colormap(gca, parula)
+	if im, colormap(gca, parula), end
 	xlabelf('RMSE %.4f', srms(sinit(:,:,end)))
 
 	im(13, abs(sadmf(:,:,end)), slim, '$\hat{s}$ admm full'), cbar
 	im(14, abs(sadmf(:,:,end) - smap) .* maskS, elim, '|err| admm full'), cbar
-	colormap(gca, parula)
+	if im, colormap(gca, parula), end
 	xlabelf('RMSE %.4f', srms(sadmf(:,:,end)))
 
 	im(15, abs(sadms(:,:,end)) .* maskS, slim, '$\hat{s}$ admm mask'), cbar
 	im(16, abs(sadms(:,:,end) - smap) .* maskS, elim, '|err| admm mask'), cbar
-	colormap(gca, parula)
+	if im, colormap(gca, parula), end
 	xlabelf('RMSE %.4f', srms(sadms(:,:,end)))
 end
 
@@ -209,9 +209,13 @@ if im
 	im subplot 19
 	plot(	0:f.niter, srms(sadmf), 'b-', ...
 		0:f.niter, srms(sadms), 'm-'), titlef 'RMSE', legend('full', 'mask')
-	axis([0 f.niter 0 0.03]), xtick([0 f.niter]), ytick([0 0.016 0.024])
+	if im
+		axis([0 f.niter 0 0.03]), xtick([0 f.niter]), ytick([0 0.016 0.024])
+	end
 	im subplot 20
-	plot(	0:f.niter, srms2(sadmf, schof), 'b-', ...
-		0:f.niter, srms2(sadms, schos), 'm-'), titlef 'RMSD'
-	axis([0 f.niter 0 0.03]), xtick([0 f.niter]), ytick([0 0.024])
+	if im
+		plot(	0:f.niter, srms2(sadmf, schof), 'b-', ...
+			0:f.niter, srms2(sadms, schos), 'm-'), titlef 'RMSD'
+		axis([0 f.niter 0 0.03]), xtick([0 f.niter]), ytick([0 0.024])
+	end
 end
