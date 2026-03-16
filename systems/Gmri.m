@@ -79,7 +79,9 @@ arg.ti = [];
 arg.L = [];
 arg.aL = []; % for autocorrelation zmap. default is arg.L
 N = size(mask);
-arg.nufft_args = {N, [6 6], 2*N, N/2, 'table', 2^10, 'minmax:kb'};
+if iscolumn(mask), N = N(1); end
+% arg.nufft_args = {N, [6 6], 2*N, N/2, 'table', 2^10, 'minmax:kb'};
+arg.nufft_args = {N, 6 * ones(1, numel(N)), 2*N, N/2, 'table', 2^10, 'minmax:kb'};
 arg.n_shift = [];
 arg.exp_approx_args = {}; % arguments for mri_exp_approx()
 
@@ -104,18 +106,14 @@ end
 
 dd = size(kspace,2);
 arg.kspace = kspace;
-if length(arg.fov) == 1
-	arg.fov = arg.fov * ones(1,dd);
-end
+if isscalar(arg.fov) == 1, arg.fov = arg.fov * ones(1,dd); end
 arg.mask = mask;
 arg.Nd = size(mask);
 arg.dim = [size(kspace,1) sum(mask(:))];
 
-omega = zeros(size(kspace), class(kspace));
-for id=1:dd
-	omega(:,id) = 2*pi*kspace(:,id) * arg.fov(id) / arg.Nd(id);
-end
-if max(abs(omega(:))) > pi+1e-6
+omega = 2*pi * bsxfun(@times, kspace, arg.fov./arg.Nd);
+
+if any(abs(omega(:)) > pi+1e-6)
 	warn 'omega exceeds pi.  are you sure you intended this?'
 end
 
@@ -384,7 +382,7 @@ if size(x,1) ~= arg.dim(2)
 end
 y = exp_xform_mex(complexify(single(x)), ...
 	complexify(arg.u), complexify(arg.v));
-y = y .* repmat(arg.basis.transform, [1 ncol(y)]); % [nd *nc]
+y = bsxfun(@times, y, arg.basis.transform);
 
 
 % Gmri_forw_exact(): y = A * x
@@ -392,7 +390,7 @@ function y = Gmri_forw_exact(arg, x)
 x = reshapee(x, prod(arg.Nd), []); % [(N) (nc)] to [*N *nc]
 x = x(arg.mask,:); % [np *nc]
 y = exp_xform_mex(complexify(single(x)), arg.u, arg.v); % [nd *nc]
-y = y .* repmat(arg.basis.transform, [1 ncol(y)]); % [nd *nc]
+y = bsxfun(@times, y, arg.basis.transform);
 
 
 % Gmri_forw(): y = A * x
@@ -402,26 +400,25 @@ if size(x,1) ~= arg.dim(2)
 	x = reshape(x, prod(arg.Nd), []); % [(N) (nc)] to [*N *nc]
 	x = x(arg.mask,:); % [np *nc]
 end
-nc = ncol(x);
 
 if isempty(arg.zmap)
 	y = arg.Gnufft * x;
 else % approximation
 	y = 0;
 	for ll=1:arg.L
-		tmp = repmat(arg.Ct(:,ll), [1 nc]) .* x;
+		tmp = bsxfun(@times, arg.Ct(:,ll), x);
 		tmp = arg.Gnufft * tmp;
-		tmp = repmat(arg.B(:,ll), [1 nc]) .* tmp;
+		tmp = bsxfun(@times, arg.B(:,ll), tmp);
 		y = y + tmp;
 %		y = y + arg.B(:,ll) .* (arg.Gnufft * (arg.Ct(:,ll) .* x));
 	end
 end
-y = y .* repmat(arg.basis.transform, [1 nc]); % [nd *nc]
+y = squeeze(bsxfun(@times, y, arg.basis.transform));
 
 
 % Gmri_back_exact_Fatrix(): x = A' * y
 function x = Gmri_back_exact_Fatrix(arg, y)
-y = y .* repmat(conj(arg.basis.transform), [1 ncol(y)]); % [nd nc]
+y = bsxfun(@times, y, conj(arg.basis.transform));
 % trick: conj(exp(-uv)) = exp(-conj(u) conj(v))
 vc = complexify(conj(arg.v));
 uc = complexify(conj(arg.u));
@@ -437,17 +434,16 @@ x = embed(x, arg.mask); % [(N) nc] as required for fatrix2
 % Gmri_back_Fatrix(): x = A' * y
 % full adjoint ("back-projection")
 function x = Gmri_back_Fatrix(arg, y)
-nc = ncol(y);
-y = y .* repmat(conj(arg.basis.transform), [1 nc]);
+y = bsxfun(@times, y, conj(arg.basis.transform));
 
 if isempty(arg.zmap)
 	x = arg.Gnufft' * y;
 else % approximation
 	x = 0;
 	for ll=1:arg.L
-		tmp = repmat(conj(arg.B(:,ll)), [1 nc]) .* y;
+		tmp = bsxfun(@times, conj(arg.B(:,ll)), y);
 		tmp = arg.Gnufft' * tmp;
-		tmp = repmat(conj(arg.Ct(:,ll)), [1 nc]) .* tmp;
+		tmp = bsxfun(@times, conj(arg.Ct(:,ll)), tmp);
 		x = x + tmp;
 	end
 end
