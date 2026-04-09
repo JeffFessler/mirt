@@ -1,0 +1,16 @@
+#!/bin/csh -e
+
+alias cp /bin/cp
+echo "fail: penalty,diff obsolete"
+exit -1
+
+#cp -p ~/l/src/defs/*.h .
+#cp -p ~/l/src/util/mex/def,mexarg.h .
+#cp -p ~/l/src/util/mex/mexarg.c .
+#cp -p ~/l/src/util/mex/Makefile .
+
+cp -p ~/l/src/util/mex/penalty_mex.c .
+exit
+
+cp -p ~/l/src/util/misc/defs-misc.h .
+cp -p ~/l/src/util/misc/penalty,diff.c .

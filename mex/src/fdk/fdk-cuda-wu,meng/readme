@@ -1,0 +1,18 @@
+
+This directory contains source code for building MEX files
+that do the back-projection step of the FDK (Feldkamp)
+cone-beam image reconstruction method using CUDA on GPU.
+
+This code was written by Matthew Lauer and Ryan James in Summer 2009
+by modifying the FDK code in ../fdk by Jeff Fessler.
+
+To compile, modify one of the Makefiles to use the paths
+to your installation of the CUDA library from Nvidia.
+For example, on a mac use
+	make -f Makefile,mac
+
+After compiling, which creates fdk_mex.mex[suffix],
+test as described in ../readme
+
+
+This version from ~febmeng/fdk/fdk_meng by Meng Wu

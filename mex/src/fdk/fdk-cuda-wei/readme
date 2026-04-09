@@ -1,0 +1,24 @@
+This directory contains part of the source code for building MEX files that do
+the back-projection step of the FDK (Feldkamp)cone-beam image reconstruction
+method using CUDA on GPU.
+
+This code was written by Wenlay Esther Wei in Winter 2010 by modifying the
+work of Matthew Lauer and Ryan James in order to improve the performance.
+This FDK code is originally in ../fdk by Jeff Fessler.
+
+Each folder contains source code for each speed-up strategy as well as related
+information.  For more details, please read the project report contained in
+this folder.
+
+To compile, replace the fdk-ts.cu (and fdk-ts-t.cu for some versions) with the
+counterparts in fdk-cuda folder, modify the Makefiles
+
+To test, use cbct_back test command in MATLAB or modify the init2.m to use
+your paths
+
+To use CUDA compiler, modify init.m to add your paths
+
+Please read the project report for more details
+
+NOTE: Testing folder contains a simple CUDA file I made while learning the GPU
+architecture, it generates a mex file

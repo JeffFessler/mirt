@@ -1,0 +1,68 @@
+
+This directory contains source code for building MEX files
+that do the back-projection step of the FDK (Feldkamp, Davis, Kress)
+cone-beam image reconstruction method.
+
+Individuals working with this may want to see the original 1984 paper:
+http://dx.doi.org/10.1364/JOSAA.1.000612
+
+However, the "notation" in the software may not match that paper.
+The notation matches a book chapter on tomography that JF has written.
+Ask JF for this chapter if interested.
+
+
+fdk-orig/
+The "current" version for a "standard" CPU.
+
+Other directories contain versions that try to accelerate computation
+by using CUDA on GPU.
+To compile those versions you will probably
+need to modify one of the Makefiles to use the paths
+to your installation of the CUDA library from Nvidia.
+
+http://developer.nvidia.com/object/matlab_cuda.html
+
+
+After compiling to make fdk_mex.mex[suffix]
+you can test your compiled version by using the matlab command:
+        cbct_back test
+If your path is correct, this will try to compare the version in jf_mex.mex*
+with the version fdk_mex.mex* that is in your local directory or path,
+checking for numerical consistency between these versions.
+You should see lines like the following:
+
+cbct_back_test: found fdk_mex:
+ /Volumes/a2/fessler/src/matlab/alg/mex/src/fdk/fdk-orig/fdk_mex.mexmaci64
+cbct_back_test: mpd jf_mex vs fdk_mex: 0.328966%
+
+Hopefully your "maximum percent difference" (mpd) error is < 1% or so.
+
+
+After you have debugged your code you are ready to compare the compute times.
+For this comparison, use the routine:
+
+	cbct_back_time
+
+You can edit your own local copy of this routine to change parameters.
+
+2010-06-23
+The latest matlab version (2010a?) does not include the file "mexversion.c"
+in extern/src, so I modified script
+	ir62:/usr/local/matcuda/nvmex
+to eliminate the dependency on it.
+Also, the 64-bit version of the cuda library are in $(CUDAHOME)/lib64
+so I modified the Makefile to use
+	-L$(CUDAHOME)/lib64
+instead of
+	-L$(CUDAHOME)/lib
+
+
+More versions have been added by various students.
+I need to clean up and document them better...
+The newest versions are:
+fdk-cuda-wei
+fdk-cuda-wu,meng
+
+
+Also see the version branched off by Miriam Leeser's group at Northeastern:
+http://www.coe.neu.edu/Research/rcl/projects/CBCT.php

@@ -1,0 +1,27 @@
+FDK helical (and axial) CT reconstruction
+by Donghwan Kim
+2014-11-13
+
+todo
+
+ir_fdk_helix_example.m: test
+– geometry: helical or axial geometry
+– phantom: ellipsoid, cylindrical, or XCAT phantom
+– matlab or mex version
+– FDK methods: SSRB, native FDK, cone-parallel FDK with and without w3d(·)
+
+• rebin_fan2par_helix.m: cone-to-parallel rebinning
+– dsChange (s/r) = 1.76
+– interpolation option: ’periodic’ for axial, ’mirror’ for helical
+
+• feldkamp_helix.m: 3D FDK in native and cone-parallel geometry
+– cone par = 0, 1
+– w3d = k = 0, 1, 10
+
+• cbct_back_helix.m: weighted back-projection
+– cone par = 0, 1
+– w3d = k = 0, 1, 10
+
+• mex version in ir61:/y/kimdongh/fdk_code/mex/
+– Debugged: vertical interpolation was incorrect
+in fessler/l/src/matlab/alg/mex/src/fdk/fdk-orig/fdk,ts.c

@@ -1,0 +1,95 @@
+# Makefile for FDK (Felkamp) cone-beam back-projection with MEX/CUDA
+# jeff fessler, ryan
+
+# cuda installation location:
+#CUDAHOME = /home/software/rhel4/cuda/2.1b/cuda
+CUDAHOME = /usr/local/cuda
+
+# matlab-cuda install location
+matcuda	= /usr/local/matcuda
+
+# cuda compilation flags:
+INCLUDEDIR = -I$(CUDAHOME)/include
+INCLUDELIB = -L$(CUDAHOME)/lib -lcudart -lcufft -Wl,-rpath,$(CUDAHOME)/lib
+CFLAGS     = -fPIC -D_GNU_SOURCE -pthread -fexceptions
+COPTIMFLAGS = -O3
+# -funroll-loops -msse2
+
+# common compile flags
+aflags = \
+	-Dfdk_gpu \
+	-DUse_fdk_mex -DMmex
+#	-deviceemu
+
+gccflags = \
+	-std=c99 \
+	-Wall -Wshadow -Wpointer-arith -W -Werror -Wmissing-prototypes \
+	-O3
+# -ffast-math -fexpensive-optimizations
+# -DUse_thread \
+
+# Define installation location for MATLAB.
+#export MATLAB = /usr/caen/matlab-2007a
+#export MATLAB = /usr/local/matlab/
+#export MATLAB = /Applications/MATLAB_R2007b
+export MATLAB = /Volumes/a2/pub/matlab/matlab-2008b.app
+#MEX           = $(MATLAB)/bin/mex
+MEXEXT        = $(shell $(MATLAB)/bin/mexext)
+
+# nvmex is a modified mex script that knows how to handle CUDA .cu files.
+NVMEX = $(matcuda)/nvmex -f $(matcuda)/nvopts.sh
+
+# List the mex file(s) to be built.  The .mex extension will be replaced with the
+# appropriate extension for this installation of MATLAB, e.g. .mexglx or .mexa64.
+
+goal1 = fdk_mex.$(MEXEXT)
+
+all: $(goal1)
+	echo $(goal1)
+
+# c99 code with no matlab or cuda:
+fdkd = ../fdk-orig/
+defd = ../../def/
+fdkh = \
+	$(fdkd)cbct,def.h \
+	$(fdkd)def,fdk.h \
+	$(defd)defs-env.h \
+	$(defd)jf,thread1.h
+
+fdkc = \
+	$(fdkd)cbct,mask2.c \
+	$(fdkd)fdk,st.c \
+	$(defd)jf,thread1.c
+#	$(fdkd)fdk,ts,t.c
+
+#fdko = $(subst $(fdkd),,$(fdkc:.c=.o))
+
+# c99 code with matlab stuff to be compiled with (nv)mex:
+mexc = $(defd)mexarg.c
+mexh = $(defd)def,mexarg.h $(defd)jf,mex,def.h
+
+# cuda c code:
+mexu = fdk-ts.cu fdk-mex-cuda.cu fdk-ts-t.cu fdk-ts-h.cu
+gpuh = jf-cuda.h
+
+incs = -I$(fdkd) -I$(defd)
+
+#
+# compile it all together using nvmex:
+#
+$(goal1): $(mexh) $(mexc) $(mexu) $(fdkh) $(fdkc) $(gpuh)
+	cat $(fdkc) $(mexc) > tmp.cu
+	$(NVMEX) -o $@ -v \
+		CFLAGS='$(aflags) --compiler-options -std=c99' \
+		$(incs) $(INCLUDEDIR) $(INCLUDELIB) \
+		$(mexu) tmp.cu
+	rm tmp.cu
+	rm *.linkinfo
+
+# tried to compile c99 parts with gcc and nvcc
+# but then the linker did not seem to link them properly:
+#	gcc -c $(gccflags) $(incs) $(fdkc)
+#	nvcc -c --compiler-options -std=c99 --host-compilation C $(incs) $(fdkc)
+
+clean:
+	rm -i $(goal1)

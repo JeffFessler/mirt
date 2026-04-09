@@ -1,0 +1,6 @@
+Method,#Calls,GPU usec,CPU usec,%GPU time,gld coalesced,gst coalesced,local load,local store,branch,divergent branch,instructions,warp serialize,cta launched,gld 32b,gld 64b,gld 128b,gst 32b,gst 64b,gst 128b,glob mem read throughput
+(GB/s),glob mem write throughput
+(GB/s),glob mem overall throughput
+(GB/s),instruction throughput
+fdk_ts_back1_kernel,246,1.25542e+06,1.29469e+06,96.65,1.50146e+08,9.07357e+07,0,0,1.92464e+07,366147,2.08707e+08,0,118080,1.47329e+08,1.90678e+06,953401,4.53695e+07,0,0,31.5982,9.25158,40.8497,0.535411
+memcopy,247,43465.9,111703,3.34,,,,,,,,,,,,,,,,,,,
