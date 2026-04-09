@@ -14,7 +14,9 @@ data/downloads/
 freemat/
 give
 help-pc/
-mex/
+mex/lib*
+mex/oct*
+mex/v7/
 mri-rf/graf-splitting/
 octave/
 reproduce/
