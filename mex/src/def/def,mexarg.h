@@ -54,11 +54,14 @@ extern int mxu_numel(Cmx mx);
 #define mxIsRealDouble(mx) \
 	(mxIsDouble(mx) && !mxIsComplex(mx))
 
-#define mxIsScalar(mx) \
-	( (2 == mxGetNumberOfDimensions(mx)) \
-		&& (1 == mxGetM(mx)) && (1 == mxGetN(mx)) )
+// 2019 now Matlab has this defined already
+// #define mxIsScalar(mx)
+//	 ( (2 == mxGetNumberOfDimensions(mx))
+//		&& (1 == mxGetM(mx)) && (1 == mxGetN(mx)) )
 #define mxIsScalarInt32(mx) \
 	( mxIsScalar(mx) && mxIsInt32(mx) && !mxIsComplex(mx) )
+#define mxIsScalarUint64(mx) \
+	( mxIsScalar(mx) && mxIsUint64(mx) && !mxIsComplex(mx) )
 #define mxIsScalarSingle(mx) \
 	( mxIsScalar(mx) && mxIsRealSingle(mx) )
 #define mxIsScalarDouble(mx) \
