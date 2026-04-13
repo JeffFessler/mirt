@@ -41,6 +41,8 @@ list = {...
 'fbp', ...		% FBP (filtered backprojection) code
 'general', ...		% generic image reconstruction
 'graph', ...		% graphics routines
+'mex', ...      % MEX files
+'mex/src', ...  % MEX source code
 'mri', ...		% MRI reconstruction
 'mri/fieldmap', ...	% MRI B0 field map estimation
 'mri-rf/yip-spsp', ...	% MRI RF pulse design
@@ -71,9 +73,6 @@ end
 % If you have mex problems, comment out the following line.
 % Much of the toolbox will work without mex, just slower.
 % addpath([irtdir 'mex/v7']);
-
-% Set up path to mex source files
-addpath([irtdir 'mex/src']);
 
 % do not add the paths below if you are using Matlab!
 if ir_is_octave
