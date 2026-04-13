@@ -12,5 +12,6 @@
 
 ir_mex_build_mri
 ir_mex_build_table
+irt_mex_make
 
 % todo: ir_mex_build_penal

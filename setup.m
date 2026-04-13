@@ -70,8 +70,10 @@ end
 % e.g., 7.3 and running on earlier 7.0 won't work.
 % If you have mex problems, comment out the following line.
 % Much of the toolbox will work without mex, just slower.
-addpath([irtdir 'mex/v7']);
+% addpath([irtdir 'mex/v7']);
 
+% Set up path to mex source files
+addpath([irtdir 'mex/src']);
 
 % do not add the paths below if you are using Matlab!
 if ir_is_octave
