@@ -41,8 +41,8 @@ list = {...
 'fbp', ...		% FBP (filtered backprojection) code
 'general', ...		% generic image reconstruction
 'graph', ...		% graphics routines
-'mex', ...      % MEX files
-'mex/src', ...  % MEX source code
+'mex/local', ... % MEX files compiled for local OS/CPU
+'mex/src', ... % MEX source code for irt_mex_make.m
 'mri', ...		% MRI reconstruction
 'mri/fieldmap', ...	% MRI B0 field map estimation
 'mri-rf/yip-spsp', ...	% MRI RF pulse design
