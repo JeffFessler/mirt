@@ -29,6 +29,11 @@ if irtdir(end) ~= filesep % make sure there is a '/' at end of directory
 	irtdir = [irtdir filesep];
 end
 
+if ~exist([irtdir 'mex/local'], 'dir')
+    disp(sprintf('The directory "%s" does not exist. Creating it now.', [irtdir 'mex/local']))
+    mkdir([irtdir 'mex/local']);
+end
+
 list = {...
 'align', ...		% image registration
 'align/mex', ...	% image registration mex files
@@ -74,6 +79,8 @@ end
 % Much of the toolbox will work without mex, just slower.
 addpath([irtdir 'mex/local']) % must precede "mex/v7"
 addpath([irtdir 'mex/v7']);
+
+disp('NOTE: Previous irt versions expected MEX files in "mex/v7".')
 
 % do not add the paths below if you are using Matlab!
 if ir_is_octave
