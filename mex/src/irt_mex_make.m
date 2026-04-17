@@ -7,7 +7,6 @@ if ispc
 	cd ../../..
 else
 	cd mex/src/penalty
-	% mex -v penalty_mex.c mexarg.c 'penalty,diff.c' -DMmex -outdir ../v7
-    mex -v penalty_mex.c '../def/mexarg.c' 'penalty,diff.c' -I'../def/' -DMmex -outdir ../..
+    mex -v penalty_mex.c '../def/mexarg.c' 'penalty,diff.c' -I'../def/' -DMmex -outdir ../../local
 	cd ../../..
 end
