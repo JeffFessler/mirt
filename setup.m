@@ -76,7 +76,6 @@ end
 addpath([irtdir 'mex/local']) % must precede "mex/v7"
 addpath([irtdir 'mex/v7']);
 
-disp('NOTE: Previous irt versions expected MEX files in "mex/v7".')
 
 % do not add the paths below if you are using Matlab!
 if ir_is_octave
