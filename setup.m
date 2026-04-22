@@ -29,10 +29,6 @@ if irtdir(end) ~= filesep % make sure there is a '/' at end of directory
 	irtdir = [irtdir filesep];
 end
 
-if ~exist([irtdir 'mex/local'], 'dir')
-    disp(sprintf('The directory "%s" does not exist. Creating it now.', [irtdir 'mex/local']))
-    mkdir([irtdir 'mex/local']);
-end
 
 list = {...
 'align', ...		% image registration
