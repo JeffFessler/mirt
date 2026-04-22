@@ -29,6 +29,7 @@ if irtdir(end) ~= filesep % make sure there is a '/' at end of directory
 	irtdir = [irtdir filesep];
 end
 
+
 list = {...
 'align', ...		% image registration
 'align/mex', ...	% image registration mex files
@@ -41,6 +42,8 @@ list = {...
 'fbp', ...		% FBP (filtered backprojection) code
 'general', ...		% generic image reconstruction
 'graph', ...		% graphics routines
+'mex/local', ... % MEX files compiled for local OS/CPU
+'mex/src', ... % MEX source code for irt_mex_make.m
 'mri', ...		% MRI reconstruction
 'mri/fieldmap', ...	% MRI B0 field map estimation
 'mri-rf/yip-spsp', ...	% MRI RF pulse design
@@ -70,6 +73,7 @@ end
 % e.g., 7.3 and running on earlier 7.0 won't work.
 % If you have mex problems, comment out the following line.
 % Much of the toolbox will work without mex, just slower.
+addpath([irtdir 'mex/local']) % must precede "mex/v7"
 addpath([irtdir 'mex/v7']);
 
 
