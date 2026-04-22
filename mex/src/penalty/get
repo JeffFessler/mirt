@@ -4,6 +4,8 @@ alias cp /bin/cp
 echo "fail: penalty,diff obsolete"
 exit -1
 
+# cp -p ~/l/src/util/reg/def,reg.h .
+
 #cp -p ~/l/src/defs/*.h .
 #cp -p ~/l/src/util/mex/def,mexarg.h .
 #cp -p ~/l/src/util/mex/mexarg.c .
