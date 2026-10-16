@@ -21,7 +21,10 @@
 // sets a __need_timespec flag which affects declarations in time.h
 #ifdef Use_thread
 // include "def,thread.h" used to go here
+#pragma message "Using pthreads"
 #include <pthread.h>
+#else
+#pragma message "NOT Using pthreads"
 #endif
 
 #include <stdio.h>
@@ -293,10 +296,9 @@ cchar *format, ...);
 
 #define jf_thread_print(stream, how, file, line, ...) \
 	{ \
-	(void) fprintf(stream, "%s %s %d: ", how, file, line); \
-	(void) fprintf(stream, __VA_ARGS__); \
-	(void) fprintf(stream, "\n"); \
-	(void) fflush(stream); \
+	(void) printf("%s %s %d: ", how, file, line); \
+	(void) printf(__VA_ARGS__); \
+	(void) printf("\n"); \
 	}
 
 #endif
@@ -335,7 +337,7 @@ cchar *format, ...);
 #endif
 
 #ifndef Fail
-#	define Fail(...) { \
+	#define Fail(...) { \
 	jf_thread_print(stderr, "FAIL", __FILE__, __LINE__, __VA_ARGS__); \
 	return Failure; }
 

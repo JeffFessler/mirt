@@ -75,8 +75,10 @@ int nrhs, Const mxArray *prhs[])
 	int n_offset;
 	int nod_i;
 	int nod_o;
-	cint *dim_i;
-	int dim_o[Max_ndim+1];
+	int ii;
+	Const mwSize *dim_i;
+	mwSize dim_o[Max_ndim+1];
+	int dim_int[Max_ndim]; /* penalty,diff.c expects int dims, not mwSize */
 
 	if (nlhs != 1 || nrhs != 4) {
 		penalty_mex_help();
@@ -99,6 +101,8 @@ int nrhs, Const mxArray *prhs[])
 	if (nod_i > Max_ndim) Fail("ndim limit exceeded!?")
 	Bcopy(dim_i, dim_o, nod_i)
 	dim_o[nod_o-1] = n_offset;
+	for (ii=0; ii < nod_i; ++ii)
+		dim_int[ii] = (int) dim_i[ii];
 
 	Call(plhs[0] = mxCreateNumericArray,
 		(nod_o, dim_o, mxSINGLE_CLASS, mxREAL))
@@ -111,7 +115,7 @@ int nrhs, Const mxArray *prhs[])
 		Call(penalty_diff_wk_tight, (
 			(float *) mxGetData(plhs[0]),
 			(cfloat *) mxGetData(mx_kappa),
-			dim_i, nod_i,
+			dim_int, nod_i,
 			(cint *) mxGetData(mx_offsets), n_offset,
 			*mxGetPr(mx_power), order))
 	}
@@ -122,7 +126,7 @@ int nrhs, Const mxArray *prhs[])
 		Call(penalty_diff_wk_leak, (
 			(float *) mxGetData(plhs[0]),
 			(cfloat *) mxGetData(mx_kappa),
-			dim_i, nod_i,
+			dim_int, nod_i,
 			(cint *) mxGetData(mx_offsets), n_offset,
 			*mxGetPr(mx_power), order))
 	}
@@ -155,8 +159,8 @@ cint power)
 	int n_offset;
 	int nod_i;
 	int nod_o;
-	cint *dim_i;
-	int dim_o[Max_ndim+1];
+	Const mwSize *dim_i;
+	mwSize dim_o[Max_ndim+1];
 
 	if (nlhs != 1 || nrhs < 3 || nrhs > 4) {
 		penalty_mex_help();
@@ -249,9 +253,9 @@ cint power)
 	int nr = 1; /* # of realizations */
 	int n_offset;
 	int nod_i;
-	cint *dim_i;
+	Const mwSize *dim_i;
 	int nod_o;
-	int dim_o[Max_ndim];
+	mwSize dim_o[Max_ndim];
 
 	if (nlhs != 1 || nrhs < 3 || nrhs > 4) {
 		penalty_mex_help();
