@@ -14,7 +14,7 @@
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
-	int dim, m, n, l, ntot;
+	int m, n, l, ntot;
 	mwSize dims[3];
  	float *data1, *data2, *wx, *wy, *wz;
 	double spline, nx, ny, nz, offx, offy, offz, mx, my, mz;
@@ -78,7 +78,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 	}
 
 	ntot = mxGetNumberOfElements(prhs[1]);
-	dim = ntot;
 	if (ntot == 3)
 	{
 		nx = *((double*) mxGetData(prhs[1]));
