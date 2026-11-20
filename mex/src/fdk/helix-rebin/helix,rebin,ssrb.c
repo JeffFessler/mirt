@@ -70,7 +70,7 @@ static float rebin_helix_scale(cfloat dfs, cfloat dsd, cfloat ss, cfloat tt)
 		return sqrtf(Sqr(ss) + Sqr(tt) + Sqr(dsd))
 			/ sqrtf(Sqr(tt) + Sqr(dsd));
 	// case 0 % arc
-		return dsd / sqrtf(Sqr(tt) + Sqr(dsd));
+	return dsd / sqrtf(Sqr(tt) + Sqr(dsd));
 }
 
 
