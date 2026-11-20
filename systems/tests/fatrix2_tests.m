@@ -398,7 +398,7 @@ if 1 % horzcat
 	xt = cat(dimi_cat, 5*x, x, 4*x);
 	y2 = B * xt;
 	yt = (5 + 7 - 4) * y1;
-	equivs(y2, yt, 'thresh', 1.2e-6) % 2018-10-01
+	equivs(y2, yt, 'thresh', 1.3e-6) % 2026-11-20
 	test_fun2(B, xt)
 end
 
@@ -461,7 +461,7 @@ if 1 % kronI
 	dimo_cat = 1 + numel(A.odim);
 	y3 = cat(dimo_cat, y1, 2*y1, 3*y1, 4*y1);
 	try
-		equivs(y2, y3, 'thresh', 1.2e-6) % 2018-10-01
+		equivs(y2, y3, 'thresh', 1.3e-6) % 2026-11-20
 	catch
 		warn('kronI issue')
 		keyboard

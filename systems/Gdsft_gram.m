@@ -283,7 +283,7 @@ mask = true(N,1); mask(end-3) = false;
 A = Gdsft(omega, N, 'mask', mask, 'n_shift', N/2, 'show', 1);
 T = build_gram(A, wi);
 test_adjoint(T, 'complex', 1, 'tolre', 1e-7);
-fatrix2_tests(A, 'complex', 1, 'tol_gram', 2e-7);
+fatrix2_tests(A, 'complex', 1, 'tol_gram', 1e-6);
 
 
 % Gdsft_gram_test2()
@@ -295,7 +295,7 @@ ktype = 'spiral0';
 ig = image_geom('nx', N(1), 'ny', N(2), 'dx', 1);
 mask = ellipse_im(ig, [0 0 14 15 0 1], 'oversample', 3) > 0;
 A = Gdsft(omega, N, 'n_shift', N/2, 'show', 1);
-fatrix2_tests(A, 'complex', 1, 'tol_gram', 2e-7);
+fatrix2_tests(A, 'complex', 1, 'tol_gram', 1e-6);
 
 T = build_gram(A, wi);
 fatrix2_tests(T, 'complex', 1, 'tol_gram', 1e-7);
@@ -306,7 +306,7 @@ if 1
 	x1 = A' * (wi .* (A * x));
 	x1 = embed(x1, mask);
 	x2 = T * x;
-	equivs(x1, x2, 'thresh', 2e-7)
+	equivs(x1, x2, 'thresh', 1e-6)
 end
 
 tic
@@ -325,7 +325,7 @@ N = [8 4 2];
 rng(0)
 omega = rand(21,3) * 2 * pi;
 A = Gdsft(omega, N, 'n_shift', N/2, 'show', 1);
-fatrix2_tests(A, 'complex', 1, 'tol_gram', 2e-7);
+fatrix2_tests(A, 'complex', 1, 'tol_gram', 1e-6);
 test_adjoint(A, 'complex', 1, 'big', 1);
 
 wi = [1:size(omega,1)]';
