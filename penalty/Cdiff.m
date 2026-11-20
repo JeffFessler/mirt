@@ -83,9 +83,7 @@ if ischar(arg.offsets)
 end
 
 if isempty(arg.offsets)
-	if ndims(kappa) == 1
-		arg.offsets = [1];
-	elseif ndims(kappa) == 2
+	if ndims(kappa) == 2
 		nx = arg.dim_i(1);
 		arg.offsets = [1 nx nx+1 nx-1]; % default 2D
 	elseif ndims(kappa) == 3

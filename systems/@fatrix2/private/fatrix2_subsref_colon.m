@@ -82,10 +82,18 @@ tmp = ob * x;
 out = zeros(size(ob,1), length(jj), class(tmp));
 out(:,1) = tmp;
 
-for nn=2:length(jj)
-	x = z;
-	x(jj(nn)) = 1;
-	out(:,nn) = ob * x;
+if ~isempty(gcp('nocreate'))
+	parfor nn=2:length(jj)
+		x = z;
+		x(jj(nn)) = 1;
+		out(:,nn) = ob * x;
+	end
+else
+	for nn=2:length(jj)
+		x = z;
+		x(jj(nn)) = 1;
+		out(:,nn) = ob * x;
+	end
 end
 
 

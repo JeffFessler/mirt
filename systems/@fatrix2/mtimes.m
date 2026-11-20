@@ -28,7 +28,11 @@ if ~isnumeric(x) % object * object
 	end
 end
 
-y = fatrix2_mtimes_vector(ob, x); % "ordinary" fatrix * vector multiplication
+if isscalar(x)
+	y = fatrix2_scalar_times(x, ob);
+else
+	y = fatrix2_mtimes_vector(ob, x); % "ordinary" fatrix * vector multiplication
+end
 
 end % mtimes()
 
