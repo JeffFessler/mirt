@@ -16,7 +16,7 @@ if ~isvar('zmap'), printm 'read fieldmap'
 		t = t * max(fmap(:));
 		if im
 			im clf, im(fmap + t)
-			title 'Fieldmap and mask outline'
+			titlef('Fieldmap and mask outline')
 			ir_colorbar_text('Hz')
 		end
 	end
